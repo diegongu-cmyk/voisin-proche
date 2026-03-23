@@ -82,6 +82,8 @@ export default function AdminPage() {
   if (!error && data && data.length > 0) {
     // Enviar email de confirmación
     const reservation = allBookings.find(r => r.id === reservationId)
+    console.log('Reservation data:', JSON.stringify(reservation))
+    console.log('Email encontrado:', reservation?.details?.email)
     if (reservation?.details?.email) {
       await fetch('/api/send-email', {
         method: 'POST',
