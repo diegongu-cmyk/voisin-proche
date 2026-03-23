@@ -281,6 +281,7 @@ function BookingPageContent() {
                 onChange={(e) => setPhone(e.target.value)}
                 className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-[#1D9E75]"
               />
+              <p className="text-xs text-gray-500 mt-1">Ce numéro sera utilisé pour vous contacter sur WhatsApp</p>
             </div>
             <div>
               <label className="mb-1 block text-sm font-medium text-slate-700">Adresse email</label>
