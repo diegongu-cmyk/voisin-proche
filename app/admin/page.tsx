@@ -131,6 +131,23 @@ export default function AdminPage() {
   }
 }
 
+  const handleWhatsApp = async (reservationId: string) => {
+    const { data: reservation } = await supabase
+      .from('reservations')
+      .select('*')
+      .eq('id', reservationId)
+      .single()
+  
+    const details = typeof reservation?.details === 'string'
+      ? JSON.parse(reservation.details)
+      : reservation?.details
+  
+    const phone = details?.phone?.replace(/[^0-9]/g, '')
+    const message = encodeURIComponent(`Bonjour ${details?.fullName}, votre réservation pour ${reservation?.service} le ${reservation?.date} à ${reservation?.heure} est confirmée ! À bientôt — Voisin Proche 🌿`)
+  
+    window.open(`https://wa.me/${phone}?text=${message}`, '_blank')
+  }
+
 const handleTerminer = async (reservationId: string, userId: string, serviceName: string) => {
   console.log('Terminer - userId:', userId, 'service:', serviceName)
   
