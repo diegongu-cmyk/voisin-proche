@@ -131,7 +131,6 @@ export default function AdminPage() {
   }
 }
 
-  const handleWhatsApp = async (reservationId: string) => {
     const { data: reservation } = await supabase
       .from('reservations')
       .select('*')
