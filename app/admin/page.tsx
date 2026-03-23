@@ -536,19 +536,22 @@ const handleTerminer = async (reservationId: string, userId: string, serviceName
                                 <button 
                                   onClick={() => handleAnnuler(booking.id)}
                                   className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
-                                ><button
-  onClick={() => {
-    const details = typeof booking.details === 'string' ? JSON.parse(booking.details) : booking.details;
-    const phone = details?.phone?.replace(/[^0-9]/g, '');
-    const message = encodeURIComponent(`Bonjour ${details?.fullName}, votre réservation pour ${booking.service} le ${booking.date} à ${booking.heure} est confirmée ! À bientôt — Voisin Proche 🌿`);
-    window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
-  }}
-  className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm flex items-center gap-1"
->
-  <svg viewBox="0 0 24 24" fill="white" width="14" height="14"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.523 5.855L.057 23.273a.75.75 0 00.92.92l5.418-1.466A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.667-.523-5.188-1.433l-.372-.22-3.862 1.046 1.046-3.862-.22-.372A9.944 9.944 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-  WA
-</button>
+                                >
                                   Annuler
+                                </button>
+                                <button 
+                                  onClick={() => {
+                                    const details = typeof booking.details === 'string' ? JSON.parse(booking.details) : booking.details;
+                                    const phone = details?.phone?.replace(/[^0-9]/g, '');
+                                    const message = encodeURIComponent(`Bonjour ${details?.fullName}, votre réservation pour ${booking.service} le ${booking.date} à ${booking.heure} est confirmée ! À bientôt — Voisin Proche 🌿`);
+                                    window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+                                  }}
+                                  className="bg-green-500 hover:bg-green-600 text-white p-1 rounded"
+                                >
+                                  <svg viewBox="0 0 24 24" fill="white" width="16" height="16">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                                    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.523 5.855L.057 23.273a.75.75 0 00.92.92l5.418-1.466A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.667-.523-5.188-1.433l-.372-.22-3.862 1.046 1.046-3.862-.22-.372A9.944 9.44 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+                                  </svg>
                                 </button>
                               </>
                             )}
@@ -638,15 +641,6 @@ const handleTerminer = async (reservationId: string, userId: string, serviceName
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm">
                           <div className="flex gap-2">
-                            <button 
-                              onClick={() => handleWhatsApp(booking.id)}
-                              className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-xs font-medium transition-colors flex items-center gap-1"
-                            >
-                              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-1.138-.272-.27-.547-.27-.748-.007-.227.008-.438.15-.636.414-.2.311-.447.665-.447.354 0 .642.194.642.435 0 .212-.007.375-.076.45-.211.112-.229.224-.336.414-.334.643 0 .188.012.346.076.501.154.324.286.624.583.899.928.106.139.195.288.305.464.393.165.078.336.123.511.123.207 0 .424-.199.487-.285.218-.094.451-.183.651-.337.29-.225.54-.453.669-.704.268-.274.529-.503.775-.831.57-.688.928-1.16 1.102-.895.151-1.776.151-2.349 0-1.126.33-2.196.918-2.196.918 0 .269.035.52.103.736.206-.892-.305-1.76-.825-2.599-1.514-.75-.675-1.609-1.2-1.609-1.2 0-.414.336-.75.75-.75.75.75 0 .414-.336.75-.75.75-.75.414 0-.75-.336-.75-.75.75.75 0 1.411.986 2.606 2.306 1.62.32 3.039.764 3.039 1.64 0 1.828-1.486 3.314-3.314 3.314-1.828 0-3.314-1.486-3.314-3.314 0-1.828 1.486-3.314 3.314-3.314 1.828 0 3.314 1.486 3.314 3.314z" fill="#25D366"/>
-                              </svg>
-                              WhatsApp
-                            </button>
                             {booking.status === "En attente" && (
                               <>
                                 <button 
@@ -661,14 +655,60 @@ const handleTerminer = async (reservationId: string, userId: string, serviceName
                                 >
                                   Annuler
                                 </button>
+                                <button 
+                                  onClick={() => {
+                                    const details = typeof booking.details === 'string' ? JSON.parse(booking.details) : booking.details;
+                                    const phone = details?.phone?.replace(/[^0-9]/g, '');
+                                    const message = encodeURIComponent(`Bonjour ${details?.fullName}, votre réservation pour ${booking.service} le ${booking.date} à ${booking.heure} est confirmée ! À bientôt — Voisin Proche 🌿`);
+                                    window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+                                  }}
+                                  className="bg-green-500 hover:bg-green-600 text-white p-1 rounded"
+                                >
+                                  <svg viewBox="0 0 24 24" fill="white" width="16" height="16">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                                    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.523 5.855L.057 23.273a.75.75 0 00.92.92l5.418-1.466A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.667-.523-5.188-1.433l-.372-.22-3.862 1.046 1.046-3.862-.22-.372A9.944 9.44 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+                                  </svg>
+                                </button>
                               </>
                             )}
                             {booking.status === "Confirmé" && (
+                              <>
+                                <button 
+                                  onClick={() => handleTerminer(booking.id, booking.user_id, booking.service)}
+                                  className="bg-green-700 hover:bg-green-800 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
+                                >
+                                  Terminer
+                                </button>
+                                <button 
+                                  onClick={() => {
+                                    const details = typeof booking.details === 'string' ? JSON.parse(booking.details) : booking.details;
+                                    const phone = details?.phone?.replace(/[^0-9]/g, '');
+                                    const message = encodeURIComponent(`Bonjour ${details?.fullName}, votre réservation pour ${booking.service} le ${booking.date} à ${booking.heure} est confirmée ! À bientôt — Voisin Proche 🌿`);
+                                    window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+                                  }}
+                                  className="bg-green-500 hover:bg-green-600 text-white p-1 rounded"
+                                >
+                                  <svg viewBox="0 0 24 24" fill="white" width="16" height="16">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                                    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.523 5.855L.057 23.273a.75.75 0 00.92.92l5.418-1.466A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.667-.523-5.188-1.433l-.372-.22-3.862 1.046 1.046-3.862-.22-.372A9.944 9.44 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+                                  </svg>
+                                </button>
+                              </>
+                            )}
+                            {booking.status === "Terminé" && (
                               <button 
-                                onClick={() => handleTerminer(booking.id, booking.user_id, booking.service)}
-                                className="bg-green-700 hover:bg-green-800 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
+                                onClick={() => {
+                                  const details = typeof booking.details === 'string' ? JSON.parse(booking.details) : booking.details;
+                                  const phone = details?.phone?.replace(/[^0-9]/g, '');
+                                  const message = encodeURIComponent(`Bonjour ${details?.fullName}, votre réservation pour ${booking.service} le ${booking.date} à ${booking.heure} est confirmée ! À bientôt — Voisin Proche 🌿`);
+                                  window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+                                }}
+                                className="bg-green-500 hover:bg-green-600 text-white p-1 rounded"
                               >
-                                Terminer
+                                <svg viewBox="0 0 24 24" fill="white" width="16" height="16">
+                                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                                  <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.523 5.855L.057 23.273a.75.75 0 00.92.92l5.418-1.466A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.667-.523-5.188-1.433l-.372-.22-3.862 1.046 1.046-3.862-.22-.372A9.944 9.44 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+                                </svg>
                               </button>
                             )}
                           </div>
