@@ -80,6 +80,34 @@ export default function AdminPage() {
     .select()
   console.log('Resultado:', { data, error })
   if (!error && data && data.length > 0) {
+    // Enviar email de confirmación
+    const reservation = allBookings.find(r => r.id === reservationId)
+    if (reservation?.details?.email) {
+      await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: reservation.details.email,
+          subject: 'Votre réservation est confirmée — Voisin Proche',
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+              <h1 style="color: #1D9E75;">Voisin Proche</h1>
+              <h2 style="color: #085041;">Votre réservation est confirmée ! ✅</h2>
+              <p>Bonjour ${reservation.details.fullName || 'cher client'},</p>
+              <p>Nous avons le plaisir de confirmer votre réservation :</p>
+              <div style="background: #E1F5EE; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                <p><strong>Service :</strong> ${reservation.service}</p>
+                <p><strong>Date :</strong> ${reservation.date}</p>
+                <p><strong>Heure :</strong> ${reservation.heure}</p>
+              </div>
+              <p>Nous vous contacterons bientôt pour les derniers détails.</p>
+              <p>Pour toute question : <a href="mailto:voisinprochecontact@gmail.com">voisinprochecontact@gmail.com</a></p>
+              <p style="color: #1D9E75;"><strong>L'équipe Voisin Proche</strong></p>
+            </div>
+          `
+        })
+      })
+    }
     window.location.reload()
   } else {
     alert('Error: ' + (error?.message || 'No se actualizó ninguna fila - ID no encontrado'))

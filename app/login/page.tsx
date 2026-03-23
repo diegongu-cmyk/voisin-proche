@@ -22,8 +22,10 @@ export default function LoginPage() {
         password,
       });
 
+      console.log('Login result:', data, error);
+
       if (error) {
-        setError("Email ou mot de passe incorrect");
+        setError(error.message);
       } else {
         window.location.href = '/mon-compte';
       }
@@ -136,6 +138,13 @@ export default function LoginPage() {
             >
               {isLoading ? "Connexion..." : "Se connecter"}
             </button>
+            
+            {/* Error Message */}
+            {error && (
+              <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-red-600 text-sm text-center">{error}</p>
+              </div>
+            )}
           </form>
 
           {/* Divider */}
