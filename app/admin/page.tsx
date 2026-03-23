@@ -84,18 +84,21 @@ export default function AdminPage() {
     const reservation = allBookings.find(r => r.id === reservationId)
     console.log('Reservation data:', JSON.stringify(reservation))
     console.log('Email encontrado:', reservation?.details?.email)
-    if (reservation?.details?.email) {
+    const details = typeof reservation?.details === 'string' 
+      ? JSON.parse(reservation.details) 
+      : reservation?.details
+    if (details?.email) {
       await fetch('/api/send-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          to: reservation.details.email,
+          to: details.email,
           subject: 'Votre réservation est confirmée — Voisin Proche',
           html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
               <h1 style="color: #1D9E75;">Voisin Proche</h1>
               <h2 style="color: #085041;">Votre réservation est confirmée ! ✅</h2>
-              <p>Bonjour ${reservation.details.fullName || 'cher client'},</p>
+              <p>Bonjour ${details.fullName || 'cher client'},</p>
               <p>Nous avons le plaisir de confirmer votre réservation :</p>
               <div style="background: #E1F5EE; padding: 15px; border-radius: 8px; margin: 20px 0;">
                 <p><strong>Service :</strong> ${reservation.service}</p>
