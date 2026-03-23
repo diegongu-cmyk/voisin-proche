@@ -318,7 +318,6 @@ const handleTerminer = async (reservationId: string, userId: string, serviceName
     }
   };
 
-  const getWhatsAppLink = (phone: string, clientName: string, service: string) => {
     if (!phone) return '#';
     
     // Formatear el número (eliminar espacios, +, etc.)
