@@ -73,49 +73,53 @@ export default function AdminPage() {
 
   const handleConfirmer = async (reservationId: string) => {
   console.log('Intentando confirmar:', reservationId)
-  const { data, error } = await supabase
+  const { error, data } = await supabase
     .from('reservations')
     .update({ statut: 'confirme' })
     .eq('id', reservationId)
     .select()
-  console.log('Resultado:', { data, error })
+
   if (!error && data && data.length > 0) {
-    // Enviar email de confirmación
-    const reservation = allBookings.find(r => r.id === reservationId)
-    console.log('Reservation data:', JSON.stringify(reservation))
-    console.log('Email encontrado:', reservation?.details?.email)
-    const details = typeof reservation?.details === 'string' 
-      ? JSON.parse(reservation.details) 
-      : reservation?.details
-    if (details?.email) {
-      await fetch('/api/send-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          to: details.email,
-          subject: 'Votre réservation est confirmée — Voisin Proche',
-          html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+    // Obtener email directamente de Supabase
+    const { data: reservationData } = await supabase
+      .from('reservations')
+      .select('*')
+      .eq('id', reservationId)
+      .single()
+
+    if (reservationData) {
+      const details = typeof reservationData.details === 'string'
+        ? JSON.parse(reservationData.details)
+        : reservationData.details
+
+      if (details?.email) {
+        await fetch('/api/send-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            to: details.email,
+            subject: 'Votre réservation est confirmée — Voisin Proche',
+            html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
               <h1 style="color: #1D9E75;">Voisin Proche</h1>
               <h2 style="color: #085041;">Votre réservation est confirmée ! ✅</h2>
               <p>Bonjour ${details.fullName || 'cher client'},</p>
               <p>Nous avons le plaisir de confirmer votre réservation :</p>
               <div style="background: #E1F5EE; padding: 15px; border-radius: 8px; margin: 20px 0;">
-                <p><strong>Service :</strong> ${reservation.service}</p>
-                <p><strong>Date :</strong> ${reservation.date}</p>
-                <p><strong>Heure :</strong> ${reservation.heure}</p>
+                <p><strong>Service :</strong> ${reservationData.service}</p>
+                <p><strong>Date :</strong> ${reservationData.date}</p>
+                <p><strong>Heure :</strong> ${reservationData.heure}</p>
               </div>
               <p>Nous vous contacterons bientôt pour les derniers détails.</p>
-              <p>Pour toute question : <a href="mailto:voisinprochecontact@gmail.com">voisinprochecontact@gmail.com</a></p>
+              <p>Pour toute question : voisinprochecontact@gmail.com</p>
               <p style="color: #1D9E75;"><strong>L'équipe Voisin Proche</strong></p>
-            </div>
-          `
+            </div>`
+          })
         })
-      })
+      }
     }
     window.location.reload()
   } else {
-    alert('Error: ' + (error?.message || 'No se actualizó ninguna fila - ID no encontrado'))
+    alert('Erreur lors de la confirmation')
   }
 }
 
