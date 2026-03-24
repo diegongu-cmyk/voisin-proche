@@ -25,23 +25,44 @@ export default function MonComptePage() {
     const emojiMap: { [key: string]: string } = {
       "Promenade de chiens": "🐕",
       "Garde d'animaux": "🏠",
+      "Accompagnement de personnes": "🤝",
+      "Courses et commissions": "🛒",
+      "Ménage maison/bureau": "🧹",
       "Cours d'espagnol": "📚",
-      "Ménage": "🧹"
+      "Autres services": "⭐"
     };
     return emojiMap[serviceName] || "⭐";
   };
 
-  // Service progress data from Supabase
+  // Define all 7 services that should always be shown
+  const allServices = [
+    { name: "Promenade de chiens", emoji: "🐕" },
+    { name: "Garde d'animaux", emoji: "🏠" },
+    { name: "Accompagnement de personnes", emoji: "🤝" },
+    { name: "Courses et commissions", emoji: "🛒" },
+    { name: "Ménage maison/bureau", emoji: "🧹" },
+    { name: "Cours d'espagnol", emoji: "📚" },
+    { name: "Autres services", emoji: "⭐" }
+  ];
+
+  // Service progress data from Supabase - now shows all 7 services
   console.log('Datos fidelite:', fidelityData)
-  const serviceProgress = fidelityData.map(item => ({
-    name: item.service_name,
-    service: item.service,        // Agregar campo service
-    emoji: getServiceEmoji(item.service_name),
-    completed: item.count,
-    count: item.count,
-    total: 7,
-    hasDiscount: item.count >= 7
-  }));
+  
+  // Create service progress for all 7 services
+  const serviceProgress = allServices.map(service => {
+    const fidelityItem = fidelityData.find(item => item.service_name === service.name);
+    const count = fidelityItem ? fidelityItem.count : 0;
+    
+    return {
+      name: service.name,
+      service: service.name,
+      emoji: service.emoji,
+      completed: count,
+      count: count,
+      total: 7,
+      hasDiscount: count >= 7
+    };
+  });
 
   useEffect(() => {
     // Check authentication and load user data
@@ -81,13 +102,8 @@ export default function MonComptePage() {
       if (!fidelityError && fidelity && fidelity.length > 0) {
         setFidelityData(fidelity);
       } else {
-        // If no fidelity data, show all services at 0/7
-        setFidelityData([
-          { service_name: "Promenade de chiens", completed: 0 },
-          { service_name: "Garde d'animaux", completed: 0 },
-          { service_name: "Cours d'espagnol", completed: 0 },
-          { service_name: "Ménage", completed: 0 }
-        ]);
+        // If no fidelity data, set empty array - we'll show all services at 0/7 in serviceProgress
+        setFidelityData([]);
       }
 
       // Load historique data (services terminés)
@@ -228,12 +244,49 @@ export default function MonComptePage() {
           </div>
 
           {(fidelityData.length === 0 || fidelityData.every(item => item.count === 0 || item.completed === 0)) ? (
-            // Motivational message for new users
-            <div className="text-center py-12">
-              <div className="text-6xl mb-4">⭐</div>
-              <h3 className="text-xl font-bold text-[#085041] mb-2">Commencez à réserver !</h3>
-              <p className="text-gray-500 mb-6 max-w-md mx-auto">Réservez vos premiers services et suivez votre progression vers des réductions exclusives. Après 7 services du même type, bénéficiez de -20% !</p>
-              <a href="/services" className="bg-[#1D9E75] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#085041] transition-colors">Découvrir nos services</a>
+            // Show all 7 services at 0/7 for new users
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {serviceProgress.map((service, index) => (
+                <div
+                  key={index}
+                  className="rounded-2xl border-2 border-slate-200 bg-white p-5 transition-all"
+                >
+                  {/* Service Header */}
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="text-2xl">{service.emoji}</span>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-[#085041] text-lg">{service.name}</h3>
+                    </div>
+                  </div>
+
+                  {/* Progress Circles */}
+                  <div className="flex justify-center gap-2 mb-4">
+                    {Array.from({ length: service.total }, (_, i) => (
+                      <div
+                        key={i}
+                        className={`h-8 w-8 rounded-full flex items-center justify-center transition-all ${
+                          i < service.completed
+                            ? "bg-[#1D9E75] shadow-md"
+                            : "bg-gray-200"
+                        }`}
+                      >
+                        {i < service.completed ? (
+                          <span className="text-xs font-bold text-white">{i + 1}</span>
+                        ) : (
+                          <span className="text-xs font-medium text-gray-400">{i + 1}</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Progress Text */}
+                  <div className="text-center">
+                    <p className="text-sm text-slate-600">
+                      <span className="font-semibold">{service.count} services</span> · Plus que {Math.max(0, 7 - service.count)} pour votre réduction -20%
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
           ) : (
             // Show only used services
