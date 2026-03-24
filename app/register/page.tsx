@@ -6,9 +6,9 @@ import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 
 export default function RegisterPage() {
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -22,12 +22,6 @@ export default function RegisterPage() {
     setError("");
     setSuccess("");
 
-    if (password !== confirmPassword) {
-      setError("Les mots de passe ne correspondent pas");
-      setIsLoading(false);
-      return;
-    }
-
     if (!acceptTerms) {
       setError("Vous devez accepter les conditions d'utilisation");
       setIsLoading(false);
@@ -38,15 +32,20 @@ export default function RegisterPage() {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: {
+            full_name: fullName,
+          }
+        }
       });
 
       if (error) {
         setError(error.message);
       } else {
         setSuccess("Vérifiez votre email pour confirmer votre compte !");
+        setFullName("");
         setEmail("");
         setPassword("");
-        setConfirmPassword("");
         setAcceptTerms(false);
       }
     } catch (err) {
@@ -97,6 +96,21 @@ export default function RegisterPage() {
           )}
           
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Full Name Field */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Prénom et Nom
+              </label>
+              <input
+                type="text"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent"
+                placeholder="Jean Dupont"
+                required
+              />
+            </div>
+
             {/* Email Field */}
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">
@@ -122,22 +136,7 @@ export default function RegisterPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent"
-                placeholder="••••••••"
-                required
-              />
-            </div>
-
-            {/* Confirm Password Field */}
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Confirmer le mot de passe
-              </label>
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent"
-                placeholder="••••••••"
+                placeholder="•••••••"
                 required
               />
             </div>
@@ -153,8 +152,31 @@ export default function RegisterPage() {
                 required
               />
               <label htmlFor="terms" className="text-sm text-slate-600">
-                J'accepte les conditions d'utilisation et la politique de confidentialité
+                En créant un compte, vous acceptez nos conditions générales
               </label>
+            </div>
+
+            {/* Social Login Buttons */}
+            <div className="space-y-3">
+              <button
+                type="button"
+                className="w-full flex items-center justify-center gap-2 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+              >
+                <svg className="w-5 h-5" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25-.07a9.91 9.91 0 00-6.13-3.36 9.91 9.91 0 00-6.13 3.36c-.13.72-.2 1.47-.2 2.25 0a9.91 9.91 0 006.13 3.36 9.91 9.91 0 006.13-3.36c.13-.72.2-1.47.2-2.25zM12 23c-2.74 0-5.38-.79-7.68-2.25l-2.54-2.54c-.39-.39-.39-1.02 0-1.41l2.54-2.54c2.3-2.3 4.94-2.25 7.68 2.25 2.74 0 5.38.79 7.68 2.25l2.54 2.54c.39.39.39 1.02 0 1.41l-2.54 2.54c-2.3 2.3-4.94 2.25-7.68-2.25z"/>
+                </svg>
+                Continuer avec Google
+              </button>
+              
+              <button
+                type="button"
+                className="w-full flex items-center justify-center gap-2 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+              >
+                <svg className="w-5 h-5" viewBox="0 0 24 24">
+                  <path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 9.86v2.933h-2.951c0 1.008.617 1.846 1.45 2.528h2.951c1.008 0 1.846-.617 1.45-1.45v-2.933c0-5.99-4.388-10.954-9.86H12z"/>
+                </svg>
+                Continuer avec Facebook
+              </button>
             </div>
 
             {/* Submit Button */}

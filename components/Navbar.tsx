@@ -120,7 +120,7 @@ export default function Navbar() {
             </svg>
           </button>
 
-          {/* Auth button (always visible) */}
+          {/* Auth buttons (always visible) */}
           {isLoggedIn || isAdmin ? (
             <button
               onClick={handleLogout}
@@ -130,13 +130,22 @@ export default function Navbar() {
               Déconnexion
             </button>
           ) : (
-            <Link
-              href={connexionLink.href}
-              className="rounded-md px-3 py-2 text-sm font-medium text-white transition bg-[#1D9E75] hover:bg-[#1a8a63]"
-              style={{ borderRadius: "8px" }}
-            >
-              {connexionLink.label}
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link
+                href="/register"
+                className="rounded-md px-3 py-2 text-sm font-medium text-[#1D9E75] bg-white border border-[#1D9E75] transition hover:bg-[#1D9E75] hover:text-white"
+                style={{ borderRadius: "8px" }}
+              >
+                S'inscrire
+              </Link>
+              <Link
+                href={connexionLink.href}
+                className="rounded-md px-3 py-2 text-sm font-medium text-white transition bg-[#1D9E75] hover:bg-[#1a8a63]"
+                style={{ borderRadius: "8px" }}
+              >
+                {connexionLink.label}
+              </Link>
+            </div>
           )}
         </div>
       </nav>
