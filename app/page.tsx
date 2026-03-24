@@ -30,14 +30,14 @@ const services = [
   {
     emoji: "🤝",
     titre: "Accompagnement",
-    prix: "depuis 12€/h",
+    prix: "Depuis 12€/h",
     description: "Aide pour sorties et rendez-vous.\nPrésence rassurante et bienveillante.",
     image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400",
   },
   {
     emoji: "🛒",
     titre: "Courses",
-    prix: "depuis 8€",
+    prix: "Depuis 8€",
     description: "Commissions du quotidien simplifiées.\nLivraison rapide à Fontenay-le-Comte.",
     image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=400",
   },
@@ -60,32 +60,32 @@ const services = [
 const sliderServices = [
   {
     titre: "Promenade de chiens",
-    prix: "depuis 8€",
+    prix: "Depuis 8€",
     image: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=600",
   },
   {
     titre: "Garde d'animaux",
-    prix: "depuis 15€/jour",
+    prix: "Depuis 15€/jour",
     image: "https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?w=600",
   },
   {
     titre: "Accompagnement",
-    prix: "depuis 12€",
+    prix: "Depuis 12€",
     image: "https://images.unsplash.com/photo-1569398034126-476e3a9e3808?w=600",
   },
   {
     titre: "Courses et commissions",
-    prix: "depuis 8€",
+    prix: "Depuis 8€",
     image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=600",
   },
   {
     titre: "Ménage maison/bureau",
-    prix: "depuis 25€",
+    prix: "Depuis 25€",
     image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600",
   },
   {
     titre: "Cours d'espagnol",
-    prix: "depuis 15€/heure",
+    prix: "Depuis 15€/heure",
     image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600",
   },
   {
