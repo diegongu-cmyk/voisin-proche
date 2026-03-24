@@ -70,7 +70,7 @@ const sliderServices = [
   },
   {
     titre: "Accompagnement",
-    prix: "12€/heure",
+    prix: "depuis 12€/h",
     image: "https://images.unsplash.com/photo-1569398034126-476e3a9e3808?w=600",
   },
   {
