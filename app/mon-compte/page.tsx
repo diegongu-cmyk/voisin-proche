@@ -275,6 +275,18 @@ export default function MonComptePage() {
         </div>
       </header>
 
+      <div className="mx-auto max-w-6xl px-4 py-8 md:px-8 space-y-8">
+        {/* SECTION 1 - Ma carte de fidélité par service */}
+        <section>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F59E0B]">
+              <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold text-[#085041]">Ma carte de fidélité</h2>
+          </div>
+
           {(fidelityData.length === 0 || fidelityData.every(item => item.count === 0 || item.completed === 0)) ? (
             // Show all 7 services at 0/7 for new users
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
