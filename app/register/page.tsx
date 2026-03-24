@@ -61,11 +61,7 @@ export default function RegisterPage() {
       if (error) {
         setError(error.message);
       } else {
-        setSuccess("Vérifiez votre email pour confirmer votre compte !");
-        setFullName("");
-        setEmail("");
-        setPassword("");
-        setAcceptTerms(false);
+        window.location.href = '/mon-compte';
       }
     } catch (err) {
       setError("Une erreur est survenue lors de l'inscription");
