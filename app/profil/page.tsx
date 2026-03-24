@@ -64,38 +64,33 @@ export default function ProfilPage() {
     setIsLoading(true);
     
     try {
-      // Update or insert profile in Supabase
-      const { error } = await supabase
-        .from('profiles')
-        .upsert({
-          id: user.id,
-          first_name: profile.firstName,
-          last_name: profile.lastName,
-          phone: profile.phone,
-          address: profile.address,
-          updated_at: new Date().toISOString()
-        });
+      // Get current authenticated user
+      const { data: { user } } = await supabase.auth.getUser();
 
-      if (!error) {
-        // Also update user metadata
-        await supabase.auth.updateUser({
-          data: {
-            user_metadata: {
-              first_name: profile.firstName,
-              last_name: profile.lastName,
-              phone: profile.phone,
-              address: profile.address
-            }
-          }
-        });
-
-        setSuccessMessage("Profil mis à jour ✅");
+      if (user) {
+        const fullName = `${profile.firstName} ${profile.lastName}`;
         
-        // Clear success message after 3 seconds
-        setTimeout(() => setSuccessMessage(""), 3000);
+        const { error } = await supabase
+          .from('profiles')
+          .upsert({
+            id: user.id,
+            email: user.email,
+            prenom: fullName.split(' ')[0],
+            nom: fullName.split(' ').slice(1).join(' '),
+            telephone: profile.phone,
+            adresse: profile.address,
+          });
+
+        if (!error) {
+          alert('Profil mis à jour ✅');
+          window.location.href = '/mon-compte';
+        } else {
+          alert('Erreur: ' + error.message);
+        }
       }
     } catch (err) {
       console.error("Error updating profile:", err);
+      alert('Erreur lors de la mise à jour du profil');
     } finally {
       setIsLoading(false);
     }
