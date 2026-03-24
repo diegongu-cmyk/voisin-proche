@@ -147,6 +147,13 @@ export default function AdminPage() {
     window.open(`https://wa.me/${phone}?text=${message}`, '_blank')
   }
 
+  const handleWhatsApp = (booking: any) => {
+    const details = typeof booking.details === 'string' ? JSON.parse(booking.details) : booking.details;
+    const phone = details?.phone?.replace(/[^0-9]/g, '');
+    const message = encodeURIComponent(`Bonjour ${details?.fullName}, votre réservation pour ${booking.service} le ${booking.date} à ${booking.heure} est confirmée ! À bientôt — Voisin Proche 🌿`);
+    window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+  }
+
 const handleTerminer = async (reservationId: string, userId: string, serviceName: string) => {
   console.log('Terminer - userId:', userId, 'service:', serviceName)
   
