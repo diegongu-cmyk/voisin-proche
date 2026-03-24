@@ -30,7 +30,7 @@ const services = [
   {
     emoji: "🤝",
     titre: "Accompagnement",
-    prix: "12€/h",
+    prix: "depuis 12€/h",
     description: "Aide pour sorties et rendez-vous.\nPrésence rassurante et bienveillante.",
     image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400",
   },
