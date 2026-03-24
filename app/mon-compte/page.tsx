@@ -18,7 +18,7 @@ export default function MonComptePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [userReservations, setUserReservations] = useState<any[]>([]);
-  const [fidelityData, setFidelityData] = useState<any[]>([]);
+  const [fidelityData, setFidelityData] = useState<any[] | null>(null);
   const [historiqueData, setHistoriqueData] = useState<any[]>([]);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editForm, setEditForm] = useState({
@@ -57,7 +57,7 @@ export default function MonComptePage() {
   
   // Create service progress for all 6 services
   const serviceProgress = allServices.map(service => {
-    const fidelityItem = fidelityData.find(item => item.service_name === service.name);
+    const fidelityItem = fidelityData?.find(item => item.service_name === service.name);
     const count = fidelityItem ? fidelityItem.count : 0;
     
     return {
@@ -294,7 +294,7 @@ export default function MonComptePage() {
             <h2 className="text-2xl font-bold text-[#085041]">Ma carte de fidélité</h2>
           </div>
 
-          {(fidelityData.length === 0 || fidelityData.every(item => item.count === 0 || item.completed === 0)) ? (
+          {(fidelityData === null || fidelityData.length === 0 || fidelityData.every(item => item.count === 0 || item.completed === 0)) ? (
             // Show all 7 services at 0/7 for new users
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {serviceProgress.map((service, index) => (
