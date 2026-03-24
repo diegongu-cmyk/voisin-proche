@@ -36,9 +36,17 @@ export default function LoginPage() {
     }
   };
 
-  const handleGoogleLogin = () => {
-    // Google OAuth will be implemented later
-    console.log("Google login");
+  const handleGoogleLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: 'https://voisin-proche.vercel.app/mon-compte'
+      }
+    });
+    
+    if (error) {
+      setError(error.message);
+    }
   };
 
   const handleFacebookLogin = () => {

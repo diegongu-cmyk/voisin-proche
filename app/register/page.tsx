@@ -16,7 +16,24 @@ export default function RegisterPage() {
 
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleGoogleLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: 'https://voisin-proche.vercel.app/mon-compte'
+      }
+    });
+    
+    if (error) {
+      setError(error.message);
+    }
+  };
+
+  const handleFacebookLogin = () => {
+    // Facebook OAuth will be implemented later
+    console.log("Facebook login");
+  };
+    const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
@@ -160,6 +177,7 @@ export default function RegisterPage() {
             <div className="space-y-3">
               <button
                 type="button"
+                onClick={handleGoogleLogin}
                 className="w-full flex items-center justify-center gap-2 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -170,6 +188,7 @@ export default function RegisterPage() {
               
               <button
                 type="button"
+                onClick={handleFacebookLogin}
                 className="w-full flex items-center justify-center gap-2 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
