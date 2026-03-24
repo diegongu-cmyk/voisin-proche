@@ -32,7 +32,7 @@ const services = [
     titre: "Accompagnement",
     prix: "12€/h",
     description: "Aide pour sorties et rendez-vous.\nPrésence rassurante et bienveillante.",
-    image: "https://images.unsplash.com/photo-1569398034126-476e3a9e3808?w=400",
+    image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400",
   },
   {
     emoji: "🛒",
