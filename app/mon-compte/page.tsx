@@ -263,14 +263,14 @@ export default function MonComptePage() {
             <div className="mt-2 inline-flex rounded-full bg-[#1D9E75]/20 px-3 py-1 text-sm font-semibold text-white">
               Membre Voisin Proche
             </div>
-            {/* Make name clickable to open edit modal */}
-            <button
-              onClick={() => setShowEditModal(true)}
+            {/* Make name clickable to go to profile page */}
+            <Link
+              href="/profil"
               className="ml-2 text-white/80 hover:text-white transition-colors"
               title="Modifier mon profil"
             >
               <span className="text-lg">✏️</span>
-            </button>
+            </Link>
           </div>
         </div>
       </header>
