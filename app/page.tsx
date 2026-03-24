@@ -18,7 +18,7 @@ const services = [
     titre: "Promenade de chiens",
     prix: "Depuis 8€",
     description: "Balades adaptées à votre compagnon.\nSuivi GPS en temps réel et photos incluses.",
-    image: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400",
+    image: "https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?w=400",
   },
   {
     emoji: "🐾",
@@ -61,7 +61,7 @@ const sliderServices = [
   {
     titre: "Promenade de chiens",
     prix: "depuis 8€",
-    image: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600",
+    image: "https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?w=600",
   },
   {
     titre: "Garde d'animaux",
