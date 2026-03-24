@@ -37,7 +37,7 @@ const services = [
   {
     emoji: "🛒",
     titre: "Courses",
-    prix: "8€",
+    prix: "depuis 8€",
     description: "Commissions du quotidien simplifiées.\nLivraison rapide à Fontenay-le-Comte.",
     image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=400",
   },
