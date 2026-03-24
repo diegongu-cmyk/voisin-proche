@@ -3,19 +3,40 @@
 import { useState, useEffect } from "react";
 import { supabase } from '@/lib/supabase';
 
+interface Reservation {
+  id: string;
+  user_id: string;
+  service: string;
+  date: string;
+  heure: string;
+  details: any;
+  notes: string;
+  statut: string;
+  prix?: number;
+}
+
+interface ServiceDetails {
+  fullName?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  dogName?: string;
+  dogBreed?: string;
+  walkDuration?: string;
+  spanishLevel?: string;
+  houseSize?: string;
+  gardenSize?: string;
+  computerIssue?: string;
+  cleaningType?: string;
+  handymanService?: string;
+}
+
 export default function AdminPage() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [services, setServices] = useState([
-    { id: 1, name: "Promenade de chiens", price: "11€", active: true },
-    { id: 2, name: "Garde d'animaux", price: "25€/jour", active: true },
-    { id: 3, name: "Cours d'espagnol", price: "30€/heure", active: true },
-    { id: 4, name: "Ménage", price: "20€/heure", active: true },
-    { id: 5, name: "Bricolage", price: "35€/heure", active: false },
-    { id: 6, name: "Jardinage", price: "25€/heure", active: false },
-    { id: 7, name: "Cours d'informatique", price: "30€/heure", active: true }
-  ]);
+  const [selectedReservation, setSelectedReservation] = useState<Reservation | null>(null);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
 
   const [todayStats, setTodayStats] = useState({
     reservations: 0,
@@ -24,10 +45,8 @@ export default function AdminPage() {
     unreadMessages: 0
   });
 
-  const [todayBookings, setTodayBookings] = useState<any[]>([]);
-  const [allBookings, setAllBookings] = useState<any[]>([]);
-  const [unreadMessages, setUnreadMessages] = useState<any[]>([]);
-  const [recentMessages, setRecentMessages] = useState<any[]>([]);
+  const [todayBookings, setTodayBookings] = useState<Reservation[]>([]);
+  const [allBookings, setAllBookings] = useState<Reservation[]>([]);
 
   useEffect(() => {
     const admin = localStorage.getItem('isAdmin') === 'true';
@@ -56,77 +75,61 @@ export default function AdminPage() {
     setPassword("");
   };
 
-  const toggleService = (id: number) => {
-    setServices(services.map(service => 
-      service.id === id ? { ...service, active: !service.active } : service
-    ));
+  const openDetailsModal = (reservation: Reservation) => {
+    setSelectedReservation(reservation);
+    setShowDetailsModal(true);
   };
 
-  const updateServicePrice = (id: number, newPrice: string) => {
-    setServices(services.map(service => 
-      service.id === id ? { ...service, price: newPrice } : service
-    ));
+  const closeDetailsModal = () => {
+    setShowDetailsModal(false);
+    setSelectedReservation(null);
   };
 
-  // Función handleConfirmer - actualiza statut a 'confirme' y envía email
+  const getServiceIcon = (serviceName: string) => {
+    const icons: { [key: string]: string } = {
+      "Promenade de chiens": "🐕",
+      "Garde d'animaux": "🏠",
+      "Cours d'espagnol": "📚",
+      "Ménage": "🧹",
+      "Bricolage": "🔧",
+      "Jardinage": "🌱",
+      "Cours d'informatique": "💻"
+    };
+    return icons[serviceName] || "📋";
+  };
+
+  const getServicePrice = (serviceName: string) => {
+    const prices: { [key: string]: number } = {
+      "Promenade de chiens": 11,
+      "Garde d'animaux": 25,
+      "Cours d'espagnol": 30,
+      "Ménage": 20,
+      "Bricolage": 35,
+      "Jardinage": 25,
+      "Cours d'informatique": 30
+    };
+    return prices[serviceName] || 0;
+  };
+
   const handleConfirmer = async (reservationId: string) => {
-    console.log('Intentando confirmar:', reservationId);
-    const { error, data } = await supabase
+    const { error } = await supabase
       .from('reservations')
       .update({ statut: 'confirme' })
-      .eq('id', reservationId)
-      .select();
-
-    if (!error && data && data.length > 0) {
-      // Obtener email directamente de Supabase
-      const { data: reservationData } = await supabase
-        .from('reservations')
-        .select('*')
-        .eq('id', reservationId)
-        .single();
-
-      if (reservationData) {
-        const details = typeof reservationData.details === 'string'
-          ? JSON.parse(reservationData.details)
-          : reservationData.details;
-
-        if (details?.email) {
-          await fetch('/api/send-email', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              to: details.email,
-              subject: 'Votre réservation est confirmée — Voisin Proche',
-              html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-                <h1 style="color: #1D9E75;">Voisin Proche</h1>
-                <h2 style="color: #085041;">Votre réservation est confirmée ! ✅</h2>
-                <p>Bonjour ${details.fullName || 'cher client'},</p>
-                <p>Nous avons le plaisir de confirmer votre réservation :</p>
-                <div style="background: #E1F5EE; padding: 15px; border-radius: 8px; margin: 20px 0;">
-                  <p><strong>Service :</strong> ${reservationData.service}</p>
-                  <p><strong>Date :</strong> ${reservationData.date}</p>
-                  <p><strong>Heure :</strong> ${reservationData.heure}</p>
-                </div>
-                <p>Nous vous contacterons bientôt pour les derniers détails.</p>
-                <p>Pour toute question : voisinprochecontact@gmail.com</p>
-                <p style="color: #1D9E75;"><strong>L'équipe Voisin Proche</strong></p>
-              </div>`
-            })
-          });
-        }
-      }
+      .eq('id', reservationId);
+    
+    if (!error) {
       window.location.reload();
     } else {
       alert('Erreur lors de la confirmation');
     }
   };
 
-  // Función handleAnnuler - actualiza statut a 'annule'
   const handleAnnuler = async (reservationId: string) => {
     const { error } = await supabase
       .from('reservations')
       .update({ statut: 'annule' })
       .eq('id', reservationId);
+    
     if (!error) {
       window.location.reload();
     } else {
@@ -134,17 +137,12 @@ export default function AdminPage() {
     }
   };
 
-  // Función handleTerminer - actualiza statut a 'termine' y actualiza tabla fidelite
   const handleTerminer = async (reservationId: string, userId: string, serviceName: string) => {
-    console.log('Terminer - userId:', userId, 'service:', serviceName);
-    
-    // 1. Primero actualiza reservations
     const { error } = await supabase
       .from('reservations')
       .update({ statut: 'termine' })
       .eq('id', reservationId);
 
-    // 2. Si no hay error, actualiza fidelite
     if (!error) {
       const { data: existing } = await supabase
         .from('fidelite')
@@ -171,11 +169,10 @@ export default function AdminPage() {
     }
   };
 
-  // Función handleWhatsApp - abre WhatsApp con mensaje de confirmación
-  const handleWhatsApp = (booking: any) => {
-    const details = typeof booking.details === 'string' ? JSON.parse(booking.details) : booking.details;
+  const handleWhatsApp = (reservation: Reservation) => {
+    const details = typeof reservation.details === 'string' ? JSON.parse(reservation.details) : reservation.details;
     const phone = details?.phone?.replace(/[^0-9]/g, '');
-    const message = encodeURIComponent(`Bonjour ${details?.fullName}, votre réservation pour ${booking.service} le ${booking.date} à ${booking.heure} est confirmée ! À bientôt — Voisin Proche 🌿`);
+    const message = encodeURIComponent(`Bonjour ${details?.fullName}, votre réservation pour ${reservation.service} le ${reservation.date} à ${reservation.heure} est confirmée ! À bientôt — Voisin Proche 🌿`);
     window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
   };
 
@@ -207,7 +204,6 @@ export default function AdminPage() {
 
   const loadAdminData = async () => {
     try {
-      // Load today's reservations
       const today = new Date().toISOString().split('T')[0];
       const { data: reservations, error: reservationsError } = await supabase
         .from('reservations')
@@ -221,7 +217,7 @@ export default function AdminPage() {
       }
 
       const revenue = reservations?.reduce((sum: number, r: any) => {
-        return sum + (r.prix || 0);
+        return sum + (r.prix || getServicePrice(r.service));
       }, 0) || 0;
 
       setTodayStats({
@@ -231,23 +227,8 @@ export default function AdminPage() {
         unreadMessages: 0
       });
 
-      setTodayBookings(reservations?.map((r: any) => {
-        return {
-          id: r.id,
-          user_id: r.user_id,
-          service: r.service,
-          time: r.heure,
-          client: r.details?.fullName || 'Client',
-          phone: r.details?.phone || '',
-          details: r.details?.dogName ? `${r.details.dogName} - ${r.details.walkDuration || '30min'}` : 'Service personnalisé',
-          notes: r.notes || '',
-          status: r.statut === 'en_attente' ? 'En attente' : 
-                  r.statut === 'confirme' ? 'Confirmé' : 
-                  r.statut === 'annule' ? 'Annulé' : 'Terminé'
-        };
-      }) || []);
+      setTodayBookings(reservations || []);
 
-      // Load all reservations
       const { data: allReservations, error } = await supabase
         .from('reservations')
         .select('*')
@@ -258,44 +239,36 @@ export default function AdminPage() {
         return;
       }
 
-      setAllBookings(allReservations?.map((r: any) => {
-        return {
-          id: r.id,
-          user_id: r.user_id,
-          service: r.service,
-          time: r.heure,
-          date: r.date,
-          client: r.details?.fullName || 'Client',
-          phone: r.details?.phone || '',
-          details: r.details?.dogName ? `${r.details.dogName} - ${r.details.walkDuration || '30min'}` : 'Service personnalisé',
-          notes: r.notes || '',
-          status: r.statut === 'en_attente' ? 'En attente' : 
-                  r.statut === 'confirme' ? 'Confirmé' : 
-                  r.statut === 'annule' ? 'Annulé' : 'Terminé'
-        };
-      }) || []);
-
-      // Load recent messages
-      const { data: allMessages, error: allMessagesError } = await supabase
-        .from('messages')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(3);
-
-      if (allMessagesError) {
-        console.error('Error loading all messages:', allMessagesError);
-        return;
-      }
-
-      setRecentMessages(allMessages || []);
+      setAllBookings(allReservations || []);
     } catch (error) {
       console.error('Error loading admin data:', error);
     }
   };
 
+  const formatServiceDetails = (serviceName: string, details: ServiceDetails) => {
+    switch (serviceName) {
+      case "Promenade de chiens":
+        return `🐕 ${details.dogName || 'Non spécifié'} - ${details.dogBreed || 'Race non spécifiée'} (${details.walkDuration || '30min'})`;
+      case "Garde d'animaux":
+        return `🏠 Garde: ${details.dogName || 'Non spécifié'} - ${details.dogBreed || 'Race non spécifiée'}`;
+      case "Cours d'espagnol":
+        return `📚 Niveau: ${details.spanishLevel || 'Débutant'}`;
+      case "Ménage":
+        return `🧹 Type: ${details.cleaningType || 'Ménage général'} - Surface: ${details.houseSize || 'Non spécifiée'}`;
+      case "Bricolage":
+        return `🔧 Service: ${details.handymanService || 'Travaux divers'}`;
+      case "Jardinage":
+        return `🌱 Surface: ${details.gardenSize || 'Non spécifiée'}`;
+      case "Cours d'informatique":
+        return `💻 Problème: ${details.computerIssue || 'Support général'}`;
+      default:
+        return "Service personnalisé";
+    }
+  };
+
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#E8F5E9] to-[#1D9E75] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-[#FFFBF5] to-[#E8F5E9] flex items-center justify-center p-4">
         <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-[#085041] mb-2">Voisin Proche</h1>
@@ -336,7 +309,7 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#FFFBF5]">
       {/* Header */}
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -417,187 +390,123 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {/* Section 2 - Réservations du jour */}
-        <section>
+        {/* Section 1 - Réservations du jour */}
+        <section className="mb-8">
           <h2 className="text-xl font-bold text-[#085041] mb-4">Réservations du jour</h2>
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-50 border-b border-slate-200">
+                <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Heure</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Client</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Service</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Détails</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Message</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Statut</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date / Heure</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200">
+                <tbody className="divide-y divide-gray-200">
                   {todayBookings.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="px-6 py-12 text-center text-slate-500">
+                      <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
                         Aucune réservation aujourd'hui
                       </td>
                     </tr>
                   ) : (
-                    todayBookings.map((booking) => (
-                      <tr key={booking.id} className="hover:bg-slate-50 transition-colors">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">{booking.time}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{booking.client}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{booking.service}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{booking.details}</td>
-                        <td className="px-6 py-4 text-sm text-slate-600 max-w-xs truncate" title={booking.notes}>
-                          {booking.notes || '-'}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(booking.status)}`}>
-                            {booking.status}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm">
-                          <div className="flex gap-2">
-                            {booking.status === "En attente" && (
-                              <>
-                                <button 
-                                  onClick={() => handleConfirmer(booking.id)}
-                                  className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
-                                >
-                                  Confirmer
-                                </button>
-                                <button 
-                                  onClick={() => handleAnnuler(booking.id)}
-                                  className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
-                                >
-                                  Annuler
-                                </button>
-                              </>
-                            )}
-                            {booking.status === "Confirmé" && (
+                    todayBookings.map((booking) => {
+                      const details = typeof booking.details === 'string' ? JSON.parse(booking.details) : booking.details;
+                      return (
+                        <tr 
+                          key={booking.id} 
+                          className="hover:bg-gray-50 transition-colors cursor-pointer"
+                          onClick={() => openDetailsModal(booking)}
+                        >
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            <div>
+                              <div className="font-medium text-gray-900">{booking.date}</div>
+                              <div className="text-gray-600">{booking.heure}</div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            <div className="flex items-center">
+                              <span className="mr-2">{getServiceIcon(booking.service)}</span>
+                              <span className="text-gray-900">{booking.service}</span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {details?.fullName || 'Non spécifié'}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {details?.email || 'Non spécifié'}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(booking.statut === 'en_attente' ? 'En attente' : booking.statut === 'confirme' ? 'Confirmé' : booking.statut === 'annule' ? 'Annulé' : 'Terminé')}`}>
+                              {booking.statut === 'en_attente' ? 'En attente' : booking.statut === 'confirme' ? 'Confirmé' : booking.statut === 'annule' ? 'Annulé' : 'Terminé'}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            <div className="flex gap-2">
                               <button 
-                                onClick={() => handleTerminer(booking.id, booking.user_id, booking.service)}
-                                className="bg-green-700 hover:bg-green-800 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  openDetailsModal(booking);
+                                }}
+                                className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
                               >
-                                Terminer
+                                Voir détails
                               </button>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        {/* Section 3 - Toutes les réservations */}
-        <section className="mt-8">
-          <h2 className="text-xl font-bold text-[#085041] mb-4">
-            Toutes les réservations ({allBookings.length} au total)
-          </h2>
-          
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead>
-                  <tr className="border-b border-slate-200">
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Heure</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Date</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Client</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Service</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Détails</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Message</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Statut</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-200">
-                  {allBookings.length === 0 ? (
-                    <tr>
-                      <td colSpan={8} className="px-6 py-12 text-center text-slate-500">
-                        Aucune réservation pour le moment
-                      </td>
-                    </tr>
-                  ) : (
-                    allBookings.map((booking) => (
-                      <tr key={booking.id} className="hover:bg-slate-50 transition-colors">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">{booking.time}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{booking.date}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{booking.client}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{booking.service}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{booking.details}</td>
-                        <td className="px-6 py-4 text-sm text-slate-600 max-w-xs truncate" title={booking.notes}>
-                          {booking.notes || '-'}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(booking.status)}`}>
-                            {booking.status}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm">
-                          <div className="flex gap-2">
-                            {booking.status === "En attente" && (
-                              <>
+                              {booking.statut === 'en_attente' && (
+                                <>
+                                  <button 
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleConfirmer(booking.id);
+                                    }}
+                                    className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
+                                  >
+                                    Confirmer
+                                  </button>
+                                  <button 
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleAnnuler(booking.id);
+                                    }}
+                                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
+                                  >
+                                    Annuler
+                                  </button>
+                                </>
+                              )}
+                              {booking.statut === 'confirme' && (
                                 <button 
-                                  onClick={() => handleConfirmer(booking.id)}
-                                  className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
-                                >
-                                  Confirmer
-                                </button>
-                                <button 
-                                  onClick={() => handleAnnuler(booking.id)}
-                                  className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
-                                >
-                                  Annuler
-                                </button>
-                                <button 
-                                  onClick={() => handleWhatsApp(booking)}
-                                  className="bg-green-500 hover:bg-green-600 text-white p-1 rounded"
-                                >
-                                  <svg viewBox="0 0 24 24" fill="white" width="16" height="16">
-                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-                                    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.523 5.855L.057 23.273a.75.75 0 00.92.92l5.418-1.466A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.667-.523-5.188-1.433l-.372-.22-3.862 1.046 1.046-3.862-.22-.372A9.944 9.44 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
-                                  </svg>
-                                </button>
-                              </>
-                            )}
-                            {booking.status === "Confirmé" && (
-                              <>
-                                <button 
-                                  onClick={() => handleTerminer(booking.id, booking.user_id, booking.service)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleTerminer(booking.id, booking.user_id, booking.service);
+                                  }}
                                   className="bg-green-700 hover:bg-green-800 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
                                 >
                                   Terminer
                                 </button>
-                                <button 
-                                  onClick={() => handleWhatsApp(booking)}
-                                  className="bg-green-500 hover:bg-green-600 text-white p-1 rounded"
-                                >
-                                  <svg viewBox="0 0 24 24" fill="white" width="16" height="16">
-                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-                                    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.523 5.855L.057 23.273a.75.75 0 00.92.92l5.418-1.466A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.667-.523-5.188-1.433l-.372-.22-3.862 1.046 1.046-3.862-.22-.372A9.944 9.44 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
-                                  </svg>
-                                </button>
-                              </>
-                            )}
-                            {booking.status === "Terminé" && (
+                              )}
                               <button 
-                                onClick={() => handleWhatsApp(booking)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleWhatsApp(booking);
+                                }}
                                 className="bg-green-500 hover:bg-green-600 text-white p-1 rounded"
+                                style={{ backgroundColor: '#25D366' }}
                               >
                                 <svg viewBox="0 0 24 24" fill="white" width="16" height="16">
                                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
                                   <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.523 5.855L.057 23.273a.75.75 0 00.92.92l5.418-1.466A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.667-.523-5.188-1.433l-.372-.22-3.862 1.046 1.046-3.862-.22-.372A9.944 9.44 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
                                 </svg>
                               </button>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    ))
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
                   )}
                 </tbody>
               </table>
@@ -605,33 +514,272 @@ export default function AdminPage() {
           </div>
         </section>
 
-        {/* Section 4 - Messages récents */}
-        <section className="mt-8">
-          <h2 className="text-xl font-bold text-[#085041] mb-4">Messages récents</h2>
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-            {recentMessages.length === 0 ? (
-              <p className="text-center text-gray-500 py-8">Aucun message récent</p>
-            ) : (
-              <div className="space-y-4">
-                {recentMessages.map((message) => (
-                  <div key={message.id} className="border-b border-gray-200 pb-4 last:border-0">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <p className="font-medium text-gray-900">{message.name}</p>
-                        <p className="text-sm text-gray-600">{message.email}</p>
-                        <p className="text-gray-700 mt-1">{message.message}</p>
-                      </div>
-                      <span className="text-xs text-gray-500">
-                        {new Date(message.created_at).toLocaleDateString('fr-FR')}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+        {/* Section 2 - Toutes les réservations */}
+        <section>
+          <h2 className="text-xl font-bold text-[#085041] mb-4">Toutes les réservations ({allBookings.length} au total)</h2>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date / Heure</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {allBookings.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                        Aucune réservation pour le moment
+                      </td>
+                    </tr>
+                  ) : (
+                    allBookings.map((booking) => {
+                      const details = typeof booking.details === 'string' ? JSON.parse(booking.details) : booking.details;
+                      return (
+                        <tr 
+                          key={booking.id} 
+                          className="hover:bg-gray-50 transition-colors cursor-pointer"
+                          onClick={() => openDetailsModal(booking)}
+                        >
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            <div>
+                              <div className="font-medium text-gray-900">{booking.date}</div>
+                              <div className="text-gray-600">{booking.heure}</div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            <div className="flex items-center">
+                              <span className="mr-2">{getServiceIcon(booking.service)}</span>
+                              <span className="text-gray-900">{booking.service}</span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {details?.fullName || 'Non spécifié'}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {details?.email || 'Non spécifié'}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(booking.statut === 'en_attente' ? 'En attente' : booking.statut === 'confirme' ? 'Confirmé' : booking.statut === 'annule' ? 'Annulé' : 'Terminé')}`}>
+                              {booking.statut === 'en_attente' ? 'En attente' : booking.statut === 'confirme' ? 'Confirmé' : booking.statut === 'annule' ? 'Annulé' : 'Terminé'}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            <div className="flex gap-2">
+                              <button 
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  openDetailsModal(booking);
+                                }}
+                                className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
+                              >
+                                Voir détails
+                              </button>
+                              {booking.statut === 'en_attente' && (
+                                <>
+                                  <button 
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleConfirmer(booking.id);
+                                    }}
+                                    className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
+                                  >
+                                    Confirmer
+                                  </button>
+                                  <button 
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleAnnuler(booking.id);
+                                    }}
+                                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
+                                  >
+                                    Annuler
+                                  </button>
+                                </>
+                              )}
+                              {booking.statut === 'confirme' && (
+                                <button 
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleTerminer(booking.id, booking.user_id, booking.service);
+                                  }}
+                                  className="bg-green-700 hover:bg-green-800 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
+                                >
+                                  Terminer
+                                </button>
+                              )}
+                              <button 
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleWhatsApp(booking);
+                                }}
+                                className="bg-green-500 hover:bg-green-600 text-white p-1 rounded"
+                                style={{ backgroundColor: '#25D366' }}
+                              >
+                                <svg viewBox="0 0 24 24" fill="white" width="16" height="16">
+                                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                                  <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.523 5.855L.057 23.273a.75.75 0 00.92.92l5.418-1.466A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.667-.523-5.188-1.433l-.372-.22-3.862 1.046 1.046-3.862-.22-.372A9.944 9.44 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+                                </svg>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </section>
       </main>
+
+      {/* Modal Détails */}
+      {showDetailsModal && selectedReservation && (
+        <>
+          {/* Fondo oscuro semitransparente */}
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 z-40"
+            onClick={closeDetailsModal}
+          ></div>
+          
+          {/* Panel deslizante desde la derecha */}
+          <div className="fixed right-0 top-0 h-full w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out">
+            <div className="h-full flex flex-col">
+              {/* Header del modal */}
+              <div className="bg-[#085041] text-white p-6 flex justify-between items-center">
+                <div>
+                  <h3 className="text-lg font-semibold flex items-center">
+                    <span className="mr-2">{getServiceIcon(selectedReservation.service)}</span>
+                    {selectedReservation.service}
+                  </h3>
+                  <p className="text-sm opacity-90 mt-1">
+                    {selectedReservation.date} à {selectedReservation.heure}
+                  </p>
+                </div>
+                <button
+                  onClick={closeDetailsModal}
+                  className="text-white hover:bg-white hover:bg-opacity-20 rounded-lg p-2 transition-colors"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Contenido del modal */}
+              <div className="flex-1 overflow-y-auto p-6">
+                {(() => {
+                  const details = typeof selectedReservation.details === 'string' ? JSON.parse(selectedReservation.details) : selectedReservation.details;
+                  return (
+                    <div className="space-y-6">
+                      {/* Información básica */}
+                      <div className="bg-gray-50 rounded-lg p-4">
+                        <h4 className="font-semibold text-gray-900 mb-3">Informations du client</h4>
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Nom complet:</span>
+                            <span className="text-sm font-medium text-gray-900">{details?.fullName || 'Non spécifié'}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Email:</span>
+                            <span className="text-sm font-medium text-gray-900">{details?.email || 'Non spécifié'}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Téléphone:</span>
+                            <span className="text-sm font-medium text-gray-900">{details?.phone || 'Non spécifié'}</span>
+                          </div>
+                          <div>
+                            <span className="text-sm text-gray-600">Adresse:</span>
+                            <p className="text-sm font-medium text-gray-900 mt-1">{details?.address || 'Non spécifiée'}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Detalles específicos del servicio */}
+                      <div className="bg-blue-50 rounded-lg p-4">
+                        <h4 className="font-semibold text-gray-900 mb-3">Détails du service</h4>
+                        <div className="space-y-2">
+                          <div className="text-sm text-gray-700">
+                            {formatServiceDetails(selectedReservation.service, details)}
+                          </div>
+                          <div className="flex justify-between mt-3">
+                            <span className="text-sm text-gray-600">Prix estimé:</span>
+                            <span className="text-sm font-semibold text-gray-900">{getServicePrice(selectedReservation.service)}€</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Notas adicionales */}
+                      {selectedReservation.notes && (
+                        <div className="bg-yellow-50 rounded-lg p-4">
+                          <h4 className="font-semibold text-gray-900 mb-2">Notes additionnelles</h4>
+                          <p className="text-sm text-gray-700">{selectedReservation.notes}</p>
+                        </div>
+                      )}
+
+                      {/* Botones de acción */}
+                      <div className="flex gap-3 pt-4 border-t border-gray-200">
+                        {selectedReservation.statut === 'en_attente' && (
+                          <>
+                            <button
+                              onClick={() => {
+                                handleConfirmer(selectedReservation.id);
+                                closeDetailsModal();
+                              }}
+                              className="flex-1 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                            >
+                              Confirmer
+                            </button>
+                            <button
+                              onClick={() => {
+                                handleAnnuler(selectedReservation.id);
+                                closeDetailsModal();
+                              }}
+                              className="flex-1 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                            >
+                              Annuler
+                            </button>
+                          </>
+                        )}
+                        {selectedReservation.statut === 'confirme' && (
+                          <button
+                            onClick={() => {
+                              handleTerminer(selectedReservation.id, selectedReservation.user_id, selectedReservation.service);
+                                closeDetailsModal();
+                              }}
+                              className="flex-1 bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                            >
+                              Terminer
+                            </button>
+                        )}
+                        <button
+                          onClick={() => handleWhatsApp(selectedReservation)}
+                          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                          style={{ backgroundColor: '#25D366' }}
+                        >
+                          <div className="flex items-center justify-center">
+                            <svg viewBox="0 0 24 24" fill="white" width="16" height="16" className="mr-2">
+                              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                              <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.523 5.855L.057 23.273a.75.75 0 00.92.92l5.418-1.466A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.667-.523-5.188-1.433l-.372-.22-3.862 1.046 1.046-3.862-.22-.372A9.944 9.44 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+                            </svg>
+                            WhatsApp
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
