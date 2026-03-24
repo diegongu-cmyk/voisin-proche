@@ -18,7 +18,7 @@ const services = [
     titre: "Promenade de chiens",
     prix: "Depuis 8€",
     description: "Balades adaptées à votre compagnon.\nSuivi GPS en temps réel et photos incluses.",
-    image: "https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?w=400",
+    image: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=400",
   },
   {
     emoji: "🐾",
@@ -32,7 +32,7 @@ const services = [
     titre: "Accompagnement",
     prix: "12€/h",
     description: "Aide pour sorties et rendez-vous.\nPrésence rassurante et bienveillante.",
-    image: "https://images.unsplash.com/photo-1516307365426-bea591f05011?w=400",
+    image: "https://images.unsplash.com/photo-1569398034126-476e3a9e3808?w=400",
   },
   {
     emoji: "🛒",
@@ -61,7 +61,7 @@ const sliderServices = [
   {
     titre: "Promenade de chiens",
     prix: "depuis 8€",
-    image: "https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?w=600",
+    image: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=600",
   },
   {
     titre: "Garde d'animaux",
@@ -71,7 +71,7 @@ const sliderServices = [
   {
     titre: "Accompagnement",
     prix: "12€/heure",
-    image: "https://images.unsplash.com/photo-1516307365426-bea591f05011?w=600",
+    image: "https://images.unsplash.com/photo-1569398034126-476e3a9e3808?w=600",
   },
   {
     titre: "Courses et commissions",

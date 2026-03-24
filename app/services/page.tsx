@@ -19,7 +19,7 @@ const services = [
       "Balades adaptées au rythme de votre chien.\nSuivi GPS en temps réel pendant chaque sortie.\nPhotos incluses pour chaque promenade.",
     details: ["30min 8€", "45min 11€", "1h 14€", "GPS inclus", "Photos incluses"],
     image:
-      "https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?w=600",
+      "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=600",
   },
   {
     emoji: "🐾",
@@ -39,7 +39,7 @@ const services = [
       "Un accompagnement humain pour le quotidien.\nPrésence rassurante lors de déplacements.\nService flexible selon vos besoins.",
     details: ["Rendez-vous médicaux", "Promenades", "Compagnie", "Minimum 1h"],
     image:
-      "https://images.unsplash.com/photo-1516307365426-bea591f05011?w=600",
+      "https://images.unsplash.com/photo-1569398034126-476e3a9e3808?w=600",
   },
   {
     emoji: "🛒",
