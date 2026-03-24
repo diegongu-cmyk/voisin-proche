@@ -19,38 +19,38 @@ export default function ProfilPage() {
   useEffect(() => {
     // Check authentication and load user data
     const checkSession = async () => {
-      const { data: { session }, error } = await supabase.auth.getSession();
+      const { data: { user } } = await supabase.auth.getUser();
       
-      if (!session || error) {
+      if (!user) {
         window.location.href = '/login';
         return;
       }
       
-      setUser(session.user);
+      setUser(user);
       
       // Load user profile data from Supabase
-      const { data: profileData, error: profileError } = await supabase
+      const { data: profile } = await supabase
         .from('profiles')
         .select('*')
-        .eq('id', session.user.id)
+        .eq('id', user.id)
         .single();
-
-      if (!profileError && profileData) {
+      
+      if (profile) {
         setProfile({
-          firstName: profileData.first_name || "",
-          lastName: profileData.last_name || "",
-          email: session.user?.email || "",
-          phone: profileData.phone || "",
-          address: profileData.address || ""
+          firstName: profile.prenom || "",
+          lastName: profile.nom || "",
+          email: user.email || "",
+          phone: profile.telephone || "",
+          address: profile.adresse || ""
         });
       } else {
         // If no profile exists, use user metadata
         setProfile({
-          firstName: session.user?.user_metadata?.first_name || "",
-          lastName: session.user?.user_metadata?.last_name || "",
-          email: session.user?.email || "",
-          phone: session.user?.user_metadata?.phone || "",
-          address: session.user?.user_metadata?.address || ""
+          firstName: user?.user_metadata?.first_name || "",
+          lastName: user?.user_metadata?.last_name || "",
+          email: user?.email || "",
+          phone: user?.user_metadata?.phone || "",
+          address: user?.user_metadata?.address || ""
         });
       }
 
@@ -69,17 +69,25 @@ export default function ProfilPage() {
 
       if (user) {
         const fullName = `${profile.firstName} ${profile.lastName}`;
+        const prenom = fullName.split(' ')[0];
+        const nom = fullName.split(' ').slice(1).join(' ');
+        const telephone = profile.phone;
+        const adresse = profile.address;
+        
+        console.log('Guardando perfil:', { id: user.id, prenom, nom, telephone, adresse });
         
         const { error } = await supabase
           .from('profiles')
           .upsert({
             id: user.id,
             email: user.email,
-            prenom: fullName.split(' ')[0],
-            nom: fullName.split(' ').slice(1).join(' '),
-            telephone: profile.phone,
-            adresse: profile.address,
+            prenom: prenom,
+            nom: nom,
+            telephone: telephone,
+            adresse: adresse,
           });
+
+        console.log('Error al guardar:', error);
 
         if (!error) {
           alert('Profil mis à jour ✅');
