@@ -17,17 +17,14 @@ export default function RegisterPage() {
   const router = useRouter();
 
   const handleGoogleLogin = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: 'https://voisin-proche.vercel.app/mon-compte'
-      }
-    });
-    
-    if (error) {
-      setError(error.message);
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: 'https://voisin-proche.vercel.app/mon-compte'
     }
-  };
+  })
+  if (error) alert('Erreur: ' + error.message)
+}
 
   const handleFacebookLogin = () => {
     // Facebook OAuth will be implemented later
