@@ -147,10 +147,10 @@ export default function HomePage() {
                   style={{ transform: `translateX(-${currentSlide * 100}%)` }}
                 >
                   {sliderServices.map((service, index) => (
-                    <div key={index} className="w-full flex-shrink-0">
+                                <div key={index} className="w-full flex-shrink-0">
                       <div className="relative">
                         <img
-                          src={service.image}
+              src={service.image}
                           alt={service.titre}
                           className="h-64 w-full object-cover md:h-80"
                           loading="lazy"
@@ -259,7 +259,6 @@ export default function HomePage() {
 
       <section id="services" className="space-y-6">
         <div>
-          <h2 className="text-3xl font-extrabold text-slate-900">Nos services</h2>
           <p className="mt-2 text-slate-600">
             Une offre claire, locale et adaptée à vos besoins du quotidien.
           </p>
@@ -271,13 +270,17 @@ export default function HomePage() {
               key={service.titre}
               className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
             >
-              <img
-                src={service.image}
-                alt={service.titre}
-                className="h-44 w-full object-cover"
-                loading="lazy"
-              />
-              <div className="space-y-3 p-5">
+<div className="relative">
+  <img
+    src={service.image}
+    alt={service.titre}
+    className="h-44 w-full object-cover"
+    loading="lazy"
+  />
+  <span className="absolute right-3 top-3 rounded-full bg-[#1D9E75] px-3 py-1 text-xs font-bold text-white">
+    {service.prix}
+  </span>
+</div>              <div className="space-y-3 p-5">
                 <p className="text-2xl">{service.emoji}</p>
                 <h3 className="text-lg font-extrabold text-slate-900">{service.titre}</h3>
                 <p className="text-xl font-extrabold text-[#1D9E75]">{service.prix}</p>
@@ -291,7 +294,8 @@ export default function HomePage() {
                   Réserver
                 </Link>
               </div>
-            </article>
+                  <h2 className="text-3xl font-extrabold text-slate-900">Nos services</h2>
+    </article>
           ))}
         </div>
       </section>
