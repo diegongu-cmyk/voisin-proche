@@ -56,21 +56,21 @@ export default function MonComptePage() {
   console.log('Datos fidelite:', fidelityData)
   console.log('Fidelite data completo:', JSON.stringify(fidelityData))
   
-  // Create service progress for all 6 services
-  const serviceProgress = allServices.map(service => {
-    const fidelityItem = fidelityData?.find(item => item.service === service.name);
-    const count = fidelityItem ? fidelityItem.count : 0;
-    
-    return {
-      name: service.name,
-      service: service.name,
-      emoji: service.emoji,
-      completed: count,
-      count: count,
-      total: 7,
-      hasDiscount: count >= 7
-    };
-  });
+  // Base services list
+  const serviciosBase = [
+    { name: 'Promenade de chiens', emoji: '🐕' },
+    { name: 'Garde d\'animaux', emoji: '🏠' },
+    { name: 'Accompagnement de personnes', emoji: '🤝' },
+    { name: 'Courses et commissions', emoji: '🛒' },
+    { name: 'Ménage maison/bureau', emoji: '🧹' },
+    { name: 'Cours d\'espagnol', emoji: '📚' },
+  ]
+
+  // Combine base services with fidelity data
+  const serviciosConProgreso = serviciosBase.map(s => {
+    const found = fidelityData?.find(f => f.service === s.name)
+    return { ...s, count: found?.count || 0 }
+  })
 
   useEffect(() => {
     // Check authentication and load user data
@@ -295,117 +295,50 @@ export default function MonComptePage() {
             <h2 className="text-2xl font-bold text-[#085041]">Ma carte de fidélité</h2>
           </div>
 
-          {(fidelityData === null || fidelityData.length === 0 || fidelityData.every(item => item.count === 0 || item.completed === 0)) ? (
-            // Show all 7 services at 0/7 for new users
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {serviceProgress.map((service, index) => (
-                <div
-                  key={index}
-                  className="rounded-2xl border-2 border-slate-200 bg-white p-5 transition-all"
-                >
-                  {/* Service Header */}
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="text-2xl">{service.emoji}</span>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-[#085041] text-lg">{service.name}</h3>
-                    </div>
-                  </div>
-
-                  {/* Progress Circles */}
-                  <div className="flex justify-center gap-2 mb-4">
-                    {Array.from({ length: service.total }, (_, i) => (
-                      <div
-                        key={i}
-                        className={`h-8 w-8 rounded-full flex items-center justify-center transition-all ${
-                          i < (service.count || 0)
-                            ? "bg-[#1D9E75] shadow-md"
-                            : "bg-gray-200"
-                        }`}
-                      >
-                        {i < (service.count || 0) ? (
-                          <span className="text-xs font-bold text-white">{i + 1}</span>
-                        ) : (
-                          <span className="text-xs font-medium text-gray-400">{i + 1}</span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Progress Text */}
-                  <div className="text-center">
-                    <p className="text-sm text-slate-600">
-                      <span className="font-semibold">{service.count || 0} services</span> · Plus que {Math.max(0, 7 - (service.count || 0))} pour votre réduction -20%
-                    </p>
+          {/* Show all 6 services with progress */}
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {serviciosConProgreso.map((service, index) => (
+              <div
+                key={index}
+                className="rounded-2xl border-2 border-slate-200 bg-white p-5 transition-all"
+              >
+                {/* Service Header */}
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-2xl">{service.emoji}</span>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-[#085041] text-lg">{service.name}</h3>
                   </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            // Show only used services
-            <div className="grid gap-4 md:grid-cols-2">
-              {serviceProgress.map((service, index) => (
-                <div
-                  key={index}
-                  className={`rounded-2xl border-2 p-5 transition-all ${
-                    service.hasDiscount 
-                      ? 'border-[#F59E0B] bg-[#FFFBF5] shadow-lg' 
-                      : 'border-slate-200 bg-white'
-                  }`}
-                >
-                  {/* Service Header */}
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="text-2xl">{service.emoji}</span>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-[#085041] text-lg">{service.name}</h3>
-                      {service.hasDiscount && (
-                        <span className="inline-flex animate-pulse rounded-full bg-yellow-400 px-2 py-1 text-xs font-bold text-yellow-900">
-                          −20% disponible !
-                        </span>
+
+                {/* Progress Circles */}
+                <div className="flex justify-center gap-2 mb-4">
+                  {Array.from({ length: 7 }, (_, i) => (
+                    <div
+                      key={i}
+                      className={`h-8 w-8 rounded-full flex items-center justify-center transition-all ${
+                        i < (service.count || 0)
+                          ? "bg-[#1D9E75] shadow-md"
+                          : "bg-gray-200"
+                      }`}
+                    >
+                      {i < (service.count || 0) ? (
+                        <span className="text-xs font-bold text-white">{i + 1}</span>
+                      ) : (
+                        <span className="text-xs font-medium text-gray-400">{i + 1}</span>
                       )}
                     </div>
-                  </div>
-
-                  {/* Service Title */}
-                  <h3 style={{fontSize: '15px', fontWeight: '600', color: '#085041', marginBottom: '12px'}}>
-                    {service.service}
-                  </h3>
-
-                  {/* Progress Circles */}
-                  <div className="flex justify-center gap-2 mb-4">
-                    {Array.from({ length: service.total }, (_, i) => (
-                      <div
-                        key={i}
-                        className={`h-8 w-8 rounded-full flex items-center justify-center transition-all ${
-                          i < (service.count || 0)
-                            ? "bg-[#1D9E75] shadow-md"
-                            : "bg-gray-200"
-                        }`}
-                      >
-                        {i < (service.count || 0) ? (
-                          <span className="text-xs font-bold text-white">{i + 1}</span>
-                        ) : (
-                          <span className="text-xs font-medium text-gray-400">{i + 1}</span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Progress Text */}
-                  <div className="text-center">
-                    {service.hasDiscount ? (
-                      <p className="font-bold text-[#085041] animate-pulse">
-                        Votre 8ème {service.name.toLowerCase()} sera à -20% ! 🎁
-                      </p>
-                    ) : (
-                      <p className="text-sm text-slate-600">
-                        <span className="font-semibold">{service.count || 0} services</span> · Plus que {Math.max(0, 7 - (service.count || 0))} pour votre réduction -20%
-                      </p>
-                    )}
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
+
+                {/* Progress Text */}
+                <div className="text-center">
+                  <p className="text-sm text-slate-600">
+                    <span className="font-semibold">{service.count || 0} services</span> · Plus que {Math.max(0, 7 - (service.count || 0))} pour votre réduction -20%
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* SECTION 2 - Historique de mes services */}
