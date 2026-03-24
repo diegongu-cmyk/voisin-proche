@@ -109,10 +109,15 @@ export default function MonComptePage() {
       }
 
       // Load fidelity data
+      const { data: { user } } = await supabase.auth.getUser();
+      console.log('User ID:', user?.id);
+
       const { data: fidelity, error: fidelityError } = await supabase
         .from('fidelite')
         .select('*')
-        .eq('user_id', session.user.id);
+        .eq('user_id', user?.id);
+
+      console.log('Fidelite data:', fidelity);
 
       if (!fidelityError && fidelity && fidelity.length > 0) {
         setFidelityData(fidelity);
