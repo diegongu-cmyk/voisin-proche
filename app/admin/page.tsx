@@ -320,14 +320,11 @@ const handleTerminer = async (reservationId: string, userId: string, serviceName
     }
   };
 
-    if (!phone) return '#';
-    
-    // Formatear el número (eliminar espacios, +, etc.)
-    const formattedPhone = phone.replace(/[^0-9]/g, '');
-    
-    // Mensaje predefinido
-    const message = `Bonjour ${clientName}, c'est Voisin Proche concernant votre réservation pour le service "${service}". Comment pouvons-nous vous aider ?`;
-    
+  const getWhatsAppUrl = (booking: any) => {
+    const details = typeof booking.details === 'string' ? JSON.parse(booking.details) : booking.details;
+    const clientName = details?.fullName || 'client';
+    const formattedPhone = details?.phone?.replace(/[^0-9]/g, '');
+    const message = `Bonjour ${clientName}, votre réservation pour ${booking.service} le ${booking.date} à ${booking.heure} est confirmée ! À bientôt — Voisin Proche`;
     return `https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`;
   };
 
