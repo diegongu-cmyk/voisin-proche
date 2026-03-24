@@ -46,10 +46,15 @@ export default function LoginPage() {
   if (error) alert('Erreur: ' + error.message)
 }
 
-  const handleFacebookLogin = () => {
-    // Facebook OAuth will be implemented later
-    console.log("Facebook login");
-  };
+  const handleFacebookLogin = async () => {
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: 'facebook',
+    options: {
+      redirectTo: 'https://voisin-proche.vercel.app/mon-compte'
+    }
+  })
+  if (error) alert('Erreur: ' + error.message)
+}
 
   return (
     <div className="min-h-screen bg-[#FFFBF5] flex items-center justify-center px-4 py-8">
