@@ -263,14 +263,16 @@ export default function MonComptePage() {
             <div className="mt-2 inline-flex rounded-full bg-[#1D9E75]/20 px-3 py-1 text-sm font-semibold text-white">
               Membre Voisin Proche
             </div>
-            {/* Make name clickable to go to profile page */}
-            <Link
-              href="/profil"
-              className="ml-2 text-white/80 hover:text-white transition-colors"
-              title="Modifier mon profil"
-            >
-              <span className="text-lg">✏️</span>
-            </Link>
+            
+            {/* Edit Profile Button */}
+            <div className="mt-4">
+              <Link
+                href="/profil"
+                className="inline-flex items-center justify-center rounded-lg border-2 border-[#1D9E75] bg-white px-6 py-3 text-sm font-semibold text-[#1D9E75] transition-all hover:bg-[#1D9E75] hover:text-white min-w-[200px]"
+              >
+                ✏️ Modifier mon profil
+              </Link>
+            </div>
           </div>
         </div>
       </header>
