@@ -130,6 +130,7 @@ export default function AdminPage() {
     alert('Erreur: ' + error.message)
   }
 }
+  
 
     const { data: reservation } = await supabase
       .from('reservations')
@@ -140,12 +141,6 @@ export default function AdminPage() {
     const details = typeof reservation?.details === 'string'
       ? JSON.parse(reservation.details)
       : reservation?.details
-  
-    const phone = details?.phone?.replace(/[^0-9]/g, '')
-    const message = encodeURIComponent(`Bonjour ${details?.fullName}, votre réservation pour ${reservation?.service} le ${reservation?.date} à ${reservation?.heure} est confirmée ! À bientôt — Voisin Proche 🌿`)
-  
-    window.open(`https://wa.me/${phone}?text=${message}`, '_blank')
-  }
 
   const handleWhatsApp = (booking: any) => {
     const details = typeof booking.details === 'string' ? JSON.parse(booking.details) : booking.details;
