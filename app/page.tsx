@@ -88,11 +88,6 @@ const sliderServices = [
     prix: "Depuis 15€/heure",
     image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600",
   },
-  {
-    titre: "Autres services",
-    prix: "nous contacter",
-    image: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=600",
-  },
 ];
 
 export default function HomePage() {
@@ -220,7 +215,7 @@ export default function HomePage() {
             </svg>
             <h3 className="mt-4 text-lg font-semibold text-[#085041]">Proximité</h3>
             <p className="mt-2 text-sm text-slate-500">
-              Toujours près de vous, où que vous soyez en Vendée
+              Toujours près de vous, où que vous soyez en Fontenay Le Compte.
             </p>
           </article>
 
