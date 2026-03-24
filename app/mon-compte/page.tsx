@@ -20,6 +20,14 @@ export default function MonComptePage() {
   const [userReservations, setUserReservations] = useState<any[]>([]);
   const [fidelityData, setFidelityData] = useState<any[]>([]);
   const [historiqueData, setHistoriqueData] = useState<any[]>([]);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editForm, setEditForm] = useState({
+    firstName: "",
+    lastName: "",
+    phone: "",
+    address: ""
+  });
+  const [successMessage, setSuccessMessage] = useState("");
 
   const getServiceEmoji = (serviceName: string) => {
     const emojiMap: { [key: string]: string } = {
@@ -80,6 +88,14 @@ export default function MonComptePage() {
         firstName: session.user?.user_metadata?.first_name || "",
         lastName: session.user?.user_metadata?.last_name || ""
       }));
+      
+      // Initialize edit form with current user data
+      setEditForm({
+        firstName: session.user?.user_metadata?.first_name || "",
+        lastName: session.user?.user_metadata?.last_name || "",
+        phone: session.user?.user_metadata?.phone || "",
+        address: session.user?.user_metadata?.address || ""
+      });
 
       // Load user's reservations
       const { data: reservations, error: reservationsError } = await supabase
@@ -146,18 +162,39 @@ export default function MonComptePage() {
     return () => subscription.unsubscribe();
   }, []);
 
-  const handleSaveProfile = () => {
+  const handleSaveProfile = async () => {
     setIsEditing(false);
     // Update user data in Supabase
-    supabase.auth.updateUser({
+    const { error } = await supabase.auth.updateUser({
       data: {
         user_metadata: {
-          first_name: profile.firstName,
-          last_name: profile.lastName
+          first_name: editForm.firstName,
+          last_name: editForm.lastName,
+          phone: editForm.phone,
+          address: editForm.address
         }
       }
     });
-    console.log("Profile saved:", profile);
+
+    if (!error) {
+      // Update local profile state
+      setProfile(prev => ({
+        ...prev,
+        firstName: editForm.firstName,
+        lastName: editForm.lastName,
+        phone: editForm.phone,
+        address: editForm.address
+      }));
+      
+      // Close modal and show success message
+      setShowEditModal(false);
+      setSuccessMessage("Profil mis à jour ✅");
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccessMessage(""), 3000);
+    }
+    
+    console.log("Profile saved:", editForm);
   };
 
   const handleLogout = async () => {
@@ -226,21 +263,17 @@ export default function MonComptePage() {
             <div className="mt-2 inline-flex rounded-full bg-[#1D9E75]/20 px-3 py-1 text-sm font-semibold text-white">
               Membre Voisin Proche
             </div>
+            {/* Make name clickable to open edit modal */}
+            <button
+              onClick={() => setShowEditModal(true)}
+              className="ml-2 text-white/80 hover:text-white transition-colors"
+              title="Modifier mon profil"
+            >
+              <span className="text-lg">✏️</span>
+            </button>
           </div>
         </div>
       </header>
-
-      <div className="mx-auto max-w-6xl px-4 py-8 md:px-8 space-y-8">
-        {/* SECTION 1 - Ma carte de fidélité par service */}
-        <section>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F59E0B]">
-              <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-              </svg>
-            </div>
-            <h2 className="text-2xl font-bold text-[#085041]">Ma carte de fidélité</h2>
-          </div>
 
           {(fidelityData.length === 0 || fidelityData.every(item => item.count === 0 || item.completed === 0)) ? (
             // Show all 7 services at 0/7 for new users
