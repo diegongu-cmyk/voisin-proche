@@ -34,21 +34,20 @@ export default function MonComptePage() {
     return emojiMap[serviceName] || "⭐";
   };
 
-  // Define all 7 services that should always be shown
+  // Define all 6 main services that should be shown
   const allServices = [
     { name: "Promenade de chiens", emoji: "🐕" },
     { name: "Garde d'animaux", emoji: "🏠" },
     { name: "Accompagnement de personnes", emoji: "🤝" },
     { name: "Courses et commissions", emoji: "🛒" },
     { name: "Ménage maison/bureau", emoji: "🧹" },
-    { name: "Cours d'espagnol", emoji: "📚" },
-    { name: "Autres services", emoji: "⭐" }
+    { name: "Cours d'espagnol", emoji: "📚" }
   ];
 
   // Service progress data from Supabase - now shows all 7 services
   console.log('Datos fidelite:', fidelityData)
   
-  // Create service progress for all 7 services
+  // Create service progress for all 6 services
   const serviceProgress = allServices.map(service => {
     const fidelityItem = fidelityData.find(item => item.service_name === service.name);
     const count = fidelityItem ? fidelityItem.count : 0;
