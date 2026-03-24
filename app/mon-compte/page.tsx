@@ -54,10 +54,11 @@ export default function MonComptePage() {
 
   // Service progress data from Supabase - now shows all 7 services
   console.log('Datos fidelite:', fidelityData)
+  console.log('Fidelite data completo:', JSON.stringify(fidelityData))
   
   // Create service progress for all 6 services
   const serviceProgress = allServices.map(service => {
-    const fidelityItem = fidelityData?.find(item => item.service_name === service.name);
+    const fidelityItem = fidelityData?.find(item => item.service === service.name);
     const count = fidelityItem ? fidelityItem.count : 0;
     
     return {
@@ -316,12 +317,12 @@ export default function MonComptePage() {
                       <div
                         key={i}
                         className={`h-8 w-8 rounded-full flex items-center justify-center transition-all ${
-                          i < service.completed
+                          i < (service.count || 0)
                             ? "bg-[#1D9E75] shadow-md"
                             : "bg-gray-200"
                         }`}
                       >
-                        {i < service.completed ? (
+                        {i < (service.count || 0) ? (
                           <span className="text-xs font-bold text-white">{i + 1}</span>
                         ) : (
                           <span className="text-xs font-medium text-gray-400">{i + 1}</span>
@@ -333,7 +334,7 @@ export default function MonComptePage() {
                   {/* Progress Text */}
                   <div className="text-center">
                     <p className="text-sm text-slate-600">
-                      <span className="font-semibold">{service.count} services</span> · Plus que {Math.max(0, 7 - service.count)} pour votre réduction -20%
+                      <span className="font-semibold">{service.count || 0} services</span> · Plus que {Math.max(0, 7 - (service.count || 0))} pour votre réduction -20%
                     </p>
                   </div>
                 </div>
@@ -375,12 +376,12 @@ export default function MonComptePage() {
                       <div
                         key={i}
                         className={`h-8 w-8 rounded-full flex items-center justify-center transition-all ${
-                          i < service.completed
+                          i < (service.count || 0)
                             ? "bg-[#1D9E75] shadow-md"
                             : "bg-gray-200"
                         }`}
                       >
-                        {i < service.completed ? (
+                        {i < (service.count || 0) ? (
                           <span className="text-xs font-bold text-white">{i + 1}</span>
                         ) : (
                           <span className="text-xs font-medium text-gray-400">{i + 1}</span>
@@ -397,7 +398,7 @@ export default function MonComptePage() {
                       </p>
                     ) : (
                       <p className="text-sm text-slate-600">
-                        <span className="font-semibold">{service.count} services</span> · Plus que ${Math.max(0, 7 - service.count)} pour votre réduction -20%
+                        <span className="font-semibold">{service.count || 0} services</span> · Plus que {Math.max(0, 7 - (service.count || 0))} pour votre réduction -20%
                       </p>
                     )}
                   </div>
