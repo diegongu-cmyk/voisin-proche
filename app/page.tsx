@@ -75,7 +75,7 @@ const sliderServices = [
   },
   {
     titre: "Courses et commissions",
-    prix: "8€",
+    prix: "depuis 8€",
     image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=600",
   },
   {
