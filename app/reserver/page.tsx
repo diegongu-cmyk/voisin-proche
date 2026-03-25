@@ -767,7 +767,7 @@ function BookingPageContent() {
                       {dogNotes && <p><span className="font-medium">Notes:</span> {dogNotes}</p>}
                     </div>
                   </div>
-                ) : null}
+                )}
                 {service === "garde" ? (
                   <p>
                     <span className="font-semibold">Durée / détails:</span> du{" "}
