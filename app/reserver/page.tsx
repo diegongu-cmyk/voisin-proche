@@ -466,8 +466,6 @@ function BookingPageContent() {
               />
             </div>
           </div>
-          </div>
-
           <div className="mt-6 flex flex-wrap gap-3">
             <button
               type="button"
