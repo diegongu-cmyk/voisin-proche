@@ -28,6 +28,7 @@ export default function MonComptePage() {
     address: ""
   });
   const [successMessage, setSuccessMessage] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const getServiceEmoji = (serviceName: string) => {
     const emojiMap: { [key: string]: string } = {
@@ -75,13 +76,21 @@ export default function MonComptePage() {
   useEffect(() => {
     // Check authentication and load user data
     const checkSession = async () => {
+      console.log('Loading state:', loading);
+      console.log('Starting session check...');
+      
       const { data: { session }, error } = await supabase.auth.getSession();
       
+      console.log('Session:', session);
+      console.log('Session error:', error);
+      
       if (!session || error) {
+        console.log('No session found, redirecting to login');
         window.location.href = '/login';
         return;
       }
       
+      console.log('User:', session.user);
       setUser(session.user);
       setProfile(prev => ({
         ...prev,
@@ -105,6 +114,9 @@ export default function MonComptePage() {
         .eq('user_id', session.user.id)
         .order('created_at', { ascending: false });
 
+      console.log('Reservations:', reservations);
+      console.log('Reservations error:', reservationsError);
+
       if (!reservationsError && reservations) {
         setUserReservations(reservations.slice(0, 3)); // Show only 3 most recent
       }
@@ -119,6 +131,7 @@ export default function MonComptePage() {
         .eq('user_id', user?.id);
 
       console.log('Fidelite data:', fidelity);
+      console.log('Fidelite error:', fidelityError);
 
       if (!fidelityError && fidelity && fidelity.length > 0) {
         setFidelityData(fidelity);
@@ -144,6 +157,10 @@ export default function MonComptePage() {
       } else {
         setHistoriqueData([]);
       }
+
+      // Set loading to false after all data is loaded
+      setLoading(false);
+      console.log('Loading state after data load:', false);
     };
 
     checkSession();
@@ -255,35 +272,46 @@ export default function MonComptePage() {
 
   return (
     <div className="min-h-screen bg-[#FFFBF5]">
-      {/* Header */}
-      <header className="rounded-3xl bg-[#1D9E75] px-6 py-8 text-white md:px-10">
-        <div className="flex flex-col items-center gap-4 md:flex-row md:items-start">
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/20 text-3xl font-bold">
-            {initials || "U"}
-          </div>
-          <div className="text-center md:text-left">
-            <h1 className="text-2xl font-extrabold md:text-3xl">
-              {profile.firstName && profile.lastName ? `${profile.firstName} ${profile.lastName}` : "Mon compte"}
-            </h1>
-            <p className="text-white/90">{profile.email}</p>
-            <div className="mt-2 inline-flex rounded-full bg-[#1D9E75]/20 px-3 py-1 text-sm font-semibold text-white">
-              Membre Voisin Proche
-            </div>
-            
-            {/* Edit Profile Button */}
-            <div className="mt-4">
-              <Link
-                href="/profil"
-                className="inline-flex items-center justify-center rounded-lg border-2 border-[#1D9E75] bg-white px-6 py-3 text-sm font-semibold text-[#1D9E75] transition-all hover:bg-[#1D9E75] hover:text-white min-w-[200px]"
-              >
-                ✏️ Modifier mon profil
-              </Link>
-            </div>
+      {/* Loading State */}
+      {loading ? (
+        <div className="flex min-h-screen items-center justify-center">
+          <div className="text-center">
+            <div className="mb-4 text-4xl">⏳</div>
+            <p className="text-lg text-gray-600">Chargement...</p>
+            <p className="text-sm text-gray-500 mt-2">Chargement state: {loading ? 'true' : 'false'}</p>
           </div>
         </div>
-      </header>
+      ) : (
+        <>
+          {/* Header */}
+          <header className="rounded-3xl bg-[#1D9E75] px-6 py-8 text-white md:px-10">
+            <div className="flex flex-col items-center gap-4 md:flex-row md:items-start">
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/20 text-3xl font-bold">
+                {initials || "U"}
+              </div>
+              <div className="text-center md:text-left">
+                <h1 className="text-2xl font-extrabold md:text-3xl">
+                  {profile.firstName && profile.lastName ? `${profile.firstName} ${profile.lastName}` : "Mon compte"}
+                </h1>
+                <p className="text-white/90">{profile.email}</p>
+                <div className="mt-2 inline-flex rounded-full bg-[#1D9E75]/20 px-3 py-1 text-sm font-semibold text-white">
+                  Membre Voisin Proche
+                </div>
+                
+                {/* Edit Profile Button */}
+                <div className="mt-4">
+                  <Link
+                    href="/profil"
+                    className="inline-flex items-center justify-center rounded-lg border-2 border-[#1D9E75] bg-white px-6 py-3 text-sm font-semibold text-[#1D9E75] transition-all hover:bg-[#1D9E75] hover:text-white min-w-[200px]"
+                  >
+                    ✏️ Modifier mon profil
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </header>
 
-      <div className="mx-auto max-w-6xl px-4 py-8 md:px-8 space-y-8">
+          <div className="mx-auto max-w-6xl px-4 py-8 md:px-8 space-y-8">
         {/* SECTION 1 - Ma carte de fidélité par service */}
         <section>
           <div className="flex items-center gap-3 mb-6">
@@ -438,7 +466,9 @@ export default function MonComptePage() {
             Se déconnecter
           </button>
         </div>
-      </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
