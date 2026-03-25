@@ -74,96 +74,100 @@ export default function MonComptePage() {
   })
 
   useEffect(() => {
-    // Check authentication and load user data
-    const checkSession = async () => {
-      console.log('Loading state:', loading);
-      console.log('Starting session check...');
-      
-      const { data: { session }, error } = await supabase.auth.getSession();
-      
-      console.log('Session:', session);
-      console.log('Session error:', error);
-      
-      if (!session || error) {
-        console.log('No session found, redirecting to login');
-        window.location.href = '/login';
-        return;
+    const loadData = async () => {
+      try {
+        console.log('Loading state:', loading);
+        console.log('Starting session check...');
+        
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        console.log('Session:', session);
+        console.log('Session error:', error);
+        
+        if (!session || error) {
+          console.log('No session found, redirecting to login');
+          window.location.href = '/login';
+          return;
+        }
+        
+        console.log('User:', session.user);
+        setUser(session.user);
+        setProfile(prev => ({
+          ...prev,
+          email: session.user?.email || "",
+          firstName: session.user?.user_metadata?.first_name || "",
+          lastName: session.user?.user_metadata?.last_name || ""
+        }));
+        
+        // Initialize edit form with current user data
+        setEditForm({
+          firstName: session.user?.user_metadata?.first_name || "",
+          lastName: session.user?.user_metadata?.last_name || "",
+          phone: session.user?.user_metadata?.phone || "",
+          address: session.user?.user_metadata?.address || ""
+        });
+
+        // Load user's reservations
+        const { data: reservations, error: reservationsError } = await supabase
+          .from('reservations')
+          .select('*')
+          .eq('user_id', session.user.id)
+          .order('created_at', { ascending: false });
+
+        console.log('Reservations:', reservations);
+        console.log('Reservations error:', reservationsError);
+
+        if (!reservationsError && reservations) {
+          setUserReservations(reservations.slice(0, 3)); // Show only 3 most recent
+        }
+
+        // Load fidelity data
+        const { data: { user } } = await supabase.auth.getUser();
+        console.log('User ID:', user?.id);
+
+        const { data: fidelity, error: fidelityError } = await supabase
+          .from('fidelite')
+          .select('*')
+          .eq('user_id', user?.id);
+
+        console.log('Fidelite data:', fidelity);
+        console.log('Fidelite error:', fidelityError);
+
+        if (!fidelityError && fidelity && fidelity.length > 0) {
+          setFidelityData(fidelity);
+        } else {
+          // If no fidelity data, set empty array - we'll show all services at 0/7 in serviceProgress
+          setFidelityData([]);
+        }
+
+        // Load historique data (services terminés)
+        const { data: historique, error: historiqueError } = await supabase
+          .from('reservations')
+          .select('*')
+          .eq('user_id', session.user.id)
+          .eq('statut', 'termine')
+          .order('date', { ascending: false });
+
+        console.log('Historique data:', historique)
+        console.log('Historique error:', historiqueError)
+        console.log('User ID:', session.user.id)
+
+        if (!historiqueError && historique) {
+          setHistoriqueData(historique);
+        } else {
+          setHistoriqueData([]);
+        }
+
+      } catch (error) {
+        console.error('Error loading data:', error);
+      } finally {
+        // SIEMPRE ejecutar esto sin importar el resultado
+        setLoading(false);
+        console.log('Loading state after data load:', false);
       }
-      
-      console.log('User:', session.user);
-      setUser(session.user);
-      setProfile(prev => ({
-        ...prev,
-        email: session.user?.email || "",
-        firstName: session.user?.user_metadata?.first_name || "",
-        lastName: session.user?.user_metadata?.last_name || ""
-      }));
-      
-      // Initialize edit form with current user data
-      setEditForm({
-        firstName: session.user?.user_metadata?.first_name || "",
-        lastName: session.user?.user_metadata?.last_name || "",
-        phone: session.user?.user_metadata?.phone || "",
-        address: session.user?.user_metadata?.address || ""
-      });
-
-      // Load user's reservations
-      const { data: reservations, error: reservationsError } = await supabase
-        .from('reservations')
-        .select('*')
-        .eq('user_id', session.user.id)
-        .order('created_at', { ascending: false });
-
-      console.log('Reservations:', reservations);
-      console.log('Reservations error:', reservationsError);
-
-      if (!reservationsError && reservations) {
-        setUserReservations(reservations.slice(0, 3)); // Show only 3 most recent
-      }
-
-      // Load fidelity data
-      const { data: { user } } = await supabase.auth.getUser();
-      console.log('User ID:', user?.id);
-
-      const { data: fidelity, error: fidelityError } = await supabase
-        .from('fidelite')
-        .select('*')
-        .eq('user_id', user?.id);
-
-      console.log('Fidelite data:', fidelity);
-      console.log('Fidelite error:', fidelityError);
-
-      if (!fidelityError && fidelity && fidelity.length > 0) {
-        setFidelityData(fidelity);
-      } else {
-        // If no fidelity data, set empty array - we'll show all services at 0/7 in serviceProgress
-        setFidelityData([]);
-      }
-
-      // Load historique data (services terminés)
-      const { data: historique, error: historiqueError } = await supabase
-        .from('reservations')
-        .select('*')
-        .eq('user_id', session.user.id)
-        .eq('statut', 'termine')
-        .order('date', { ascending: false });
-
-      console.log('Historique data:', historique)
-      console.log('Historique error:', historiqueError)
-      console.log('User ID:', session.user.id)
-
-      if (!historiqueError && historique) {
-        setHistoriqueData(historique);
-      } else {
-        setHistoriqueData([]);
-      }
-
-      // Set loading to false after all data is loaded
-      setLoading(false);
-      console.log('Loading state after data load:', false);
     };
 
-    checkSession();
+    loadData();
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
