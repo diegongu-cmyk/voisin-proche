@@ -32,11 +32,9 @@ export default function Navbar() {
       
       if (session?.user) {
         setUser(session.user);
-        // Get user name from metadata or fallback to email
-        const fullName = session.user.user_metadata?.full_name || 
-                        session.user.user_metadata?.first_name || 
-                        session.user.email || "";
-        setUserName(fullName);
+        // Get user name with priority order
+        const userName = await getUserName(session.user);
+        setUserName(userName);
       }
     };
 
@@ -44,16 +42,14 @@ export default function Navbar() {
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      async (_event, session) => {
         setIsLoggedIn(!!session);
         setIsAdmin(session?.user?.app_metadata?.role === 'admin' || false);
         
         if (session?.user) {
           setUser(session.user);
-          const fullName = session.user.user_metadata?.full_name || 
-                          session.user.user_metadata?.first_name || 
-                          session.user.email || "";
-          setUserName(fullName);
+          const userName = await getUserName(session.user);
+          setUserName(userName);
         } else {
           setUser(null);
           setUserName("");
@@ -63,6 +59,41 @@ export default function Navbar() {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  // Function to get user name with priority order
+  const getUserName = async (user: any) => {
+    try {
+      // 1. First try to get name from profiles table
+      const { data: profileData, error } = await supabase
+        .from('profiles')
+        .select('prenom, nom')
+        .eq('id', user.id)
+        .single();
+
+      if (!error && profileData && profileData.prenom) {
+        // If profile has prenom, combine with nom if available
+        const fullName = profileData.nom 
+          ? `${profileData.prenom} ${profileData.nom}`
+          : profileData.prenom;
+        return fullName.trim();
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
+
+    // 2. Fallback to user_metadata (Google/Facebook)
+    if (user.user_metadata?.full_name) {
+      return user.user_metadata.full_name;
+    }
+
+    // 3. Fallback to email part before @
+    if (user.email) {
+      return user.email.split('@')[0];
+    }
+
+    // 4. Final fallback
+    return "Utilisateur";
+  };
 
   // Close user menu when clicking outside
   useEffect(() => {
