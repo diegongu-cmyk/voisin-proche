@@ -24,6 +24,26 @@ export default function Navbar() {
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
+    const loadUserName = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('prenom, nom')
+          .eq('id', user.id)
+          .single()
+        
+        if (profile?.prenom || profile?.nom) {
+          setUserName(`${profile.prenom || ''} ${profile.nom || ''}`.trim())
+        } else if (user.user_metadata?.full_name) {
+          setUserName(user.user_metadata.full_name)
+        } else {
+          setUserName(user.email?.split('@')[0] || '')
+        }
+      }
+    }
+    loadUserName()
+
     // Check Supabase session on component mount
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
