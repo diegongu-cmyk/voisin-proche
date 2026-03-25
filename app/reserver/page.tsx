@@ -77,7 +77,7 @@ function BookingPageContent() {
         user_id: user.id,
         service: currentService?.name || "",
         date: date || "",
-        time: time || "",
+        heure: time || "",
         details: JSON.stringify({
           fullName,
           phone,
