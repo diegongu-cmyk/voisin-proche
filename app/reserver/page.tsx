@@ -128,12 +128,24 @@ function BookingPageContent() {
 
   const currentService = services.find((s) => s.id === service);
 
+  const calculateDiscountedPrice = (price: string) => {
+    const numericPrice = parseInt(price.replace(/[^0-9]/g, ''));
+    return Math.round(numericPrice * 0.8);
+  };
+
   const handleConfirmReservation = async () => {
     try {
       // Get current user
       const { data: { user }, error: userError } = await supabase.auth.getUser();
       
       if (userError || !user) {
+        alert("Veuillez vous connecter pour réserver");
+        return;
+      }
+
+      const precioNumerico = parseInt(estimate.replace(/[^0-9]/g, ''));
+      const precioFinal = hasDiscount ? calculateDiscountedPrice(estimate) : precioNumerico;
+      
       const reservationData = {
         user_id: user.id,
         service: currentService?.name || "",
@@ -200,9 +212,10 @@ function BookingPageContent() {
         }, 3000);
       }
     } catch (err) {
-      console.error('Exception:', err);
-      alert("Une erreur est survenue lors de la réservation");
-    }
+        console.error('Exception:', err);
+        alert("Une erreur est survenue lors de la réservation");
+      }
+    };
   };
 
   return (
