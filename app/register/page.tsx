@@ -61,6 +61,32 @@ export default function RegisterPage() {
       if (error) {
         setError(error.message);
       } else {
+        // Send welcome email
+        await fetch('/api/send-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            to: email,
+            subject: 'Bienvenue chez Voisin Proche ! 🌿',
+            html: `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                <h1 style="color: #1D9E75;">Voisin Proche</h1>
+                <h2 style="color: #085041;">Bienvenue ! 👋</h2>
+                <p>Votre compte a été créé avec succès.</p>
+                <div style="background: #E1F5EE; padding:15px; border-radius: 8px; margin: 20px 0;">
+                  <p><strong>Email :</strong> ${email}</p>
+                </div>
+                <p>Vous pouvez dès maintenant réserver vos premiers services et commencer à accumuler des points de fidélité !</p>
+                <a href="https://voisin-proche.vercel.app/services" style="background: #1D9E75; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; display: inline-block; margin: 10px 0;">
+                  Découvrir nos services
+                </a>
+                <p style="color: #666; font-size: 12px;">Pour toute question : voisinprochecontact@gmail.com</p>
+                <p style="color: #1D9E75;"><strong>L'équipe Voisin Proche</strong></p>
+              </div>
+            `
+          })
+        });
+        
         window.location.href = '/mon-compte';
       }
     } catch (err) {
