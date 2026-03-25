@@ -852,7 +852,7 @@ function BookingPageContent() {
           <div className="mt-5 rounded-xl border border-slate-200 bg-[#1D9E75]/10 p-4">
             <h3 className="text-base font-extrabold text-slate-900">Prix estimé</h3>
             <div className="flex items-center gap-3">
-              <p className="text-2xl font-extrabold text-[#1D9E75]">
+                         <p className="text-2xl font-extrabold text-[#1D9E75]">
                 {hasDiscount ? (
                   <>
                     <span className="line-through text-gray-400">{estimate}</span>
@@ -861,13 +861,12 @@ function BookingPageContent() {
                 ) : (
                   <span>{estimate}</span>
                 )}
-            </p>
+              </p>
               {hasDiscount && (
                 <span className="inline-flex animate-pulse rounded-full bg-[#F59E0B] px-3 py-1 text-sm font-bold text-white">
                   🎁 -20% fidélité appliqué !
                 </span>
               )}
-            </div>
             <p className="mt-1 text-sm text-slate-700">
               Le prix final sera confirmé lors de notre prise de contact
             </p>
