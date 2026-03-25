@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+import { createClient } from '@supabase/supabase-js';
 
 const links = [
   { href: "/", label: "Accueil" },
@@ -25,27 +25,24 @@ export default function Navbar() {
 
   useEffect(() => {
     const loadUserName = async () => {
+      const supabase = createClient(
+        'https://bcfxjnqtxakdcsnqhbis.supabase.co',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJjZnhqbnF0eGFrZGNzbnFoYmlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMTQ4NTYsImV4cCI6MjA4OTY5MDg1Nn0.eH5lemH7U1mp5y8AHw7rSv3H8spy_Ami_M1knpguXbk'
+      )
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('prenom, nom')
-          .eq('id', user.id)
-          .single()
-        
-        if (profile?.prenom || profile?.nom) {
-          setUserName(`${profile.prenom || ''} ${profile.nom || ''}`.trim())
-        } else if (user.user_metadata?.full_name) {
-          setUserName(user.user_metadata.full_name)
-        } else {
-          setUserName(user.email?.split('@')[0] || '')
-        }
+        const userName = await getUserName(user);
+        setUserName(userName);
       }
     }
     loadUserName()
 
     // Check Supabase session on component mount
     const checkSession = async () => {
+      const supabase = createClient(
+        'https://bcfxjnqtxakdcsnqhbis.supabase.co',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJjZnhqbnF0eGFrZGNzbnFoYmlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMTQ4NTYsImV4cCI6MjA4OTY5MDg1Nn0.eH5lemH7U1mp5y8AHw7rSv3H8spy_Ami_M1knpguXbk'
+      )
       const { data: { session } } = await supabase.auth.getSession();
       setIsLoggedIn(!!session);
       setIsAdmin(session?.user?.app_metadata?.role === 'admin' || false);
@@ -61,8 +58,12 @@ export default function Navbar() {
     checkSession();
 
     // Listen for auth changes
+    const supabase = createClient(
+      'https://bcfxjnqtxakdcsnqhbis.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJjZnhqbnF0eGFrZGNzbnFoYmlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMTQ4NTYsImV4cCI6MjA4OTY5MDg1Nn0.eH5lemH7U1mp5y8AHw7rSv3H8spy_Ami_M1knpguXbk'
+    )
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
+      async (_event: any, session: any) => {
         setIsLoggedIn(!!session);
         setIsAdmin(session?.user?.app_metadata?.role === 'admin' || false);
         
@@ -138,13 +139,13 @@ export default function Navbar() {
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    setIsLoggedIn(false);
-    setIsAdmin(false);
-    setUser(null);
-    setUserName("");
-    window.location.href = '/';
-  };
+  const supabase = createClient(
+    'https://bcfxjnqtxakdcsnqhbis.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJjZnhqbnF0eGFrZGNzbnFoYmlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMTQ4NTYsImV4cCI6MjA4OTY5MDg1Nn0.eH5lemH7U1mp5y8AHw7rSv3H8spy_Ami_M1knpguXbk'
+  )
+  await supabase.auth.signOut()
+  window.location.href = '/'
+}
 
   // Conditional links based on authentication status
   const getLinks = () => {
