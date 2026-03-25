@@ -81,10 +81,12 @@ export default function MonComptePage() {
   
   const loadData = async () => {
     try {
-      console.log('Starting session check...')
-      const { data: { session } } = await supabase.auth.getSession()
+      console.log('Step 1: Getting session...')
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+      console.log('Step 2: Session result:', session?.user?.email, sessionError)
       
       if (!session?.user) {
+        console.log('Step 3: No user, redirecting...')
         window.location.href = '/login'
         return
       }
@@ -92,6 +94,7 @@ export default function MonComptePage() {
       const user = session.user
       if (mounted) setUser(user)
       
+      console.log('Step 4: Loading fidelite...')
       const { data: fideliteData } = await supabase
         .from('fidelite')
         .select('*')
@@ -99,6 +102,7 @@ export default function MonComptePage() {
       
       if (mounted) setFidelityData(fideliteData || [])
       
+      console.log('Step 5: Loading historique...')
       const { data: historique } = await supabase
         .from('reservations')
         .select('*')
@@ -108,6 +112,7 @@ export default function MonComptePage() {
       
       if (mounted) setHistoriqueData(historique || [])
       
+      console.log('Step 6: Loading reservations...')
       const { data: reservations } = await supabase
         .from('reservations')
         .select('*')
@@ -117,9 +122,12 @@ export default function MonComptePage() {
       
       if (mounted) setUserReservations(reservations || [])
       
+      console.log('Step 7: All data loaded successfully')
+      
     } catch (error) {
-      console.error('Error loading data:', error)
+      console.error('CATCH ERROR:', error)
     } finally {
+      console.log('Step 8: Setting loading false')
       if (mounted) setLoading(false)
     }
   }
