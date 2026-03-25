@@ -300,8 +300,19 @@ export default function MonComptePage() {
             {serviciosConProgreso.map((service, index) => (
               <div
                 key={index}
-                className="rounded-2xl border-2 border-slate-200 bg-white p-5 transition-all"
+                className={`rounded-2xl border-2 p-5 transition-all ${
+                  (service.count || 0) >= 7
+                    ? "border-[#F59E0B] bg-gradient-to-br from-[#FFF9E6] to-[#FEF3C7]"
+                    : "border-slate-200 bg-white"
+                }`}
               >
+                {/* Trophy for completed services */}
+                {(service.count || 0) >= 7 && (
+                  <div className="flex justify-center mb-4">
+                    <span className="text-4xl">🏆</span>
+                  </div>
+                )}
+
                 {/* Service Header */}
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-2xl">{service.emoji}</span>
@@ -317,7 +328,9 @@ export default function MonComptePage() {
                       key={i}
                       className={`h-8 w-8 rounded-full flex items-center justify-center transition-all ${
                         i < (service.count || 0)
-                          ? "bg-[#1D9E75] shadow-md"
+                          ? (service.count || 0) >= 7 
+                            ? "bg-[#F59E0B] shadow-md"
+                            : "bg-[#1D9E75] shadow-md"
                           : "bg-gray-200"
                       }`}
                     >
@@ -332,9 +345,15 @@ export default function MonComptePage() {
 
                 {/* Progress Text */}
                 <div className="text-center">
-                  <p className="text-sm text-slate-600">
-                    <span className="font-semibold">{service.count || 0} services</span> · Plus que {Math.max(0, 7 - (service.count || 0))} pour votre réduction -20%
-                  </p>
+                  {(service.count || 0) >= 7 ? (
+                    <p className="text-sm font-bold text-[#F59E0B]">
+                      🎁 -20% sur votre prochain service !
+                    </p>
+                  ) : (
+                    <p className="text-sm text-slate-600">
+                      <span className="font-semibold">{service.count || 0} services</span> · Plus que {Math.max(0, 7 - (service.count || 0))} pour votre réduction -20%
+                    </p>
+                  )}
                 </div>
               </div>
             ))}
