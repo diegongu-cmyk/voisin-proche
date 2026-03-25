@@ -5,6 +5,8 @@ import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 
 export default function MonComptePage() {
+  console.log('Component mounting...')
+  
   // Profile state
   const [profile, setProfile] = useState({
     firstName: "",
@@ -74,6 +76,7 @@ export default function MonComptePage() {
   }), [fidelityData])
 
   useEffect(() => {
+  console.log('useEffect running, mounted:', true)
   let mounted = true
   
   const loadData = async () => {
