@@ -4,6 +4,11 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { createClient } from '@supabase/supabase-js';
 
+const supabase = createClient(
+  'https://bcfxjnqtxakdcsnqhbis.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJjZnhqbnF0eGFrZGNzbnFoYmlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMTQ4NTYsImV4cCI6MjA4OTY5MDg1Nn0.eH5lemH7U1mp5y8AHw7rSv3H8spy_Ami_M1knpguXbk'
+)
+
 const links = [
   { href: "/", label: "Accueil" },
   { href: "/services", label: "Services" },
