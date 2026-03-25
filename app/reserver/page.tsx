@@ -861,7 +861,7 @@ function BookingPageContent() {
                 ) : (
                   <span>{estimate}</span>
                 )}
-            
+            </p>
               {hasDiscount && (
                 <span className="inline-flex animate-pulse rounded-full bg-[#F59E0B] px-3 py-1 text-sm font-bold text-white">
                   🎁 -20% fidélité appliqué !
