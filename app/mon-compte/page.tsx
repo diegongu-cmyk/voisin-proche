@@ -325,7 +325,7 @@ export default function MonComptePage() {
                 <div className="flex justify-center gap-2 mb-4">
                   {Array.from({ length: 7 }, (_, i) => {
                     const currentProgress = (service.count || 0) % 7;
-                    const hasDiscount = (service.count || 0) >= 7;
+                    const hasDiscountEligibility = (service.count || 0) > 0 && (service.count || 0) % 7 === 0;
                     const isActive = i < currentProgress;
                     
                     return (
@@ -333,7 +333,7 @@ export default function MonComptePage() {
                         key={i}
                         className={`h-8 w-8 rounded-full flex items-center justify-center transition-all ${
                           isActive
-                            ? hasDiscount 
+                            ? hasDiscountEligibility 
                               ? "bg-[#F59E0B] shadow-md"
                               : "bg-[#1D9E75] shadow-md"
                             : "bg-gray-200"
@@ -351,7 +351,7 @@ export default function MonComptePage() {
 
                 {/* Progress Text */}
                 <div className="text-center">
-                  {(service.count || 0) >= 7 && (service.count || 0) % 7 === 0 ? (
+                  {(service.count || 0) > 0 && (service.count || 0) % 7 === 0 ? (
                     <p className="text-sm font-bold text-[#F59E0B]">
                       🎁 -20% sur votre prochain service !
                     </p>

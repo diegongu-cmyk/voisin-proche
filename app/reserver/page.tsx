@@ -54,8 +54,9 @@ function BookingPageContent() {
           .eq('user_id', session.user.id);
 
         if (fideliteData && fideliteData.length > 0) {
-          const hasCompleted7Services = fideliteData.some(item => item.count >= 7);
-          setHasDiscount(hasCompleted7Services);
+          const userCount = fideliteData[0].count;
+          const hasDiscountEligibility = userCount > 0 && userCount % 7 === 0;
+          setHasDiscount(hasDiscountEligibility);
         }
       }
     };
