@@ -395,14 +395,23 @@ export default function MonComptePage() {
                       <h3 className="font-bold text-[#085041] text-lg mb-1">{reservation.service}</h3>
                       <div className="space-y-1 text-sm text-gray-600">
                         <p>
-                          {new Date(reservation.date).toLocaleDateString('fr-FR', { 
+                          <span className="font-semibold">Demandé le:</span>{" "}
+                          {new Date(reservation.created_at).toLocaleDateString('fr-FR', { 
                             weekday: 'long', 
                             year: 'numeric', 
                             month: 'long', 
                             day: 'numeric' 
                           })}
                         </p>
-                        <p>Heure: {reservation.heure}</p>
+                        <p>
+                          <span className="font-semibold">Service effectué le:</span>{" "}
+                          {new Date(reservation.date).toLocaleDateString('fr-FR', { 
+                            weekday: 'long', 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                          })} à {reservation.heure}
+                        </p>
                         {reservation.prix && (
                           <p>Prix: {reservation.prix}€</p>
                         )}
