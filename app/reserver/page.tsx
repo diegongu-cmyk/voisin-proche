@@ -39,6 +39,33 @@ function BookingPageContent() {
     }
   }, [searchParams]);
 
+  const [user, setUser] = useState<any>(null);
+  const [hasDiscount, setHasDiscount] = useState(false);
+
+  // Check authentication and get user fidelity data
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session?.user) {
+        setUser(session.user);
+        
+        // Check if user has 7+ services completed for discount
+        const { data: fideliteData } = await supabase
+          .from('fidelite')
+          .select('*')
+          .eq('user_id', session.user.id);
+
+        if (fideliteData && fideliteData.length > 0) {
+          const hasCompleted7Services = fideliteData.some(item => item.count >= 7);
+          setHasDiscount(hasCompleted7Services);
+        }
+      }
+    };
+
+    checkSession();
+  }, []);
+
   const [date, setDate] = useState("");
   const [time, setTime] = useState("8h00");
   const [notes, setNotes] = useState("");
@@ -107,50 +134,53 @@ function BookingPageContent() {
       const { data: { user }, error: userError } = await supabase.auth.getUser();
       
       if (userError || !user) {
-        alert("Connectez-vous pour réserver");
-        window.location.href = '/login';
-        return;
-      }
-
-      // Validate required fields
-      if (!date || !time || !fullName || !email || !phone) {
-        alert("Veuillez remplir tous les champs obligatoires");
-        return;
-      }
-
-      // Prepare reservation data
-      const precioNumerico = parseFloat(estimate.replace(/[^0-9.]/g, '')) || 0;
-
       const reservationData = {
         user_id: user.id,
-        service: currentService?.name || service,
-        date,
-        heure: time,
-        details: {
+        service: currentService?.name || "",
+        date: date || "",
+        time: time || "",
+        details: JSON.stringify({
           fullName,
-          email,
           phone,
-          dogName,
-          dogBreed,
-          dogSize,
-          walkDuration,
-          dogTemperament,
-          dogSocialization,
-          dogNotes,
-          startDate,
-          endDate,
-          animalType,
-          estimatedDuration,
-          meetingPlace,
-          accompagnementTypes,
-          accompagnementAutre,
-          housingType,
-          spanishLevel,
-          spanishMode,
-          deliveryAddress,
-          shoppingList
-        },
-        prix: precioNumerico,
+          email,
+          fullAddress: fullAddress ? `${fullAddress}, ${postalCode}` : "",
+          // Service-specific details
+          ...(service === "promenade" && {
+            dogName,
+            dogBreed,
+            dogSize,
+            dogTemperament,
+            dogSocialization,
+            dogNotes,
+            walkDuration
+          }),
+          ...(service === "garde" && {
+            animalType,
+            startDate,
+            endDate
+          }),
+          ...(service === "accompagnement" && {
+            accompagnementTypes,
+            accompagnementAutre,
+            estimatedDuration,
+            meetingPlace
+          }),
+          ...(service === "menage" && {
+            housingType
+          }),
+          ...(service === "espagnol" && {
+            spanishLevel,
+            spanishMode
+          }),
+          ...(service === "courses" && {
+            deliveryAddress,
+            shoppingList
+          }),
+          ...(service === "autre" && {
+            notes
+          })
+        }),
+        prix: precioFinal.toString(),
         notes: notes,
         statut: "en_attente"
       };
@@ -712,7 +742,7 @@ function BookingPageContent() {
                     <span className="font-semibold">Durée / détails:</span> {walkDuration}
                   </p>
                 ) : null}
-                {service === "promenade" ? (
+                {service === "promenade" && (
                   <div className="mt-3 space-y-2">
                     <p className="font-semibold text-[#085041]">Informations sur le chien:</p>
                     <div className="ml-4 space-y-1 text-sm">
@@ -808,7 +838,23 @@ function BookingPageContent() {
 
           <div className="mt-5 rounded-xl border border-slate-200 bg-[#1D9E75]/10 p-4">
             <h3 className="text-base font-extrabold text-slate-900">Prix estimé</h3>
-            <p className="text-2xl font-extrabold text-[#1D9E75]">{estimate}</p>
+            <div className="flex items-center gap-3">
+              <p className="text-2xl font-extrabold text-[#1D9E75]">
+                {hasDiscount ? (
+                  <>
+                    <span className="line-through text-gray-400">{estimate}</span>
+                    <span className="ml-2 text-xl font-bold text-[#F59E0B]">{calculateDiscountedPrice(estimate)}</span>
+                  </>
+                ) : (
+                  <span>{estimate}</span>
+                )}
+              </p>
+              {hasDiscount && (
+                <span className="inline-flex animate-pulse rounded-full bg-[#F59E0B] px-3 py-1 text-sm font-bold text-white">
+                  🎁 -20% fidélité appliqué !
+                </span>
+              )}
+            </div>
             <p className="mt-1 text-sm text-slate-700">
               Le prix final sera confirmé lors de notre prise de contact
             </p>
