@@ -94,7 +94,7 @@ export default function MonComptePage() {
         .select('*')
         .eq('user_id', user.id)
       
-      if (mounted) setFidelityData(fideliteData)
+      if (mounted) setFidelityData(fideliteData || [])
       
       const { data: historique } = await supabase
         .from('reservations')
@@ -103,7 +103,7 @@ export default function MonComptePage() {
         .eq('statut', 'termine')
         .order('date', { ascending: false })
       
-      if (mounted) setHistoriqueData(historique)
+      if (mounted) setHistoriqueData(historique || [])
       
       const { data: reservations } = await supabase
         .from('reservations')
@@ -112,7 +112,7 @@ export default function MonComptePage() {
         .order('created_at', { ascending: false })
         .limit(3)
       
-      if (mounted) setUserReservations(reservations)
+      if (mounted) setUserReservations(reservations || [])
       
     } catch (error) {
       console.error('Error loading data:', error)
