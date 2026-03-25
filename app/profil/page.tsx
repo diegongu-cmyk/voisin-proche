@@ -17,47 +17,50 @@ export default function ProfilPage() {
   const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
-    // Check authentication and load user data
-    const checkSession = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        window.location.href = '/login';
-        return;
+    const loadData = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        
+        if (!user) {
+          window.location.href = '/login'
+          return
+        }
+        
+        setUser(user)
+        
+        // Load user profile data from Supabase
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+        
+        if (profile) {
+          setProfile({
+            firstName: profile.prenom || "",
+            lastName: profile.nom || "",
+            email: user.email || "",
+            phone: profile.telephone || "",
+            address: profile.adresse || ""
+          });
+        } else {
+          // If no profile exists, use user metadata
+          setProfile({
+            firstName: user?.user_metadata?.first_name || "",
+            lastName: user?.user_metadata?.last_name || "",
+            email: user?.email || "",
+            phone: user?.user_metadata?.phone || "",
+            address: user?.user_metadata?.address || ""
+          });
+        }
+      } catch (error) {
+        console.error('Error loading profile:', error)
+      } finally {
+        setIsLoading(false)
       }
-      
-      setUser(user);
-      
-      // Load user profile data from Supabase
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single();
-      
-      if (profile) {
-        setProfile({
-          firstName: profile.prenom || "",
-          lastName: profile.nom || "",
-          email: user.email || "",
-          phone: profile.telephone || "",
-          address: profile.adresse || ""
-        });
-      } else {
-        // If no profile exists, use user metadata
-        setProfile({
-          firstName: user?.user_metadata?.first_name || "",
-          lastName: user?.user_metadata?.last_name || "",
-          email: user?.email || "",
-          phone: user?.user_metadata?.phone || "",
-          address: user?.user_metadata?.address || ""
-        });
-      }
-
-      setIsLoading(false);
-    };
-
-    checkSession();
+    }
+    
+    loadData()
   }, []);
 
   const handleSaveProfile = async () => {
