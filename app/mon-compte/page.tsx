@@ -81,17 +81,16 @@ export default function MonComptePage() {
   
   const loadData = async () => {
     try {
-      console.log('Step 1: Getting session...')
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-      console.log('Step 2: Session result:', session?.user?.email, sessionError)
+      console.log('Step 1: Getting user...')
+      const { data: { user }, error } = await supabase.auth.getUser()
+      console.log('Step 2: User result:', user?.email, error)
       
-      if (!session?.user) {
+      if (!user) {
         console.log('Step 3: No user, redirecting...')
         window.location.href = '/login'
         return
       }
       
-      const user = session.user
       if (mounted) setUser(user)
       
       console.log('Step 4: Loading fidelite...')
