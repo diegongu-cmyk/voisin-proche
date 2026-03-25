@@ -323,36 +323,47 @@ export default function MonComptePage() {
 
                 {/* Progress Circles */}
                 <div className="flex justify-center gap-2 mb-4">
-                  {Array.from({ length: 7 }, (_, i) => (
-                    <div
-                      key={i}
-                      className={`h-8 w-8 rounded-full flex items-center justify-center transition-all ${
-                        i < (service.count || 0)
-                          ? (service.count || 0) >= 7 
-                            ? "bg-[#F59E0B] shadow-md"
-                            : "bg-[#1D9E75] shadow-md"
-                          : "bg-gray-200"
-                      }`}
-                    >
-                      {i < (service.count || 0) ? (
-                        <span className="text-xs font-bold text-white">{i + 1}</span>
-                      ) : (
-                        <span className="text-xs font-medium text-gray-400">{i + 1}</span>
-                      )}
-                    </div>
-                  ))}
+                  {Array.from({ length: 7 }, (_, i) => {
+                    const currentProgress = (service.count || 0) % 7;
+                    const hasDiscount = (service.count || 0) >= 7;
+                    const isActive = i < currentProgress;
+                    
+                    return (
+                      <div
+                        key={i}
+                        className={`h-8 w-8 rounded-full flex items-center justify-center transition-all ${
+                          isActive
+                            ? hasDiscount 
+                              ? "bg-[#F59E0B] shadow-md"
+                              : "bg-[#1D9E75] shadow-md"
+                            : "bg-gray-200"
+                        }`}
+                      >
+                        {isActive ? (
+                          <span className="text-xs font-bold text-white">{i + 1}</span>
+                        ) : (
+                          <span className="text-xs font-medium text-gray-400">{i + 1}</span>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
 
                 {/* Progress Text */}
                 <div className="text-center">
-                  {(service.count || 0) >= 7 ? (
+                  {(service.count || 0) >= 7 && (service.count || 0) % 7 === 0 ? (
                     <p className="text-sm font-bold text-[#F59E0B]">
                       🎁 -20% sur votre prochain service !
                     </p>
                   ) : (
-                    <p className="text-sm text-slate-600">
-                      <span className="font-semibold">{service.count || 0} services</span> · Plus que {Math.max(0, 7 - (service.count || 0))} pour votre réduction -20%
-                    </p>
+                    <div>
+                      <p className="text-sm text-slate-600">
+                        <span className="font-semibold">{(service.count || 0) % 7}/7</span> · Plus que {7 - ((service.count || 0) % 7)} pour votre réduction
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Total: {service.count || 0} services complétés
+                      </p>
+                    </div>
                   )}
                 </div>
               </div>
