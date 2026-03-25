@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 
@@ -68,10 +68,10 @@ export default function MonComptePage() {
   ]
 
   // Combine base services with fidelity data
-  const serviciosConProgreso = serviciosBase.map(s => {
+  const serviciosConProgreso = useMemo(() => serviciosBase.map(s => {
     const found = fidelityData?.find(f => f.service === s.name)
     return { ...s, count: found?.count || 0 }
-  })
+  }), [fidelityData])
 
   useEffect(() => {
   let mounted = true
