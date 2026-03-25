@@ -322,6 +322,9 @@ function BookingPageContent() {
                 <option>11h00</option>
                 <option>11h30</option>
                 <option>12h00</option>
+                <option>12h30</option>
+                <option>13h00</option>
+                <option>13h30</option>
                 <option>14h00</option>
                 <option>14h30</option>
                 <option>15h00</option>
@@ -331,6 +334,7 @@ function BookingPageContent() {
                 <option>17h00</option>
                 <option>17h30</option>
                 <option>18h00</option>
+                <option>19h00</option>
               </select>
             </div>
             <div className="md:col-span-2">
