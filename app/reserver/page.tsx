@@ -30,6 +30,18 @@ function BookingPageContent() {
   const [hasDiscount, setHasDiscount] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Promenade specific states
+  const [dogName, setDogName] = useState("");
+  const [dogBreed, setDogBreed] = useState("");
+  const [dogSize, setDogSize] = useState("");
+  const [dogTemperament, setDogTemperament] = useState("");
+  const [dogSocialization, setDogSocialization] = useState("");
+  const [departureAddress, setDepartureAddress] = useState("");
+  const [walkDuration, setWalkDuration] = useState("");
+  const [isVaccinated, setIsVaccinated] = useState("");
+  const [isSterilized, setIsSterilized] = useState("");
+  const [formErrors, setFormErrors] = useState<string[]>([]);
+
   useEffect(() => {
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -58,9 +70,35 @@ function BookingPageContent() {
     return Math.round(numericPrice * 0.8);
   };
 
+  const validatePromenadeForm = () => {
+    const errors: string[] = [];
+    
+    if (!dogName.trim()) errors.push("Le nom du chien est obligatoire");
+    if (!dogBreed.trim()) errors.push("La race du chien est obligatoire");
+    if (!dogSize) errors.push("La taille du chien est obligatoire");
+    if (!dogTemperament) errors.push("Le tempérament du chien est obligatoire");
+    if (!dogSocialization) errors.push("L'entente avec autres chiens est obligatoire");
+    if (!phone.trim()) errors.push("Le téléphone WhatsApp est obligatoire");
+    if (!departureAddress.trim()) errors.push("L'adresse de départ est obligatoire");
+    if (!walkDuration) errors.push("La durée de la promenade est obligatoire");
+    if (!isVaccinated) errors.push("La vaccination du chien est obligatoire");
+    
+    return errors;
+  };
+
   const handleConfirmReservation = async () => {
     try {
       setIsLoading(true);
+      
+      // Validate form for promenade service
+      if (service === "promenade") {
+        const errors = validatePromenadeForm();
+        if (errors.length > 0) {
+          setFormErrors(errors);
+          alert("Veuillez compléter tous les champs obligatoires:\n" + errors.join("\n"));
+          return;
+        }
+      }
       
       // Get current user
       const { data: { user }, error: userError } = await supabase.auth.getUser();
@@ -73,18 +111,37 @@ function BookingPageContent() {
       const precioNumerico = parseInt(currentService?.price.replace(/[^0-9]/g, '') || '0');
       const precioFinal = hasDiscount ? calculateDiscountedPrice(currentService?.price || '0') : precioNumerico;
       
+      // Build details object based on service type
+      let detailsObject: any = {
+        fullName,
+        phone,
+        email,
+        fullAddress: fullAddress || "",
+        notes: notes
+      };
+      
+      if (service === "promenade") {
+        detailsObject = {
+          ...detailsObject,
+          dogName,
+          dogBreed,
+          dogSize,
+          dogTemperament,
+          dogSocialization,
+          departureAddress,
+          walkDuration,
+          isVaccinated,
+          isSterilized,
+          notes
+        };
+      }
+      
       const reservationData = {
         user_id: user.id,
         service: currentService?.name || "",
         date: date || "",
         heure: time || "",
-        details: JSON.stringify({
-          fullName,
-          phone,
-          email,
-          fullAddress: fullAddress || "",
-          notes: notes
-        }),
+        details: JSON.stringify(detailsObject),
         prix: precioFinal.toString(),
         notes: notes,
         statut: "en_attente"
@@ -171,7 +228,166 @@ function BookingPageContent() {
           <h2 className="text-xl font-bold text-slate-900">PASO 2 - Détails de la réservation</h2>
           <p className="mt-1 text-sm text-slate-600">{currentService?.name}</p>
 
-          <div className="mt-5 grid gap-4 md:grid-cols-2">
+          {service === "promenade" ? (
+            <div className="mt-5 space-y-6">
+              {/* INFORMACIÓN DEL PERRO */}
+              <div>
+                <h3 className="text-lg font-semibold text-[#085041] mb-3">INFORMACIÓN DEL PERRO</h3>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Nom du chien *</label>
+                    <input
+                      type="text"
+                      required
+                      value={dogName}
+                      onChange={(e) => setDogName(e.target.value)}
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-[#1D9E75]"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Race *</label>
+                    <input
+                      type="text"
+                      required
+                      value={dogBreed}
+                      onChange={(e) => setDogBreed(e.target.value)}
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-[#1D9E75]"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Taille *</label>
+                    <select
+                      value={dogSize}
+                      onChange={(e) => setDogSize(e.target.value)}
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-[#1D9E75]"
+                    >
+                      <option value="">Sélectionner...</option>
+                      <option value="Petit">Petit - moins de 10kg</option>
+                      <option value="Moyen">Moyen - 10 à 25kg</option>
+                      <option value="Grand">Grand - plus de 25kg</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Tempérament *</label>
+                    <select
+                      value={dogTemperament}
+                      onChange={(e) => setDogTemperament(e.target.value)}
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-[#1D9E75]"
+                    >
+                      <option value="">Sélectionner...</option>
+                      <option value="Calme">Calme</option>
+                      <option value="Joueur">Joueur</option>
+                      <option value="Nerveux">Nerveux</option>
+                      <option value="Agressif avec autres chiens">Agressif avec autres chiens</option>
+                    </select>
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Entente avec autres chiens *</label>
+                    <select
+                      value={dogSocialization}
+                      onChange={(e) => setDogSocialization(e.target.value)}
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-[#1D9E75]"
+                    >
+                      <option value="">Sélectionner...</option>
+                      <option value="Oui, très sociable">Oui, très sociable</option>
+                      <option value="Oui, mais supervisé">Oui, mais supervisé</option>
+                      <option value="Non, préfère être seul">Non, préfère être seul</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* CONTACT ET LOCALISATION */}
+              <div>
+                <h3 className="text-lg font-semibold text-[#085041] mb-3">CONTACT ET LOCALISATION</h3>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Téléphone WhatsApp *</label>
+                    <input
+                      type="tel"
+                      required
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-[#1D9E75]"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Nous partagerons la localisation GPS en temps réel</p>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Adresse de départ *</label>
+                    <input
+                      type="text"
+                      required
+                      value={departureAddress}
+                      onChange={(e) => setDepartureAddress(e.target.value)}
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-[#1D9E75]"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Point de rendez-vous</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* DURÉE */}
+              <div>
+                <h3 className="text-lg font-semibold text-[#085041] mb-3">DURÉE</h3>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-slate-700">Durée de la promenade *</label>
+                  <select
+                    value={walkDuration}
+                    onChange={(e) => setWalkDuration(e.target.value)}
+                    className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-[#1D9E75]"
+                  >
+                    <option value="">Sélectionner...</option>
+                    <option value="30 minutes - 8€">30 minutes - 8€</option>
+                    <option value="45 minutes - 10€">45 minutes - 10€</option>
+                    <option value="1 heure - 12€">1 heure - 12€</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* INFORMATIONS COMPLÉMENTAIRES */}
+              <div>
+                <h3 className="text-lg font-semibold text-[#085041] mb-3">INFORMATIONS COMPLÉMENTAIRES</h3>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Votre chien est-il vacciné ? *</label>
+                    <select
+                      value={isVaccinated}
+                      onChange={(e) => setIsVaccinated(e.target.value)}
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-[#1D9E75]"
+                    >
+                      <option value="">Sélectionner...</option>
+                      <option value="Oui">Oui</option>
+                      <option value="Non">Non</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Votre chien est-il stérilisé ?</label>
+                    <select
+                      value={isSterilized}
+                      onChange={(e) => setIsSterilized(e.target.value)}
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-[#1D9E75]"
+                    >
+                      <option value="">Sélectionner...</option>
+                      <option value="Oui">Oui</option>
+                      <option value="Non">Non</option>
+                      <option value="Je ne sais pas">Je ne sais pas</option>
+                    </select>
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Notes pour le promeneur</label>
+                    <textarea
+                      rows={3}
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                      placeholder="Allergies, habitudes, préférences..."
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-[#1D9E75]"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="mt-5 grid gap-4 md:grid-cols-2">
             <div>
               <label className="mb-1 block text-sm font-medium text-slate-700">Prénom et Nom</label>
               <input
@@ -289,7 +505,7 @@ function BookingPageContent() {
                   <span className="font-semibold">Téléphone:</span> {phone || "Non renseigné"}
                 </p>
                 <p>
-                  <span className="font-semibold">Adresse:</span> {fullAddress || "Non renseignée"}
+                  <span className="font-semibold">Adresse:</span> {service === "promenade" ? (departureAddress || "Non renseignée") : (fullAddress || "Non renseignée")}
                 </p>
                 <p>
                   <span className="font-semibold">Date et heure:</span>{" "}
@@ -302,6 +518,38 @@ function BookingPageContent() {
                 )}
               </div>
             </div>
+
+            {service === "promenade" && (
+              <div className="border-b border-slate-200 pb-4">
+                <h3 className="text-base font-extrabold text-slate-900">Informations du chien</h3>
+                <div className="mt-2 space-y-1">
+                  <p>
+                    <span className="font-semibold">Nom du chien:</span> {dogName || "Non renseigné"}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Race:</span> {dogBreed || "Non renseignée"}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Taille:</span> {dogSize || "Non renseignée"}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Tempérament:</span> {dogTemperament || "Non renseigné"}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Entente avec autres chiens:</span> {dogSocialization || "Non renseigné"}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Durée de la promenade:</span> {walkDuration || "Non renseignée"}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Vacciné:</span> {isVaccinated || "Non renseigné"}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Stérilisé:</span> {isSterilized || "Non renseigné"}
+                  </p>
+                </div>
+              </div>
+            )}
 
             <div className="border-b border-slate-200 pb-4">
               <h3 className="text-base font-extrabold text-slate-900">Votre réservation</h3>
