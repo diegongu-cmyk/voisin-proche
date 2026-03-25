@@ -311,7 +311,27 @@ function BookingPageContent() {
             </div>
             <div>
               <label className="mb-1 block text-sm font-medium text-slate-700">Heure souhaitée *</label>
-              <input type="time" required value={time} onChange={(e) => setTime(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+              <select required value={time} onChange={(e) => setTime(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
+                <option value="">Choisir une heure</option>
+                <option>8h00</option>
+                <option>8h30</option>
+                <option>9h00</option>
+                <option>9h30</option>
+                <option>10h00</option>
+                <option>10h30</option>
+                <option>11h00</option>
+                <option>11h30</option>
+                <option>12h00</option>
+                <option>14h00</option>
+                <option>14h30</option>
+                <option>15h00</option>
+                <option>15h30</option>
+                <option>16h00</option>
+                <option>16h30</option>
+                <option>17h00</option>
+                <option>17h30</option>
+                <option>18h00</option>
+              </select>
             </div>
             <div className="md:col-span-2">
               <label className="mb-1 block text-sm font-medium text-slate-700">Adresse à Fontenay-le-Comte *</label>
