@@ -151,16 +151,62 @@ export default function AdminPage() {
         .eq('service', serviceName)
         .maybeSingle();
 
+      const newCount = (existing?.count || 0) + 1;
+      const remaining = Math.max(0, 7 - newCount);
+
       if (existing) {
         await supabase
           .from('fidelite')
-          .update({ count: existing.count + 1 })
+          .update({ count: newCount })
           .eq('user_id', userId)
           .eq('service', serviceName);
       } else {
         await supabase
           .from('fidelite')
           .insert({ user_id: userId, service: serviceName, count: 1 });
+      }
+
+      // Obtener datos de la reserva para el email
+      const { data: reservationData } = await supabase
+        .from('reservations')
+        .select('*')
+        .eq('id', reservationId)
+        .single();
+
+      // Obtener email del cliente
+      const details = typeof reservationData?.details === 'string'
+        ? JSON.parse(reservationData.details)
+        : reservationData?.details;
+
+      if (details?.email) {
+        await fetch('/api/send-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            to: details.email,
+            subject: `Votre service est terminé — ${newCount}/7 vers votre réduction ! 🌿`,
+            html: `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                <h1 style="color: #1D9E75;">Voisin Proche</h1>
+                <h2 style="color: #085041;">Service terminé ! ✅</h2>
+                <p>Bonjour ${details.fullName || 'cher client'},</p>
+                <p>Votre service <strong>${serviceName}</strong> est maintenant terminé.</p>
+                <div style="background: #E1F5EE; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                  <h3 style="color: #085041; margin: 0 0 10px 0;">🌟 Votre carte de fidélité</h3>
+                  <p><strong>${serviceName} :</strong> ${newCount}/7 services complétés</p>
+                  ${newCount >= 7 
+                    ? '<p style="color: #F59E0B; font-weight: bold;">🎁 Félicitations ! Votre prochain service bénéficie de -20% !</p>'
+                    : `<p>Plus que <strong>${remaining} service(s)</strong> pour obtenir votre réduction de -20% !</p>` 
+                  }
+                </div>
+                <a href="https://voisin-proche.vercel.app/reserver" style="background: #1D9E75; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; display: inline-block;">
+                  Réserver un nouveau service
+                </a>
+                <p style="color: #1D9E75;"><strong>L'équipe Voisin Proche</strong></p>
+              </div>
+            `
+          })
+        });
       }
       
       window.location.reload();
