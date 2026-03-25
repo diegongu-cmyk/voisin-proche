@@ -896,7 +896,7 @@ function BookingPageContent() {
             </button>
           </div>
         </div>
-      )}
+      ) : null}
     </section>
   );
 }
