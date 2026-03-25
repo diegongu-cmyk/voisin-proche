@@ -78,10 +78,20 @@ function BookingPageContent() {
     if (!dogSize) errors.push("La taille du chien est obligatoire");
     if (!dogTemperament) errors.push("Le tempérament du chien est obligatoire");
     if (!dogSocialization) errors.push("L'entente avec autres chiens est obligatoire");
-    if (!phone.trim()) errors.push("Le téléphone WhatsApp est obligatoire");
-    if (!departureAddress.trim()) errors.push("L'adresse de départ est obligatoire");
     if (!walkDuration) errors.push("La durée de la promenade est obligatoire");
-    if (!isVaccinated) errors.push("La vaccination du chien est obligatoire");
+    
+    return errors;
+  };
+
+  const validateCommonForm = () => {
+    const errors: string[] = [];
+    
+    if (!fullName.trim()) errors.push("Le prénom et nom sont obligatoires");
+    if (!phone.trim()) errors.push("Le téléphone est obligatoire");
+    if (!email.trim()) errors.push("L'email est obligatoire");
+    if (!date.trim()) errors.push("La date est obligatoire");
+    if (!time.trim()) errors.push("L'heure est obligatoire");
+    if (!fullAddress.trim()) errors.push("L'adresse est obligatoire");
     
     return errors;
   };
@@ -90,12 +100,20 @@ function BookingPageContent() {
     try {
       setIsLoading(true);
       
-      // Validate form for promenade service
+      // Validate common form fields
+      const commonErrors = validateCommonForm();
+      if (commonErrors.length > 0) {
+        setFormErrors(commonErrors);
+        alert("Veuillez compléter tous les champs obligatoires:\n" + commonErrors.join("\n"));
+        return;
+      }
+      
+      // Validate promenade specific fields
       if (service === "promenade") {
-        const errors = validatePromenadeForm();
-        if (errors.length > 0) {
-          setFormErrors(errors);
-          alert("Veuillez compléter tous les champs obligatoires:\n" + errors.join("\n"));
+        const promenadeErrors = validatePromenadeForm();
+        if (promenadeErrors.length > 0) {
+          setFormErrors(promenadeErrors);
+          alert("Veuillez compléter tous les champs obligatoires:\n" + promenadeErrors.join("\n"));
           return;
         }
       }
@@ -128,10 +146,7 @@ function BookingPageContent() {
           dogSize,
           dogTemperament,
           dogSocialization,
-          departureAddress,
           walkDuration,
-          isVaccinated,
-          isSterilized,
           notes
         };
       }
@@ -334,7 +349,7 @@ function BookingPageContent() {
                   <span className="font-semibold">Téléphone:</span> {phone || "Non renseigné"}
                 </p>
                 <p>
-                  <span className="font-semibold">Adresse:</span> {service === "promenade" ? (departureAddress || "Non renseignée") : (fullAddress || "Non renseignée")}
+                  <span className="font-semibold">Adresse:</span> {fullAddress || "Non renseignée"}
                 </p>
                 <p>
                   <span className="font-semibold">Date et heure:</span>{" "}
