@@ -289,8 +289,7 @@ export default function HomePage() {
                   Réserver
                 </Link>
               </div>
-                  <h2 className="text-3xl font-extrabold text-slate-900">Nos services</h2>
-    </article>
+            </article>
           ))}
         </div>
       </section>
