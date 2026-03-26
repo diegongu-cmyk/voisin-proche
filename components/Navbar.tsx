@@ -240,7 +240,7 @@ export default function Navbar() {
                 </div>
                 
                 {/* User name */}
-                <span className="hidden md:block">{userName}</span>
+                <span className="hidden md:block font-bold text-lg text-[#1D9E75] bg-gradient-to-r from-[#1D9E75] to-[#085041] bg-clip-text text-transparent">{userName}</span>
                 
                 {/* Dropdown arrow */}
                 <svg 
