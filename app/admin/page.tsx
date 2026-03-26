@@ -326,6 +326,17 @@ export default function AdminPage() {
           <form onSubmit={handleAdminLogin} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
+                Email
+              </label>
+              <input
+                type="email"
+                defaultValue="voisinprochecontact@gmail.com"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent"
+                placeholder="voisinprochecontact@gmail.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Mot de passe
               </label>
               <input
