@@ -39,7 +39,7 @@ const services = [
       "Un accompagnement humain pour le quotidien.\nPrésence rassurante lors de déplacements.\nService flexible selon vos besoins.",
     details: ["Rendez-vous médicaux", "Promenades", "Compagnie", "Minimum 1h"],
     image:
-      "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=600",
+      "https://images.unsplash.com/photo-1581579185892-4b0d7f9c0e6b?w=600",
   },
   {
     emoji: "🛒",
