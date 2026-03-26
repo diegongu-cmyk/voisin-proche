@@ -3,7 +3,6 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import TopBanner from "@/components/TopBanner";
 import WhatsAppButton from "@/components/WhatsAppButton";
-import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Voisin Proche",
@@ -220,7 +219,6 @@ export default function RootLayout({
       </footer>
         
         <WhatsAppButton />
-        <Footer />
       </body>
     </html>
   );
