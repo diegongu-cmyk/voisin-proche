@@ -32,7 +32,7 @@ const services = [
     titre: "Accompagnement",
     prix: "Depuis 12€/h",
     description: "Aide pour sorties et rendez-vous.\nPrésence rassurante et bienveillante.",
-    image: "https://images.unsplash.com/photo-1581579185892-4b0d7f9c0e6b?w=400",
+    image: "https://images.unsplash.com/photo-1516307365426-bea591f05011?w=400",
   },
   {
     emoji: "🛒",
@@ -71,7 +71,7 @@ const sliderServices = [
   {
     titre: "Accompagnement",
     prix: "Depuis 12€",
-    image: "https://images.unsplash.com/photo-1581579185892-4b0d7f9c0e6b?w=600",
+    image: "https://images.unsplash.com/photo-1516307365426-bea591f05011?w=600",
   },
   {
     titre: "Courses et commissions",
