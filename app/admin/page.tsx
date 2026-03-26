@@ -13,6 +13,8 @@ interface Reservation {
   notes: string;
   statut: string;
   prix?: number;
+  created_at?: string;
+  updated_at?: string;
 }
 
 interface ServiceDetails {
@@ -725,6 +727,27 @@ export default function AdminPage() {
                   return (
                     <div className="space-y-6">
                       {/* Información básica */}
+                      <div className="bg-gray-50 rounded-lg p-4">
+                        <h4 className="font-semibold text-gray-900 mb-3">Informations du service</h4>
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Date du service:</span>
+                            <span className="text-sm font-medium text-gray-900">{selectedReservation.date} à {selectedReservation.heure}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Date de demande:</span>
+                            <span className="text-sm font-medium text-gray-900">{selectedReservation.created_at ? new Date(selectedReservation.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Non spécifiée'}</span>
+                          </div>
+                          {selectedReservation.statut === 'termine' && selectedReservation.updated_at && (
+                            <div className="flex justify-between">
+                              <span className="text-sm text-gray-600">Date de fin:</span>
+                              <span className="text-sm font-medium text-gray-900">{new Date(selectedReservation.updated_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Información del cliente */}
                       <div className="bg-gray-50 rounded-lg p-4">
                         <h4 className="font-semibold text-gray-900 mb-3">Informations du client</h4>
                         <div className="space-y-2">
