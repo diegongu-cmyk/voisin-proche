@@ -195,7 +195,7 @@ export default function RootLayout({
         <div className="mx-auto w-full max-w-640 px-4 py-6">
           <div className="flex flex-col gap-4 text-center md:flex-row md:justify-between md:text-left">
             <p className="text-xs text-white/50">
-              © 2025 Voisin Proche · Tous droits réservés
+              © 2026 Voisin Proche · Tous droits réservés
             </p>
             <p className="text-xs text-white/50">
               Fait avec à Fontenay-le-Comte
