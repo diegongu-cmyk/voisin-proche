@@ -272,7 +272,7 @@ function BookingPageContent() {
 
       {step === 2 && (
         <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
-          <h2 className="text-xl font-bold text-[#085041]">Vos informations</h2><h2 className="text-xl font-bold text-[#085041]">Vos informations</h2>
+          <h2 className="text-xl font-bold text-[#085041]">Vos informations</h2>
 
           {currentService && (
             <div className="mt-3 mb-5 rounded-2xl border border-green-200 bg-green-50 p-4">
