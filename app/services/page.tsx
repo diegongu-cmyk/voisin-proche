@@ -142,6 +142,37 @@ export default function ServicesPage() {
           ))}
         </div>
       </div>
+
+      {/* Section Autre Besoin */}
+      <div className="mx-auto max-w-4xl px-4 py-12">
+        <div className="bg-gradient-to-br from-[#1D9E75]/5 to-[#085041]/10 rounded-3xl border border-[#1D9E75]/20 p-8 text-center">
+          {/* Icon */}
+          <div className="text-6xl mb-6">🤝</div>
+          
+          {/* Titre */}
+          <h2 className="text-3xl font-bold text-[#085041] mb-4">
+            Un autre besoin ?
+          </h2>
+          
+          {/* Texte */}
+          <p className="text-lg text-slate-700 mb-8 max-w-2xl mx-auto leading-relaxed">
+            Vous ne trouvez pas ce que vous cherchez ? 
+            Contactez-nous ! Nous sommes là pour vous aider et trouver 
+            ensemble une solution adaptée à vos besoins.
+          </p>
+          
+          {/* Bouton */}
+          <Link
+            href="/contact"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#1D9E75] px-8 py-4 text-lg font-semibold text-white transition-all hover:bg-[#085041] hover:shadow-lg hover:scale-105"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            Nous contacter
+          </Link>
+        </div>
+      </div>
     </section>
   );
 }
