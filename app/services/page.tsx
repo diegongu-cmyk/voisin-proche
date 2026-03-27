@@ -5,8 +5,8 @@ import { useState } from "react";
 
 const serviceMapping: Record<string, string> = {
   "Promenade de chiens": "promenade",
-  "Garde d'animaux à domicile": "garde",
-  "Accompagnement de personnes": "accompagnement",
+  "Garde d'animaux": "garde",
+  "Accompagnement": "accompagnement",
   "Courses et commissions": "courses",
   "Ménage maison/bureau": "menage",
   "Cours d'espagnol": "espagnol",
@@ -25,18 +25,18 @@ const services = [
   },
   {
     emoji: "🐾",
-    titre: "Garde d'animaux à domicile",
+    titre: "Garde d'animaux",
     prixPrincipal: "depuis 15€/jour",
-    description: "Nous gardons votre animal chez vous pendant votre absence, avec tout l'amour et l'attention qu'il mérite. Depuis 15€/jour.",
+    description: "Nous gardons votre animal chez vous pendant votre absence. Depuis 15€/jour.",
     details: ["Chats 15€/jour", "Chiens 20€/jour", "Photos quotidiennes", "7j/7"],
     image:
       "https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?w=600",
   },
   {
     emoji: "🤝",
-    titre: "Accompagnement de personnes",
+    titre: "Accompagnement",
     prixPrincipal: "12€/heure",
-    description: "Nous accompagnons vos proches pour leurs rendez-vous médicaux, courses ou sorties. Disponible 7j/7. Depuis 12€/heure.",
+    description: "Nous accompagnons vos proches pour leurs rendez-vous médicaux, courses ou sorties. Depuis 12€/heure.",
     details: ["Rendez-vous médicaux", "Promenades", "Compagnie", "Minimum 1h"],
     image:
       "https://images.unsplash.com/photo-1706806594516-75f93dab6295?w=600",
@@ -54,7 +54,7 @@ const services = [
     emoji: "🧹",
     titre: "Ménage maison/bureau",
     prixPrincipal: "depuis 25€",
-    description: "Nettoyage complet de votre domicile ou bureau. Produits fournis sur demande. Depuis 25€.",
+    description: "Nettoyage complet de votre domicile ou bureau. Depuis 25€.",
     details: ["Maison", "Bureau", "Produits inclus", "Sur mesure"],
     image:
       "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600",
@@ -63,7 +63,7 @@ const services = [
     emoji: "🇪🇸",
     titre: "Cours d'espagnol",
     prixPrincipal: "depuis 15€/h",
-    description: "Cours particuliers d'espagnol pour tous niveaux, enfants et adultes. À domicile ou en ligne. Depuis 15€/heure.",
+    description: "Cours particuliers d'espagnol pour tous niveaux. Depuis 15€/heure.",
     details: ["Tous niveaux", "Enfants", "Adultes", "À domicile ou en ligne"],
     image:
       "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600",
@@ -72,7 +72,7 @@ const services = [
     emoji: "✨",
     titre: "Autres services",
     prixPrincipal: "nous contacter",
-    description: "Vous avez un besoin spécifique ? Contactez-nous et nous ferons notre possible pour vous aider.",
+    description: "Vous avez un besoin spécifique ? Contactez-nous !",
     details: ["Sur mesure", "Consultation", "Solutions adaptées", "Contact direct"],
     image:
       "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600",
@@ -80,8 +80,6 @@ const services = [
 ];
 
 export default function ServicesPage() {
-  const [hoveredService, setHoveredService] = useState<string | null>(null);
-
   return (
     <section className="space-y-8 bg-[#FFFBF5]">
       <header className="rounded-3xl bg-[#1D9E75] px-6 py-10 text-white md:px-10 md:py-12">
@@ -96,9 +94,7 @@ export default function ServicesPage() {
           {services.map((service) => (
             <article
               key={service.titre}
-              className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:shadow-lg"
-              onMouseEnter={() => setHoveredService(service.titre)}
-              onMouseLeave={() => setHoveredService(null)}
+              className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:shadow-lg"
             >
               <div className="relative">
                 <img
@@ -119,20 +115,9 @@ export default function ServicesPage() {
                 </h2>
 
                 {/* Description with hover effect */}
-                <div className="overflow-hidden">
-                  <div 
-                    className={`transition-all duration-300 ease-in-out ${
-                      hoveredService === service.titre 
-                        ? 'max-h-32 opacity-100 translate-y-0' 
-                        : 'max-h-0 opacity-0 -translate-y-2'
-                    }`}
-                  >
-                    <div className="bg-green-50 border-l-4 border-green-500 p-3 rounded-r-lg">
-                      <p className="text-sm leading-relaxed text-gray-700 flex items-start gap-2">
-                        <span className="text-green-500 mt-0.5">✨</span>
-                        <span>{service.description}</span>
-                      </p>
-                    </div>
+                <div className="overflow-hidden max-h-0 group-hover:max-h-40 transition-all duration-300 ease-in-out">
+                  <div className="border-l-4 border-green-500 bg-green-50 p-3 mt-2">
+                    <p className="text-sm text-gray-700">✨ {service.description}</p>
                   </div>
                 </div>
 
