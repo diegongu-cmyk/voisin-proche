@@ -184,10 +184,7 @@ function BookingPageContent() {
         console.error('Reservation error:', error);
         alert("Erreur lors de la réservation: " + error.message);
       } else {
-        alert("Réservation envoyée ! Nous vous confirmons dans les 2 heures.");
-        setTimeout(() => {
-          window.location.href = '/mon-compte';
-        }, 3000);
+        window.location.href = '/reservation-confirmee';
       }
     } catch (err) {
       console.error('Exception:', err);
