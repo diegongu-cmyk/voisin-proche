@@ -71,6 +71,13 @@ function BookingPageContent() {
     return Math.round(numericPrice * 0.8);
   };
 
+  const calculatePromenadePrice = (duration: string) => {
+    if (duration === "30 minutes") return 8;
+    if (duration === "45 minutes") return 10;
+    if (duration === "1 heure") return 12;
+    return 8; // Default price
+  };
+
   const validatePromenadeForm = () => {
     const errors: string[] = [];
     
@@ -127,8 +134,13 @@ function BookingPageContent() {
         return;
       }
 
-      const precioNumerico = parseInt(currentService?.price.replace(/[^0-9]/g, '') || '0');
-      const precioFinal = hasDiscount ? calculateDiscountedPrice(currentService?.price || '0') : precioNumerico;
+      let precioNumerico = 0;
+      if (service === "promenade" && walkDuration) {
+        precioNumerico = calculatePromenadePrice(walkDuration);
+      } else {
+        precioNumerico = parseInt(currentService?.price.replace(/[^0-9]/g, '') || '0');
+      }
+      const precioFinal = hasDiscount ? calculateDiscountedPrice(precioNumerico.toString()) : precioNumerico;
       
       // Build details object based on service type
       let detailsObject: any = {
@@ -361,6 +373,46 @@ function BookingPageContent() {
           <p className="mt-1 text-sm text-slate-600">Vérifiez les informations avant validation.</p>
 
           <div className="mt-5 space-y-5 text-sm text-slate-700">
+            <div className="mt-5 rounded-xl border border-slate-200 bg-[#1D9E75]/10 p-4">
+              <h3 className="text-base font-extrabold text-slate-900">Prix estimé</h3>
+              <div className="flex items-center gap-3">
+                <p className="text-2xl font-extrabold text-[#1D9E75]">
+                  {hasDiscount ? (
+                    <>
+                      <span className="line-through text-gray-400">
+                        {service === "promenade" && walkDuration ? 
+                          `${calculatePromenadePrice(walkDuration)}€` : 
+                          currentService?.price
+                        }
+                      </span>
+                      <span className="ml-2 text-xl font-bold text-[#F59E0B]">
+                        {calculateDiscountedPrice(
+                          service === "promenade" && walkDuration ? 
+                            calculatePromenadePrice(walkDuration).toString() : 
+                            currentService?.price || '0'
+                        )}
+                      </span>
+                    </>
+                  ) : (
+                    <span>
+                      {service === "promenade" && walkDuration ? 
+                        `${calculatePromenadePrice(walkDuration)}€` : 
+                        currentService?.price
+                      }
+                    </span>
+                  )}
+                </p>
+                {hasDiscount && (
+                  <span className="inline-flex animate-pulse rounded-full bg-[#F59E0B] px-3 py-1 text-sm font-bold text-white">
+                    🎁 -20% fidélité appliqué !
+                  </span>
+                )}
+              </div>
+              <p className="mt-1 text-sm text-slate-700">
+                Le prix final sera confirmé lors de notre prise de contact
+              </p>
+            </div>
+
             <div className="border-b border-slate-200 pb-4">
               <h3 className="text-base font-extrabold text-slate-900">Vos coordonnées</h3>
               <div className="mt-2 space-y-1">
@@ -431,30 +483,6 @@ function BookingPageContent() {
                 </p>
               </div>
             </div>
-          </div>
-
-          <div className="mt-5 rounded-xl border border-slate-200 bg-[#1D9E75]/10 p-4">
-            <h3 className="text-base font-extrabold text-slate-900">Prix estimé</h3>
-            <div className="flex items-center gap-3">
-              <p className="text-2xl font-extrabold text-[#1D9E75]">
-                {hasDiscount ? (
-                  <>
-                    <span className="line-through text-gray-400">{currentService?.price}</span>
-                    <span className="ml-2 text-xl font-bold text-[#F59E0B]">{calculateDiscountedPrice(currentService?.price || '0')}</span>
-                  </>
-                ) : (
-                  <span>{currentService?.price}</span>
-                )}
-              </p>
-              {hasDiscount && (
-                <span className="inline-flex animate-pulse rounded-full bg-[#F59E0B] px-3 py-1 text-sm font-bold text-white">
-                  🎁 -20% fidélité appliqué !
-                </span>
-              )}
-            </div>
-            <p className="mt-1 text-sm text-slate-700">
-              Le prix final sera confirmé lors de notre prise de contact
-            </p>
           </div>
 
           <div className="mt-5 rounded-xl border border-[#1D9E75] bg-[#E1F5EE] p-4 text-[#085041]">
