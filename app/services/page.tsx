@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 
 const serviceMapping: Record<string, string> = {
   "Promenade de chiens": "promenade",
@@ -15,8 +18,7 @@ const services = [
     emoji: "🐕",
     titre: "Promenade de chiens",
     prixPrincipal: "depuis 8€",
-    description:
-      "Balades adaptées au rythme de votre chien.\nSuivi GPS en temps réel pendant chaque sortie.\nPhotos incluses pour chaque promenade.",
+    description: "Nous promenons votre chien en toute sécurité dans les environs de Fontenay-le-Comte. Disponible en 30 min, 45 min ou 1 heure. Depuis 8€.",
     details: ["30min 8€", "45min 11€", "1h 14€", "GPS inclus", "Photos incluses"],
     image:
       "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=600",
@@ -25,8 +27,7 @@ const services = [
     emoji: "🐾",
     titre: "Garde d'animaux à domicile",
     prixPrincipal: "depuis 15€/jour",
-    description:
-      "Visites à domicile pour nourrir et rassurer vos animaux.\nUn suivi simple avec nouvelles quotidiennes.\nService disponible toute la semaine.",
+    description: "Nous gardons votre animal chez vous pendant votre absence, avec tout l'amour et l'attention qu'il mérite. Depuis 15€/jour.",
     details: ["Chats 15€/jour", "Chiens 20€/jour", "Photos quotidiennes", "7j/7"],
     image:
       "https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?w=600",
@@ -35,8 +36,7 @@ const services = [
     emoji: "🤝",
     titre: "Accompagnement de personnes",
     prixPrincipal: "12€/heure",
-    description:
-      "Un accompagnement humain pour le quotidien.\nPrésence rassurante lors de déplacements.\nService flexible selon vos besoins.",
+    description: "Nous accompagnons vos proches pour leurs rendez-vous médicaux, courses ou sorties. Disponible 7j/7. Depuis 12€/heure.",
     details: ["Rendez-vous médicaux", "Promenades", "Compagnie", "Minimum 1h"],
     image:
       "https://images.unsplash.com/photo-1706806594516-75f93dab6295?w=600",
@@ -45,8 +45,7 @@ const services = [
     emoji: "🛒",
     titre: "Courses et commissions",
     prixPrincipal: "8€",
-    description:
-      "On s'occupe de vos achats essentiels.\nService pratique pour votre quotidien.\nLivraison rapide selon disponibilité.",
+    description: "Nous effectuons vos courses et commissions à votre place. Rapide et fiable. 8€.",
     details: ["Supermarché", "Pharmacie", "La Poste", "Livraison le jour même"],
     image:
       "https://images.unsplash.com/photo-1542838132-92c53300491e?w=600",
@@ -55,35 +54,34 @@ const services = [
     emoji: "🧹",
     titre: "Ménage maison/bureau",
     prixPrincipal: "depuis 25€",
-    description:
-      "Nettoyage soigné de vos espaces de vie ou de travail.\nIntervention adaptée à la taille du logement.\nService fiable et professionnel.",
-    details: ["Studio 25€", "2 pièces 35€", "3+ pièces 45€", "Produits inclus"],
+    description: "Nettoyage complet de votre domicile ou bureau. Produits fournis sur demande. Depuis 25€.",
+    details: ["Maison", "Bureau", "Produits inclus", "Sur mesure"],
     image:
       "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600",
   },
   {
     emoji: "🇪🇸",
     titre: "Cours d'espagnol",
-    prixPrincipal: "depuis 15€/heure",
-    description:
-      "Cours adaptés à votre niveau et à vos objectifs.\nAccompagnement personnalisé pour progresser rapidement.\nNatif espagnol pour une pratique authentique.",
-    details: ["Enfants 15€/heure", "Adultes 18€/heure", "En ligne", "En personne"],
+    prixPrincipal: "depuis 15€/h",
+    description: "Cours particuliers d'espagnol pour tous niveaux, enfants et adultes. À domicile ou en ligne. Depuis 15€/heure.",
+    details: ["Tous niveaux", "Enfants", "Adultes", "À domicile ou en ligne"],
     image:
       "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600",
   },
   {
     emoji: "✨",
     titre: "Autres services",
-    prixPrincipal: "à venir",
-    description:
-      "Des prestations supplémentaires arrivent bientôt.\nNous adaptons l'offre à vos besoins locaux.\nN'hésitez pas à nous contacter.",
-    details: ["Service sur demande", "Besoin spécifique", "Contact personnalisé"],
+    prixPrincipal: "nous contacter",
+    description: "Vous avez un besoin spécifique ? Contactez-nous et nous ferons notre possible pour vous aider.",
+    details: ["Sur mesure", "Consultation", "Solutions adaptées", "Contact direct"],
     image:
-      "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=600",
+      "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600",
   },
 ];
 
 export default function ServicesPage() {
+  const [hoveredService, setHoveredService] = useState<string | null>(null);
+
   return (
     <section className="space-y-8 bg-[#FFFBF5]">
       <header className="rounded-3xl bg-[#1D9E75] px-6 py-10 text-white md:px-10 md:py-12">
@@ -98,7 +96,9 @@ export default function ServicesPage() {
           {services.map((service) => (
             <article
               key={service.titre}
-              className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
+              className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:shadow-lg"
+              onMouseEnter={() => setHoveredService(service.titre)}
+              onMouseLeave={() => setHoveredService(null)}
             >
               <div className="relative">
                 <img
@@ -118,9 +118,23 @@ export default function ServicesPage() {
                   {service.titre}
                 </h2>
 
-                <p className="text-sm leading-relaxed text-slate-600">
-                  {service.description}
-                </p>
+                {/* Description with hover effect */}
+                <div className="overflow-hidden">
+                  <div 
+                    className={`transition-all duration-300 ease-in-out ${
+                      hoveredService === service.titre 
+                        ? 'max-h-32 opacity-100 translate-y-0' 
+                        : 'max-h-0 opacity-0 -translate-y-2'
+                    }`}
+                  >
+                    <div className="bg-green-50 border-l-4 border-green-500 p-3 rounded-r-lg">
+                      <p className="text-sm leading-relaxed text-gray-700 flex items-start gap-2">
+                        <span className="text-green-500 mt-0.5">✨</span>
+                        <span>{service.description}</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
 
                 <ul className="space-y-1.5 text-sm text-slate-700">
                   {service.details.map((detail) => (
