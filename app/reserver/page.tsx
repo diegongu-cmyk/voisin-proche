@@ -297,9 +297,9 @@ function BookingPageContent() {
                 <label className="mb-1 block text-sm font-medium text-slate-700">Durée de la promenade *</label>
                 <select required value={walkDuration} onChange={(e) => setWalkDuration(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
                   <option value="">Sélectionner</option>
-                  <option>30 minutes - 8€</option>
-                  <option>45 minutes - 10€</option>
-                  <option>1 heure - 12€</option>
+                  <option value="30 minutes">30 minutes - 8€</option>
+                  <option value="45 minutes">45 minutes - 10€</option>
+                  <option value="1 heure">1 heure - 12€</option>
                 </select>
               </div>
             </div>
