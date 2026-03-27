@@ -189,7 +189,7 @@ function BookingPageContent() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            to: 'voisinprochecontact@gmail.com',
+            to: 'diegongu@gmail.com',
             subject: `🔔 Nouvelle réservation — ${currentService?.name}`,
             html: `
               <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 2px solid #1D9E75; border-radius: 12px;">
