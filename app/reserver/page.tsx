@@ -7,7 +7,7 @@ import { supabase } from "@/lib/supabase";
 const slots = Array.from({ length: 11 }, (_, i) => `${8 + i}h00`);
 
 const services = [
-  { id: "promenade", icon: "🐕", name: "Promenade de chiens", price: "depuis 8€", description: "Nous promenons votre chien en toute sécurité dans les environs de Fontenay-le-Comte. Disponible en 30 min, 45 min ou 1 heure. Depuis 8€." },
+  { id: "promenade", icon: "🐕", name: "Promenade de chiens", price: "depuis 8€", description: "Nous promenons votre chien en toute sécurité dans les environs de Fontenay-le-Comte. Chaque promenade est accompagnée de jeux, caresses et un peu d'exercice pour le bonheur de votre compagnon. Des photos seront envoyées sur votre WhatsApp pendant la promenade. Disponible en 30 min, 45 min ou 1 heure. Depuis 8€." },
   { id: "garde", icon: "🐾", name: "Garde d'animaux", price: "depuis 15€/jour", description: "Nous gardons votre animal chez vous pendant votre absence, avec tout l'amour et l'attention qu'il mérite. Depuis 15€/jour." },
   { id: "accompagnement", icon: "🤝", name: "Accompagnement de personnes", price: "depuis 12€/h", description: "Nous accompagnons vos proches pour leurs rendez-vous médicaux, courses ou sorties. Disponible 7j/7. Depuis 12€/heure." },
   { id: "courses", icon: "🛒", name: "Courses et commissions", price: "8€", description: "Nous effectuons vos courses et commissions à votre place. Rapide et fiable. 8€." },
