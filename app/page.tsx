@@ -28,18 +28,18 @@ const services = [
     image: "https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?w=400",
   },
   {
+    emoji: "🇪🇸",
+    titre: "Cours d'espagnol",
+    prix: "Depuis 15€/h",
+    description: "Cours personnalisés tous niveaux.\nFormat en ligne ou à domicile.",
+    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400",
+  },
+  {
     emoji: "🤝",
     titre: "Accompagnement",
     prix: "Depuis 12€/h",
     description: "Aide pour sorties et rendez-vous.\nPrésence rassurante et bienveillante.",
     image: "https://images.unsplash.com/photo-1706806594516-75f93dab6295?w=400",
-  },
-  {
-    emoji: "🛒",
-    titre: "Courses",
-    prix: "Depuis 8€",
-    description: "Commissions du quotidien simplifiées.\nLivraison rapide à Fontenay-le-Comte.",
-    image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=400",
   },
   {
     emoji: "🧹",
@@ -49,11 +49,11 @@ const services = [
     image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=400",
   },
   {
-    emoji: "🇪🇸",
-    titre: "Cours d'espagnol",
-    prix: "Depuis 15€/h",
-    description: "Cours personnalisés tous niveaux.\nFormat en ligne ou à domicile.",
-    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400",
+    emoji: "🛒",
+    titre: "Courses",
+    prix: "Depuis 8€",
+    description: "Commissions du quotidien simplifiées.\nLivraison rapide à Fontenay-le-Comte.",
+    image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=400",
   },
 ];
 
@@ -69,14 +69,14 @@ const sliderServices = [
     image: "https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?w=600",
   },
   {
+    titre: "Cours d'espagnol",
+    prix: "Depuis 15€/heure",
+    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600",
+  },
+  {
     titre: "Accompagnement",
     prix: "Depuis 12€",
     image: "https://images.unsplash.com/photo-1706806594516-75f93dab6295?w=600",
-  },
-  {
-    titre: "Courses et commissions",
-    prix: "Depuis 8€",
-    image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=600",
   },
   {
     titre: "Ménage maison/bureau",
@@ -84,9 +84,9 @@ const sliderServices = [
     image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600",
   },
   {
-    titre: "Cours d'espagnol",
-    prix: "Depuis 15€/heure",
-    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600",
+    titre: "Courses et commissions",
+    prix: "Depuis 8€",
+    image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=600",
   },
 ];
 
