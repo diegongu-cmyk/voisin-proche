@@ -272,12 +272,12 @@ function BookingPageContent() {
           <h2 className="text-xl font-bold text-[#085041]">Vos informations</h2>
 
           {currentService && (
-            <div className="mt-3 mb-5 rounded-2xl border border-green-200 bg-green-50 p-4">
-              <div className="flex items-start gap-3">
-                <span className="text-2xl">{currentService.icon}</span>
-                <div>
-                  <h3 className="font-bold text-green-800">{currentService.name}</h3>
-                  <p className="text-sm text-green-700 mt-1">{currentService.description}</p>
+            <div className="mt-3 mb-5 animate-fadeIn rounded-2xl border-2 border-green-300 border-t-4 border-green-500 shadow-md bg-gradient-to-r from-green-50 to-emerald-50 p-6">
+              <div className="flex items-start gap-4">
+                <span className="text-4xl">{currentService.icon}</span>
+                <div className="flex-1">
+                  <h3 className="text-xl font-extrabold text-green-800">{currentService.name}</h3>
+                  <p className="text-base text-green-700 leading-relaxed mt-2">{currentService.description}</p>
                 </div>
               </div>
             </div>
