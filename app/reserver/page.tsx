@@ -36,6 +36,13 @@ function BookingPageContent() {
   const [walkDuration, setWalkDuration] = useState("");
   const [isVaccinated, setIsVaccinated] = useState("");
   const [isSterilized, setIsSterilized] = useState("");
+  
+  // Garde d'animaux specific states
+  const [petType, setPetType] = useState("");
+  const [petBreed, setPetBreed] = useState("");
+  const [petAge, setPetAge] = useState("");
+  const [guardDays, setGuardDays] = useState("");
+  
   const [formErrors, setFormErrors] = useState<string[]>([]);
 
   useEffect(() => {
@@ -84,6 +91,15 @@ function BookingPageContent() {
     return priceMap[service] || 1000;
   };
 
+  const validateGardeForm = () => {
+    const errors: string[] = [];
+    if (!petType) errors.push("Le type d'animal est obligatoire");
+    if (petType === "Chien" && !petBreed.trim()) errors.push("La race du chien est obligatoire");
+    if (!petAge) errors.push("L'âge de l'animal est obligatoire");
+    if (!guardDays.trim()) errors.push("Le nombre de jours de garde est obligatoire");
+    return errors;
+  };
+
   const validatePromenadeForm = () => {
     const errors: string[] = [];
     if (!dogName.trim()) errors.push("Le nom du chien est obligatoire");
@@ -125,6 +141,15 @@ function BookingPageContent() {
           return;
         }
       }
+      
+      if (service === "garde") {
+        const gardeErrors = validateGardeForm();
+        if (gardeErrors.length > 0) {
+          setFormErrors(gardeErrors);
+          alert("Veuillez compléter tous les champs obligatoires:\n" + gardeErrors.join("\n"));
+          return;
+        }
+      }
 
       const { data: { session } } = await supabase.auth.getSession();
       await new Promise(resolve => setTimeout(resolve, 500));
@@ -146,6 +171,9 @@ function BookingPageContent() {
       let detailsObject: any = { fullName, phone, email, fullAddress, notes };
       if (service === "promenade") {
         detailsObject = { ...detailsObject, dogName, dogBreed, dogSize, dogTemperament, dogSocialization, walkDuration };
+      }
+      if (service === "garde") {
+        detailsObject = { ...detailsObject, petType, petBreed, petAge, guardDays };
       }
 
       const reservationData = {
@@ -297,6 +325,42 @@ function BookingPageContent() {
                   <h3 className="text-xl font-extrabold text-green-800">{currentService.name}</h3>
                   <p className="text-base text-green-700 leading-relaxed mt-2">{currentService.description}</p>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {service === "garde" && (
+            <div className="grid gap-4 md:grid-cols-2 mb-4">
+              <div>
+                <label className="mb-1 block text-sm font-medium text-slate-700">Type d'animal *</label>
+                <select required value={petType} onChange={(e) => setPetType(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
+                  <option value="">Sélectionner</option>
+                  <option>Chien</option>
+                  <option>Chat</option>
+                  <option>Oiseau</option>
+                  <option>Lapin</option>
+                  <option>Autre</option>
+                </select>
+              </div>
+              {petType === "Chien" && (
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-slate-700">Race *</label>
+                  <input type="text" required value={petBreed} onChange={(e) => setPetBreed(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+                </div>
+              )}
+              <div>
+                <label className="mb-1 block text-sm font-medium text-slate-700">Âge de l'animal *</label>
+                <select required value={petAge} onChange={(e) => setPetAge(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
+                  <option value="">Sélectionner</option>
+                  <option>Moins de 1 an</option>
+                  <option>1 à 3 ans</option>
+                  <option>3 à 7 ans</option>
+                  <option>Plus de 7 ans</option>
+                </select>
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-slate-700">Nombre de jours de garde *</label>
+                <input type="number" required value={guardDays} onChange={(e) => setGuardDays(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" min="1" />
               </div>
             </div>
           )}
