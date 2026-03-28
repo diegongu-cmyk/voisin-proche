@@ -154,9 +154,6 @@ export default function HomePage() {
                           {service.prix}
                         </span>
                       </div>
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                        <p className="text-lg font-bold text-white">{service.titre}</p>
-                      </div>
                     </div>
                   ))}
                 </div>
