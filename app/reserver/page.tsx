@@ -45,6 +45,10 @@ function BookingPageContent() {
   const [animalName, setAnimalName] = useState("");
   const [animalTemperament, setAnimalTemperament] = useState("");
   
+  // Ménage specific states
+  const [menageType, setMenageType] = useState("");
+  const [menageSize, setMenageSize] = useState("");
+  
   const [formErrors, setFormErrors] = useState<string[]>([]);
 
   useEffect(() => {
@@ -71,6 +75,13 @@ function BookingPageContent() {
     return Math.round(numericPrice * 0.8);
   };
 
+  const calculateMenagePrice = (size: string) => {
+    if (size === "Petit") return 22;
+    if (size === "Moyen") return 33;
+    if (size === "Grand") return 55;
+    return 22;
+  };
+
   const calculatePromenadePrice = (duration: string) => {
     if (duration === "30 minutes") return 8;
     if (duration === "45 minutes") return 10;
@@ -84,6 +95,7 @@ function BookingPageContent() {
     }
     const priceMap: { [key: string]: number } = {
       'garde': 1500 * (parseInt(guardDays) || 1),
+      'menage': calculateMenagePrice(menageSize) * 100,
       'accompagnement': 1200,
       'courses': 800,
       'menage': 2500,
@@ -91,6 +103,13 @@ function BookingPageContent() {
       'autre': 1000,
     };
     return priceMap[service] || 1000;
+  };
+
+  const validateMenageForm = () => {
+    const errors: string[] = [];
+    if (!menageType) errors.push("Le type d'espace est obligatoire");
+    if (!menageSize) errors.push("La taille de l'espace est obligatoire");
+    return errors;
   };
 
   const validateGardeForm = () => {
@@ -155,6 +174,15 @@ function BookingPageContent() {
         }
       }
 
+      if (service === "menage") {
+        const menageErrors = validateMenageForm();
+        if (menageErrors.length > 0) {
+          setFormErrors(menageErrors);
+          alert("Veuillez compléter tous les champs obligatoires:\n" + menageErrors.join("\n"));
+          return;
+        }
+      }
+
       const { data: { session } } = await supabase.auth.getSession();
       await new Promise(resolve => setTimeout(resolve, 500));
       const { data: { session: session2 } } = await supabase.auth.getSession();
@@ -178,6 +206,9 @@ function BookingPageContent() {
       }
       if (service === "garde") {
         detailsObject = { ...detailsObject, animalName, petType, petBreed, petAge, animalTemperament, guardDays };
+      }
+      if (service === "menage") {
+        detailsObject = { ...detailsObject, menageType, menageSize };
       }
 
       const reservationData = {
@@ -434,6 +465,96 @@ function BookingPageContent() {
             </div>
           )}
 
+          {service === "menage" && (
+            <div className="space-y-6">
+              {/* Section Ménage */}
+              <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+                <h3 className="text-lg font-bold text-green-800 mb-4">🧹 Informations sur le ménage</h3>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Type d'espace *</label>
+                    <select required value={menageType} onChange={(e) => {
+                      setMenageType(e.target.value);
+                      // Auto-complete size based on type
+                      if (["Studio / Appartement 1 pièce", "Appartement 2 pièces", "Appartement 3 pièces ou plus", "Bureau petit"].includes(e.target.value)) {
+                        setMenageSize("Petit");
+                      } else if (["Appartement 2-3 pièces", "Maison petite (1-2 chambres)", "Bureau moyen"].includes(e.target.value)) {
+                        setMenageSize("Moyen");
+                      } else if (["Maison moyenne (3 chambres)", "Maison grande (4 chambres ou plus)", "Bureau grand"].includes(e.target.value)) {
+                        setMenageSize("Grand");
+                      }
+                    }} className="w-full rounded-lg border border-slate-300 px-3 py-2">
+                      <option value="">Sélectionner</option>
+                      <option>Studio / Appartement 1 pièce</option>
+                      <option>Appartement 2 pièces</option>
+                      <option>Appartement 3 pièces ou plus</option>
+                      <option>Maison petite (1-2 chambres)</option>
+                      <option>Maison moyenne (3 chambres)</option>
+                      <option>Maison grande (4 chambres ou plus)</option>
+                      <option>Bureau petit</option>
+                      <option>Bureau moyen</option>
+                      <option>Bureau grand</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Taille de l'espace *</label>
+                    <select required value={menageSize} onChange={(e) => setMenageSize(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
+                      <option value="">Sélectionner</option>
+                      <option>Petit (2h minimum — 22€)</option>
+                      <option>Moyen (3h minimum — 33€)</option>
+                      <option>Grand (5h minimum — 55€)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Section Client */}
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                <h3 className="text-lg font-bold text-slate-800 mb-4">👤 Vos coordonnées</h3>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Prénom et Nom *</label>
+                    <input type="text" required value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Téléphone / WhatsApp *</label>
+                    <input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Email *</label>
+                    <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Adresse complète *</label>
+                    <input type="text" required value={fullAddress} onChange={(e) => setFullAddress(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Date souhaitée *</label>
+                    <input type="date" required value={date} onChange={(e) => setDate(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Heure souhaitée *</label>
+                    <select required value={time} onChange={(e) => setTime(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
+                      <option value="">Choisir une heure</option>
+                      <option>8h00</option><option>8h30</option><option>9h00</option>
+                      <option>9h30</option><option>10h00</option><option>10h30</option>
+                      <option>11h00</option><option>11h30</option><option>12h00</option>
+                      <option>12h30</option><option>13h00</option><option>13h30</option>
+                      <option>14h00</option><option>14h30</option><option>15h00</option>
+                      <option>15h30</option><option>16h00</option><option>16h30</option>
+                      <option>17h00</option><option>17h30</option><option>18h00</option>
+                      <option>19h00</option>
+                    </select>
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Notes libres</label>
+                    <textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {service === "promenade" && (
             <div className="grid gap-4 md:grid-cols-2 mb-4">
               <div>
@@ -549,6 +670,8 @@ function BookingPageContent() {
                           `${calculatePromenadePrice(walkDuration)}€` : 
                           service === "garde" && guardDays ? 
                             `${15 * (parseInt(guardDays) || 1)}€` : 
+                          service === "menage" && menageSize ? 
+                            `${calculateMenagePrice(menageSize)}€` :
                           currentService?.price}
                       </span>
                       <span className="ml-2 text-xl font-bold text-[#F59E0B]">
@@ -556,6 +679,8 @@ function BookingPageContent() {
                           `${calculateDiscountedPrice(calculatePromenadePrice(walkDuration).toString())}€` : 
                           service === "garde" && guardDays ? 
                             `${calculateDiscountedPrice((15 * (parseInt(guardDays) || 1)).toString())}€` : 
+                          service === "menage" && menageSize ? 
+                            `${calculateDiscountedPrice(calculateMenagePrice(menageSize).toString())}€` :
                           `${calculateDiscountedPrice(currentService?.price || '0')}€`}
                       </span>
                     </>
@@ -565,6 +690,8 @@ function BookingPageContent() {
                         `${calculatePromenadePrice(walkDuration)}€` : 
                         service === "garde" && guardDays ? 
                           `${15 * (parseInt(guardDays) || 1)}€` : 
+                        service === "menage" && menageSize ? 
+                          `${calculateMenagePrice(menageSize)}€` :
                         currentService?.price}
                     </span>
                   )}
