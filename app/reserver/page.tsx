@@ -126,8 +126,11 @@ function BookingPageContent() {
         }
       }
 
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
-      if (userError || !user) {
+      const { data: { session } } = await supabase.auth.getSession();
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const { data: { session: session2 } } = await supabase.auth.getSession();
+      const user = session2?.user || session?.user;
+      if (!user) {
         alert("Veuillez vous connecter pour réserver");
         return;
       }
