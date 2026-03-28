@@ -291,6 +291,36 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="rounded-3xl border border-[#1D9E75] bg-white px-6 py-10 md:px-10">
+        <h2 className="text-3xl font-extrabold text-[#085041] text-center mb-8">💳 Moyens de paiement acceptés</h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="text-center p-6 rounded-2xl bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 hover:shadow-md transition-shadow">
+            <div className="text-4xl mb-3">💵</div>
+            <h3 className="text-lg font-bold text-[#085041] mb-2">Espèces</h3>
+            <p className="text-sm text-slate-600">Paiement en liquide accepté</p>
+          </div>
+          
+          <div className="text-center p-6 rounded-2xl bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 hover:shadow-md transition-shadow">
+            <div className="text-4xl mb-3">🏦</div>
+            <h3 className="text-lg font-bold text-[#085041] mb-2">Virement bancaire</h3>
+            <p className="text-sm text-slate-600">Transfert direct sécurisé</p>
+          </div>
+          
+          <div className="text-center p-6 rounded-2xl bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 hover:shadow-md transition-shadow">
+            <div className="text-4xl mb-3">💳</div>
+            <h3 className="text-lg font-bold text-[#085041] mb-2">Carte bancaire</h3>
+            <p className="text-sm text-slate-600">Paiement par carte accepté</p>
+          </div>
+        </div>
+        
+        <div className="text-center">
+          <p className="text-sm text-slate-500 italic">
+            Le paiement s'effectue après confirmation du service
+          </p>
+        </div>
+      </section>
+
       <section className="rounded-3xl bg-[#FFFBF5] px-6 py-10 md:px-10">
         <h2 className="text-3xl font-extrabold text-slate-900">Pourquoi nous choisir</h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
