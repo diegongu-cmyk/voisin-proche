@@ -44,7 +44,7 @@ const services = [
   {
     emoji: "🧹",
     titre: "Ménage",
-    prix: "Depuis 25€",
+    prix: "Depuis 22€",
     description: "Maison ou bureau, service soigné.\nProduits inclus selon vos besoins.",
     image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=400",
   },
@@ -80,7 +80,7 @@ const sliderServices = [
   },
   {
     titre: "Ménage maison/bureau",
-    prix: "Depuis 25€",
+    prix: "Depuis 22€",
     image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600",
   },
   {
