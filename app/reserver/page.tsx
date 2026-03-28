@@ -42,6 +42,8 @@ function BookingPageContent() {
   const [petBreed, setPetBreed] = useState("");
   const [petAge, setPetAge] = useState("");
   const [guardDays, setGuardDays] = useState("");
+  const [animalName, setAnimalName] = useState("");
+  const [animalTemperament, setAnimalTemperament] = useState("");
   
   const [formErrors, setFormErrors] = useState<string[]>([]);
 
@@ -93,9 +95,11 @@ function BookingPageContent() {
 
   const validateGardeForm = () => {
     const errors: string[] = [];
+    if (!animalName.trim()) errors.push("Le nom de l'animal est obligatoire");
     if (!petType) errors.push("Le type d'animal est obligatoire");
     if (petType === "Chien" && !petBreed.trim()) errors.push("La race du chien est obligatoire");
     if (!petAge) errors.push("L'âge de l'animal est obligatoire");
+    if (!animalTemperament) errors.push("Le tempérament de l'animal est obligatoire");
     if (!guardDays.trim()) errors.push("Le nombre de jours de garde est obligatoire");
     return errors;
   };
@@ -173,7 +177,7 @@ function BookingPageContent() {
         detailsObject = { ...detailsObject, dogName, dogBreed, dogSize, dogTemperament, dogSocialization, walkDuration };
       }
       if (service === "garde") {
-        detailsObject = { ...detailsObject, petType, petBreed, petAge, guardDays };
+        detailsObject = { ...detailsObject, animalName, petType, petBreed, petAge, animalTemperament, guardDays };
       }
 
       const reservationData = {
@@ -330,37 +334,102 @@ function BookingPageContent() {
           )}
 
           {service === "garde" && (
-            <div className="grid gap-4 md:grid-cols-2 mb-4">
-              <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">Type d'animal *</label>
-                <select required value={petType} onChange={(e) => setPetType(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
-                  <option value="">Sélectionner</option>
-                  <option>Chien</option>
-                  <option>Chat</option>
-                  <option>Oiseau</option>
-                  <option>Lapin</option>
-                  <option>Autre</option>
-                </select>
-              </div>
-              {petType === "Chien" && (
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-slate-700">Race *</label>
-                  <input type="text" required value={petBreed} onChange={(e) => setPetBreed(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+            <div className="space-y-6">
+              {/* Section Animal */}
+              <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+                <h3 className="text-lg font-bold text-green-800 mb-4">🐾 Informations sur votre animal</h3>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Nom de l'animal *</label>
+                    <input type="text" required value={animalName} onChange={(e) => setAnimalName(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Type d'animal *</label>
+                    <select required value={petType} onChange={(e) => setPetType(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
+                      <option value="">Sélectionner</option>
+                      <option>Chien</option>
+                      <option>Chat</option>
+                      <option>Oiseau</option>
+                      <option>Lapin</option>
+                      <option>Autre</option>
+                    </select>
+                  </div>
+                  {petType === "Chien" && (
+                    <div>
+                      <label className="mb-1 block text-sm font-medium text-slate-700">Race *</label>
+                      <input type="text" required value={petBreed} onChange={(e) => setPetBreed(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+                    </div>
+                  )}
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Âge de l'animal *</label>
+                    <select required value={petAge} onChange={(e) => setPetAge(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
+                      <option value="">Sélectionner</option>
+                      <option>Moins de 1 an</option>
+                      <option>1 à 3 ans</option>
+                      <option>3 à 7 ans</option>
+                      <option>Plus de 7 ans</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Tempérament *</label>
+                    <select required value={animalTemperament} onChange={(e) => setAnimalTemperament(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
+                      <option value="">Sélectionner</option>
+                      <option>Calme</option>
+                      <option>Joueur</option>
+                      <option>Nerveux</option>
+                      <option>Craintif</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Nombre de jours de garde *</label>
+                    <input type="number" required value={guardDays} onChange={(e) => setGuardDays(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" min="1" />
+                  </div>
                 </div>
-              )}
-              <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">Âge de l'animal *</label>
-                <select required value={petAge} onChange={(e) => setPetAge(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
-                  <option value="">Sélectionner</option>
-                  <option>Moins de 1 an</option>
-                  <option>1 à 3 ans</option>
-                  <option>3 à 7 ans</option>
-                  <option>Plus de 7 ans</option>
-                </select>
               </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">Nombre de jours de garde *</label>
-                <input type="number" required value={guardDays} onChange={(e) => setGuardDays(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" min="1" />
+
+              {/* Section Client */}
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                <h3 className="text-lg font-bold text-slate-800 mb-4">👤 Vos coordonnées</h3>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Prénom et Nom *</label>
+                    <input type="text" required value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Téléphone / WhatsApp *</label>
+                    <input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Email *</label>
+                    <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Adresse complète *</label>
+                    <input type="text" required value={fullAddress} onChange={(e) => setFullAddress(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Date souhaitée *</label>
+                    <input type="date" required value={date} onChange={(e) => setDate(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Heure souhaitée *</label>
+                    <select required value={time} onChange={(e) => setTime(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
+                      <option value="">Choisir une heure</option>
+                      <option>8h00</option><option>8h30</option><option>9h00</option>
+                      <option>9h30</option><option>10h00</option><option>10h30</option>
+                      <option>11h00</option><option>11h30</option><option>12h00</option>
+                      <option>12h30</option><option>13h00</option><option>13h30</option>
+                      <option>14h00</option><option>14h30</option><option>15h00</option>
+                      <option>15h30</option><option>16h00</option><option>16h30</option>
+                      <option>17h00</option><option>17h30</option><option>18h00</option>
+                      <option>19h00</option>
+                    </select>
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Notes libres</label>
+                    <textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+                  </div>
+                </div>
               </div>
             </div>
           )}
