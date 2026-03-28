@@ -479,9 +479,9 @@ function BookingPageContent() {
                     <select required value={menageType} onChange={(e) => {
                       setMenageType(e.target.value);
                       // Auto-complete size based on type
-                      if (["Studio / Appartement 1 pièce", "Appartement 2 pièces", "Appartement 3 pièces ou plus", "Bureau petit"].includes(e.target.value)) {
+                      if (["Studio / Appartement 1 pièce", "Bureau petit"].includes(e.target.value)) {
                         setMenageSize("Petit");
-                      } else if (["Appartement 2-3 pièces", "Maison petite (1-2 chambres)", "Bureau moyen"].includes(e.target.value)) {
+                      } else if (["Appartement 2 pièces", "Appartement 3 pièces ou plus", "Maison petite (1-2 chambres)", "Bureau moyen"].includes(e.target.value)) {
                         setMenageSize("Moyen");
                       } else if (["Maison moyenne (3 chambres)", "Maison grande (4 chambres ou plus)", "Bureau grand"].includes(e.target.value)) {
                         setMenageSize("Grand");
@@ -499,14 +499,12 @@ function BookingPageContent() {
                       <option>Bureau grand</option>
                     </select>
                   </div>
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Taille de l'espace *</label>
-                    <select required value={menageSize} onChange={(e) => setMenageSize(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
-                      <option value="">Sélectionner</option>
-                      <option>Petit (2h minimum — 22€)</option>
-                      <option>Moyen (3h minimum — 33€)</option>
-                      <option>Grand (5h minimum — 55€)</option>
-                    </select>
+                  <div className="mt-2">
+                    <p className="text-sm text-slate-600">
+                      {menageSize === "Petit" && "Prix estimé: 22€ (2h minimum à 11€/h)"}
+                      {menageSize === "Moyen" && "Prix estimé: 33€ (3h minimum à 11€/h)"}
+                      {menageSize === "Grand" && "Prix estimé: 55€ (5h minimum à 11€/h)"}
+                    </p>
                   </div>
                 </div>
               </div>
