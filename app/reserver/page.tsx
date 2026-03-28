@@ -227,80 +227,32 @@ function BookingPageContent() {
         console.error('Reservation error:', error);
         alert("Erreur lors de la réservation: " + error.message);
       } else {
-        // Send email notification to admin
-        await fetch('/api/send-email', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            to: 'diegongu@gmail.com',
-            subject: `🔔 Nouvelle réservation — ${currentService?.name}`,
-            html: `
-              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 2px solid #1D9E75; border-radius: 12px;">
-                <h1 style="color: #1D9E75; text-align: center;">🔔 Nouvelle Réservation</h1>
-                <h2 style="color: #085041;">${currentService?.icon} ${currentService?.name}</h2>
-                
-                <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; margin: 15px 0;">
-                  <h3 style="color: #085041; margin-top: 0;">📋 Détails du service</h3>
-                  <p><strong>Service:</strong> ${currentService?.name}</p>
-                  <p><strong>Date souhaitée:</strong> ${date}</p>
-                  <p><strong>Heure souhaitée:</strong> ${time}</p>
-                  <p><strong>Prix estimé:</strong> ${service === 'promenade' && walkDuration ? calculatePromenadePrice(walkDuration) + '€' : currentService?.price}</p>
-                </div>
+        try {
+            const priceInCents = service === "promenade" && walkDuration
+              ? calculatePromenadePrice(walkDuration) * 100
+              : parseInt(currentService?.price.replace(/[^0-9]/g, '') || '0') * 100;
 
-                <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin: 15px 0;">
-                  <h3 style="color: #085041; margin-top: 0;">👤 Coordonnées du client</h3>
-                  <p><strong>Nom:</strong> ${fullName}</p>
-                  <p><strong>Email:</strong> ${email}</p>
-                  <p><strong>Téléphone / WhatsApp:</strong> ${phone}</p>
-                  <p><strong>Adresse:</strong> ${fullAddress}</p>
-                </div>
+            const stripeResponse = await fetch('/api/create-checkout-session', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                amount: priceInCents,
+                serviceName: currentService?.name || 'Service',
+                reservationId: data?.[0]?.id || ''
+              })
+            });
 
-                ${service === 'promenade' ? `
-                <div style="background: #fef9f0; padding: 15px; border-radius: 8px; margin: 15px 0;">
-                  <h3 style="color: #085041; margin-top: 0;">🐕 Informations du chien</h3>
-                  <p><strong>Nom:</strong> ${dogName}</p>
-                  <p><strong>Race:</strong> ${dogBreed}</p>
-                  <p><strong>Taille:</strong> ${dogSize}</p>
-                  <p><strong>Tempérament:</strong> ${dogTemperament}</p>
-                  <p><strong>Entente avec autres chiens:</strong> ${dogSocialization}</p>
-                  <p><strong>Durée de la promenade:</strong> ${walkDuration}</p>
-                </div>
-                ` : ''}
+            const stripeData = await stripeResponse.json();
 
-                ${notes ? `
-                <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin: 15px 0;">
-                  <h3 style="color: #085041; margin-top: 0;">📝 Notes du client</h3>
-                  <p>${notes}</p>
-                </div>
-                ` : ''}
-
-                <div style="text-align: center; margin-top: 20px;">
-                  <a href="https://voisin-proche.vercel.app/admin" 
-                     style="background: #1D9E75; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold;">
-                    Voir dans le panel admin
-                  </a>
-                </div>
-              </div>
-            `
-          })
-        });
-
-        // Get the reservation ID from the response
-        const { data: reservationData } = await supabase
-          .from('reservations')
-          .select('id')
-          .eq('user_id', user.id)
-          .eq('service', currentService?.name)
-          .eq('date', date)
-          .eq('heure', time)
-          .single();
-
-        if (reservationData?.id) {
-          // Redirect to Stripe payment
-          await handleStripePayment(reservationData.id);
-        } else {
-          window.location.href = '/reservation-confirmee';
-        }
+            if (stripeData.url) {
+              window.location.href = stripeData.url;
+            } else {
+              window.location.href = '/reservation-confirmee';
+            }
+          } catch (stripeError) {
+            console.error('Stripe error:', stripeError);
+            window.location.href = '/reservation-confirmee';
+          }
       }
     } catch (err) {
       console.error('Exception:', err);
