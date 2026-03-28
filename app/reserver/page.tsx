@@ -93,9 +93,13 @@ function BookingPageContent() {
     if (service === "promenade" && walkDuration) {
       return calculatePromenadePrice(walkDuration) * 100;
     }
+    if (service === "garde" && guardDays) {
+      return 15 * (parseInt(guardDays) || 1) * 100;
+    }
+    if (service === "menage" && menageSize) {
+      return calculateMenagePrice(menageSize) * 100;
+    }
     const priceMap: { [key: string]: number } = {
-      'garde': 1500 * (parseInt(guardDays) || 1),
-      'menage': calculateMenagePrice(menageSize) * 100,
       'accompagnement': 1200,
       'courses': 800,
       'espagnol': 1500,
