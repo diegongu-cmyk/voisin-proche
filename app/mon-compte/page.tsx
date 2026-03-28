@@ -14,6 +14,7 @@ export default function MonCompte() {
   const [historique, setHistorique] = useState<any[]>([])
   const [reservations, setReservations] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [serviceFilter, setServiceFilter] = useState('tous')
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -49,6 +50,31 @@ export default function MonCompte() {
     const found = fideliteData.find(f => f.service === s.name)
     return { ...s, count: found?.count || 0 }
   }), [fideliteData])
+
+  const filteredHistorique = useMemo(() => {
+    if (serviceFilter === 'tous') return historique
+    return historique.filter(r => r.service === serviceFilter)
+  }, [historique, serviceFilter])
+
+  const getStatusBadge = (statut: string) => {
+    const statusConfig = {
+      'en_attente': 'bg-yellow-100 text-yellow-700',
+      'confirme': 'bg-blue-100 text-blue-700',
+      'termine': 'bg-green-100 text-green-700',
+      'annule': 'bg-red-100 text-red-700'
+    }
+    return statusConfig[statut as keyof typeof statusConfig] || 'bg-gray-100 text-gray-700'
+  }
+
+  const getStatusText = (statut: string) => {
+    const statusText = {
+      'en_attente': 'En attente',
+      'confirme': 'Confirmé',
+      'termine': 'Terminé',
+      'annule': 'Annulé'
+    }
+    return statusText[statut as keyof typeof statusText] || statut
+  }
 
   if (loading) return <div className="p-8 text-center text-[#085041]">Chargement...</div>
 
@@ -93,48 +119,113 @@ export default function MonCompte() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-slate-200 bg-[#FFFBF5] p-6">
-        <h2 className="mb-4 text-xl font-bold text-[#085041]">📋 Historique de mes services</h2>
-        {historique.length === 0 ? (
-          <p className="text-center text-slate-500">Aucun service terminé pour le moment</p>
-        ) : (
-          <div className="space-y-3">
-            {historique.map((r) => (
-              <div key={r.id} className="rounded-xl border border-slate-200 bg-white p-4">
-                <div className="flex items-center justify-between">
-                  <span className="font-semibold text-[#085041]">{r.service}</span>
-                  <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-bold text-green-700">Terminé</span>
-                </div>
-                <p className="text-xs text-slate-500 mt-1">Demandé le: {new Date(r.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
-                <p className="text-xs text-slate-500">Service effectué le: {r.date} à {r.heure}</p>
-              </div>
-            ))}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Historique de mes services */}
+        <div className="shadow-md rounded-2xl bg-white p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-xl font-bold text-[#085041]">📋 Historique de mes services</h2>
+            <select 
+              value={serviceFilter} 
+              onChange={(e) => setServiceFilter(e.target.value)}
+              className="rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1D9E75]"
+            >
+              <option value="tous">Tous les services</option>
+              {serviciosBase.map(service => (
+                <option key={service.name} value={service.name}>{service.name}</option>
+              ))}
+            </select>
           </div>
-        )}
-      </div>
+          
+          {filteredHistorique.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-slate-500">Aucun service pour le moment</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-slate-200">
+                    <th className="text-left py-2 font-semibold text-[#085041]">Service</th>
+                    <th className="text-left py-2 font-semibold text-[#085041]">Date</th>
+                    <th className="text-left py-2 font-semibold text-[#085041]">État</th>
+                    <th className="text-right py-2 font-semibold text-[#085041]">Prix</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredHistorique.slice(0, 5).map((r) => (
+                    <tr key={r.id} className="border-b border-slate-100">
+                      <td className="py-3">
+                        <div className="flex items-center gap-2">
+                          <span>{serviciosBase.find(s => s.name === r.service)?.emoji}</span>
+                          <span className="font-medium text-slate-900">{r.service}</span>
+                        </div>
+                      </td>
+                      <td className="py-3 text-slate-600">{new Date(r.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+                      <td className="py-3">
+                        <span className={`rounded-full px-2 py-1 text-xs font-medium ${getStatusBadge(r.statut)}`}>
+                          {getStatusText(r.statut)}
+                        </span>
+                      </td>
+                      <td className="py-3 text-right font-medium text-[#1D9E75]">{r.prix}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {filteredHistorique.length > 5 && (
+                <p className="text-center text-xs text-slate-500 mt-3">
+                  Affichage des 5 premiers services sur {filteredHistorique.length} au total
+                </p>
+              )}
+            </div>
+          )}
+        </div>
 
-      <div className="rounded-2xl border border-slate-200 bg-[#FFFBF5] p-6">
-        <h2 className="mb-4 text-xl font-bold text-[#085041]">📅 Mes réservations récentes</h2>
-        {reservations.length === 0 ? (
-          <p className="text-center text-slate-500">Aucune réservation pour le moment</p>
-        ) : (
-          <div className="space-y-3">
-            {reservations.map((r) => (
-              <div key={r.id} className="rounded-xl border border-slate-200 bg-white p-4 flex items-center justify-between">
-                <div>
-                  <span className="font-semibold text-[#085041]">{r.service}</span>
-                  <p className="text-xs text-slate-500">{r.date} à {r.heure}</p>
-                </div>
-                <span className={`rounded-full px-2 py-1 text-xs font-bold ${r.statut === 'confirme' ? 'bg-green-100 text-green-700' : r.statut === 'annule' ? 'bg-red-100 text-red-700' : r.statut === 'termine' ? 'bg-slate-100 text-slate-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                  {r.statut === 'confirme' ? 'Confirmé' : r.statut === 'annule' ? 'Annulé' : r.statut === 'termine' ? 'Terminé' : 'En attente'}
-                </span>
-              </div>
-            ))}
+        {/* Mes réservations récentes */}
+        <div className="shadow-md rounded-2xl bg-white p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-xl font-bold text-[#085041]">📅 Mes réservations récentes</h2>
+            {reservations.length > 3 && (
+              <Link href="/reservations" className="text-sm font-medium text-[#1D9E75] hover:underline">
+                Voir tout
+              </Link>
+            )}
           </div>
-        )}
-        <Link href="/reserver" className="mt-4 block text-center rounded-lg border border-[#1D9E75] px-4 py-2 text-sm font-medium text-[#1D9E75] hover:bg-[#1D9E75] hover:text-white transition-colors">
-          + Nouvelle réservation
-        </Link>
+          
+          {reservations.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-slate-500">Aucune réservation pour le moment</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {reservations.slice(0, 3).map((r) => (
+                <div key={r.id} className="border-l-4 border-green-500 rounded-r-lg bg-slate-50 p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-lg">{serviciosBase.find(s => s.name === r.service)?.emoji}</span>
+                        <span className="font-semibold text-[#085041]">{r.service}</span>
+                      </div>
+                      <div className="text-sm text-slate-600">
+                        <p>{r.date} à {r.heure}</p>
+                      </div>
+                    </div>
+                    <div className="ml-4">
+                      <span className={`rounded-full px-2 py-1 text-xs font-medium ${getStatusBadge(r.statut)}`}>
+                        {getStatusText(r.statut)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          
+          <div className="mt-4 text-center">
+            <Link href="/reserver" className="inline-flex items-center rounded-lg bg-[#1D9E75] px-4 py-2 text-sm font-medium text-white hover:bg-[#085041] transition-colors">
+              + Nouvelle réservation
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   )
