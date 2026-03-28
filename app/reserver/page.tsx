@@ -238,7 +238,7 @@ function BookingPageContent() {
               body: JSON.stringify({
                 amount: priceInCents,
                 serviceName: currentService?.name || 'Service',
-                reservationId: data?.[0]?.id || ''
+                reservationId: ''
               })
             });
 
