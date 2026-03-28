@@ -83,7 +83,7 @@ function BookingPageContent() {
       return calculatePromenadePrice(walkDuration) * 100;
     }
     const priceMap: { [key: string]: number } = {
-      'garde': 1500,
+      'garde': 1500 * (parseInt(guardDays) || 1),
       'accompagnement': 1200,
       'courses': 800,
       'menage': 2500,
@@ -545,17 +545,6 @@ function BookingPageContent() {
                   {hasDiscount ? (
                     <>
                       <span className="line-through text-gray-400">
-                        {service === "promenade" && walkDuration ? `${calculatePromenadePrice(walkDuration)}€` : currentService?.price}
-                      </span>
-                      <span className="ml-2 text-xl font-bold text-[#F59E0B]">
-                        {calculateDiscountedPrice(service === "promenade" && walkDuration ? calculatePromenadePrice(walkDuration).toString() : currentService?.price || '0')}€
-                      </span>
-                    </>
-                  ) : (
-                    <span>
-                      {service === "promenade" && walkDuration ? `${calculatePromenadePrice(walkDuration)}€` : currentService?.price}
-                    </span>
-                  )}
                 </p>
                 {hasDiscount && (
                   <span className="inline-flex animate-pulse rounded-full bg-[#F59E0B] px-3 py-1 text-sm font-bold text-white">
