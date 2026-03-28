@@ -98,7 +98,6 @@ function BookingPageContent() {
       'menage': calculateMenagePrice(menageSize) * 100,
       'accompagnement': 1200,
       'courses': 800,
-      'menage': 2500,
       'espagnol': 1500,
       'autre': 1000,
     };
