@@ -3,11 +3,6 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { loadStripe } from "@stripe/stripe-js";
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-
-const slots = Array.from({ length: 11 }, (_, i) => `${8 + i}h00`);
 
 const services = [
   { id: "promenade", icon: "🐕", name: "Promenade de chiens", price: "depuis 8€", description: "Nous promenons votre chien en toute sécurité dans les environs de Fontenay-le-Comte. Chaque promenade est accompagnée de jeux, caresses et un peu d'exercice pour le bonheur de votre compagnon. Des photos seront envoyées sur votre WhatsApp pendant la promenade. Disponible en 30 min, 45 min ou 1 heure. Depuis 8€." },
@@ -33,13 +28,11 @@ function BookingPageContent() {
   const [hasDiscount, setHasDiscount] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Promenade specific states
   const [dogName, setDogName] = useState("");
   const [dogBreed, setDogBreed] = useState("");
   const [dogSize, setDogSize] = useState("");
   const [dogTemperament, setDogTemperament] = useState("");
   const [dogSocialization, setDogSocialization] = useState("");
-  const [departureAddress, setDepartureAddress] = useState("");
   const [walkDuration, setWalkDuration] = useState("");
   const [isVaccinated, setIsVaccinated] = useState("");
   const [isSterilized, setIsSterilized] = useState("");
@@ -48,22 +41,17 @@ function BookingPageContent() {
   useEffect(() => {
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      
       if (session?.user) {
-        // Check if user has 7+ services completed for discount
         const { data: fideliteData } = await supabase
           .from('fidelite')
           .select('*')
           .eq('user_id', session.user.id);
-
         if (fideliteData && fideliteData.length > 0) {
           const userCount = fideliteData[0].count;
-          const hasDiscountEligibility = userCount > 0 && userCount % 7 === 0;
-          setHasDiscount(hasDiscountEligibility);
+          setHasDiscount(userCount > 0 && userCount % 7 === 0);
         }
       }
     };
-
     checkSession();
   }, []);
 
@@ -75,91 +63,60 @@ function BookingPageContent() {
   };
 
   const calculatePromenadePrice = (duration: string) => {
-    const prices: { [key: string]: number } = {
-      "30 min": 8,
-      "45 min": 12,
-      "1 heure": 15,
-    };
-    return prices[duration] || 8;
+    if (duration === "30 minutes") return 8;
+    if (duration === "45 minutes") return 10;
+    if (duration === "1 heure") return 12;
+    return 8;
   };
 
-  const calculatePriceInCents = () => {
-    if (service === 'promenade' && walkDuration) {
+  const getPriceInCents = () => {
+    if (service === "promenade" && walkDuration) {
       return calculatePromenadePrice(walkDuration) * 100;
     }
     const priceMap: { [key: string]: number } = {
-      'garde': 1500, // 15€
-      'accompagnement': 1200, // 12€
-      'courses': 800, // 8€
-      'menage': 2500, // 25€
-      'espagnol': 1500, // 15€
+      'garde': 1500,
+      'accompagnement': 1200,
+      'courses': 800,
+      'menage': 2500,
+      'espagnol': 1500,
+      'autre': 1000,
     };
-    return priceMap[service] || 0;
-  };
-
-  const handleStripePayment = async (reservationId: string) => {
-    try {
-      const response = await fetch('/api/create-checkout-session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          amount: calculatePriceInCents(),
-          serviceName: currentService?.name,
-          reservationId,
-        }),
-      });
-
-      const { url } = await response.json();
-      if (url) {
-        window.location.href = url;
-      }
-    } catch (error) {
-      console.error('Stripe payment error:', error);
-      alert('Erreur lors de la redirection vers le paiement');
-    }
+    return priceMap[service] || 1000;
   };
 
   const validatePromenadeForm = () => {
     const errors: string[] = [];
-    
     if (!dogName.trim()) errors.push("Le nom du chien est obligatoire");
     if (!dogBreed.trim()) errors.push("La race du chien est obligatoire");
     if (!dogSize) errors.push("La taille du chien est obligatoire");
     if (!dogTemperament) errors.push("Le tempérament du chien est obligatoire");
     if (!dogSocialization) errors.push("L'entente avec autres chiens est obligatoire");
     if (!walkDuration) errors.push("La durée de la promenade est obligatoire");
-    
     return errors;
   };
 
   const validateCommonForm = () => {
     const errors: string[] = [];
-    
     if (!fullName.trim()) errors.push("Le prénom et nom sont obligatoires");
     if (!phone.trim()) errors.push("Le téléphone est obligatoire");
     if (!email.trim()) errors.push("L'email est obligatoire");
     if (!date.trim()) errors.push("La date est obligatoire");
     if (!time.trim()) errors.push("L'heure est obligatoire");
     if (!fullAddress.trim()) errors.push("L'adresse est obligatoire");
-    
     return errors;
   };
 
   const handleConfirmReservation = async () => {
     try {
       setIsLoading(true);
-      
-      // Validate common form fields
+
       const commonErrors = validateCommonForm();
       if (commonErrors.length > 0) {
         setFormErrors(commonErrors);
         alert("Veuillez compléter tous les champs obligatoires:\n" + commonErrors.join("\n"));
         return;
       }
-      
-      // Validate promenade specific fields
+
       if (service === "promenade") {
         const promenadeErrors = validatePromenadeForm();
         if (promenadeErrors.length > 0) {
@@ -168,10 +125,8 @@ function BookingPageContent() {
           return;
         }
       }
-      
-      // Get current user
+
       const { data: { user }, error: userError } = await supabase.auth.getUser();
-      
       if (userError || !user) {
         alert("Veuillez vous connecter pour réserver");
         return;
@@ -184,29 +139,12 @@ function BookingPageContent() {
         precioNumerico = parseInt(currentService?.price.replace(/[^0-9]/g, '') || '0');
       }
       const precioFinal = hasDiscount ? calculateDiscountedPrice(precioNumerico.toString()) : precioNumerico;
-      
-      // Build details object based on service type
-      let detailsObject: any = {
-        fullName,
-        phone,
-        email,
-        fullAddress: fullAddress || "",
-        notes: notes
-      };
-      
+
+      let detailsObject: any = { fullName, phone, email, fullAddress, notes };
       if (service === "promenade") {
-        detailsObject = {
-          ...detailsObject,
-          dogName,
-          dogBreed,
-          dogSize,
-          dogTemperament,
-          dogSocialization,
-          walkDuration,
-          notes
-        };
+        detailsObject = { ...detailsObject, dogName, dogBreed, dogSize, dogTemperament, dogSocialization, walkDuration };
       }
-      
+
       const reservationData = {
         user_id: user.id,
         service: currentService?.name || "",
@@ -218,42 +156,84 @@ function BookingPageContent() {
         statut: "en_attente"
       };
 
-      // Save to Supabase
-      const { error } = await supabase
-        .from('reservations')
-        .insert([reservationData]);
+      const { error } = await supabase.from('reservations').insert([reservationData]);
 
       if (error) {
         console.error('Reservation error:', error);
         alert("Erreur lors de la réservation: " + error.message);
-      } else {
-        try {
-            const priceInCents = service === "promenade" && walkDuration
-              ? calculatePromenadePrice(walkDuration) * 100
-              : parseInt(currentService?.price.replace(/[^0-9]/g, '') || '0') * 100;
-
-            const stripeResponse = await fetch('/api/create-checkout-session', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                amount: priceInCents,
-                serviceName: currentService?.name || 'Service',
-                reservationId: ''
-              })
-            });
-
-            const stripeData = await stripeResponse.json();
-
-            if (stripeData.url) {
-              window.location.href = stripeData.url;
-            } else {
-              window.location.href = '/reservation-confirmee';
-            }
-          } catch (stripeError) {
-            console.error('Stripe error:', stripeError);
-            window.location.href = '/reservation-confirmee';
-          }
+        return;
       }
+
+      // Send admin notification email
+      await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: 'diegongu@gmail.com',
+          subject: `🔔 Nouvelle réservation — ${currentService?.name}`,
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 2px solid #1D9E75; border-radius: 12px;">
+              <h1 style="color: #1D9E75; text-align: center;">🔔 Nouvelle Réservation</h1>
+              <h2 style="color: #085041;">${currentService?.icon} ${currentService?.name}</h2>
+              <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                <h3 style="color: #085041; margin-top: 0;">📋 Détails du service</h3>
+                <p><strong>Service:</strong> ${currentService?.name}</p>
+                <p><strong>Date souhaitée:</strong> ${date}</p>
+                <p><strong>Heure souhaitée:</strong> ${time}</p>
+                <p><strong>Prix estimé:</strong> ${precioFinal}€</p>
+              </div>
+              <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                <h3 style="color: #085041; margin-top: 0;">👤 Coordonnées du client</h3>
+                <p><strong>Nom:</strong> ${fullName}</p>
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Téléphone / WhatsApp:</strong> ${phone}</p>
+                <p><strong>Adresse:</strong> ${fullAddress}</p>
+              </div>
+              ${service === 'promenade' ? `
+              <div style="background: #fef9f0; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                <h3 style="color: #085041; margin-top: 0;">🐕 Informations du chien</h3>
+                <p><strong>Nom:</strong> ${dogName}</p>
+                <p><strong>Race:</strong> ${dogBreed}</p>
+                <p><strong>Taille:</strong> ${dogSize}</p>
+                <p><strong>Tempérament:</strong> ${dogTemperament}</p>
+                <p><strong>Entente avec autres chiens:</strong> ${dogSocialization}</p>
+                <p><strong>Durée de la promenade:</strong> ${walkDuration}</p>
+              </div>` : ''}
+              ${notes ? `<div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                <h3 style="color: #085041; margin-top: 0;">📝 Notes du client</h3>
+                <p>${notes}</p>
+              </div>` : ''}
+              <div style="text-align: center; margin-top: 20px;">
+                <a href="https://voisin-proche.vercel.app/admin" style="background: #1D9E75; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold;">
+                  Voir dans le panel admin
+                </a>
+              </div>
+            </div>
+          `
+        })
+      });
+
+      // Redirect to Stripe
+      if (service !== "autre") {
+        const stripeResponse = await fetch('/api/create-checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            amount: getPriceInCents(),
+            serviceName: currentService?.name || 'Service',
+            reservationId: ''
+          })
+        });
+
+        const stripeData = await stripeResponse.json();
+        if (stripeData.url) {
+          window.location.href = stripeData.url;
+          return;
+        }
+      }
+
+      window.location.href = '/reservation-confirmee';
+
     } catch (err) {
       console.error('Exception:', err);
       alert("Une erreur est survenue lors de la réservation");
@@ -265,30 +245,23 @@ function BookingPageContent() {
   return (
     <section className="rounded-3xl bg-[#FFFBF5] px-4 py-8 md:px-8">
       <h1 className="text-3xl font-extrabold text-slate-900">Réserver un service</h1>
-      <p className="mt-2 text-slate-600">
-        Choisissez votre service puis complétez les détails en 3 étapes.
-      </p>
+      <p className="mt-2 text-slate-600">Choisissez votre service puis complétez les détails en 3 étapes.</p>
 
       <div className="mt-6 grid gap-2 rounded-2xl bg-white p-3 md:grid-cols-3">
         {["1. Service", "2. Détails", "3. Confirmation"].map((label, idx) => {
           const current = idx + 1;
           const active = step >= current;
           return (
-            <div
-              key={label}
-              className={`rounded-xl px-4 py-3 text-sm font-semibold ${
-                active ? "bg-[#1D9E75] text-white" : "bg-slate-100 text-slate-500"
-              }`}
-            >
+            <div key={label} className={`rounded-xl px-4 py-3 text-sm font-semibold ${active ? "bg-[#1D9E75] text-white" : "bg-slate-100 text-slate-500"}`}>
               {label}
             </div>
           );
         })}
       </div>
 
-      {step === 1 ? (
+      {step === 1 && (
         <div className="mt-6">
-          <h2 className="text-xl font-bold text-slate-900">PASO 1 - Choisir un service</h2>
+          <h2 className="text-xl font-bold text-slate-900">Choisir un service</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {services.map((item) => {
               const selected = service === item.id;
@@ -296,15 +269,8 @@ function BookingPageContent() {
                 <button
                   key={item.id}
                   type="button"
-                  onClick={() => {
-                    setService(item.id);
-                    setStep(2);
-                  }}
-                  className={`rounded-2xl border bg-white p-4 text-left transition ${
-                    selected
-                      ? "border-[#1D9E75] ring-2 ring-[#1D9E75]/30"
-                      : "border-slate-200 hover:border-[#1D9E75]/60"
-                  }`}
+                  onClick={() => { setService(item.id); setStep(2); }}
+                  className={`rounded-2xl border bg-white p-4 text-left transition ${selected ? "border-[#1D9E75] ring-2 ring-[#1D9E75]/30" : "border-slate-200 hover:border-[#1D9E75]/60"}`}
                 >
                   <p className="text-2xl">{item.icon}</p>
                   <p className="mt-2 text-base font-bold text-slate-900">{item.name}</p>
@@ -313,34 +279,15 @@ function BookingPageContent() {
               );
             })}
           </div>
-
-          {/* Service Description Box */}
-          {service && currentService && (
-            <div className="mt-6 animate-fadeIn">
-              <div className="rounded-2xl border border-green-200 bg-green-50 p-5 shadow-sm">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">✅</span>
-                  <div className="flex-1">
-                    <h3 className="text-lg font-bold text-green-800 mb-2">
-                      {currentService.name}
-                    </h3>
-                    <p className="text-sm text-green-700 leading-relaxed">
-                      {currentService.description}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
-      ) : null}
+      )}
 
       {step === 2 && (
         <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
           <h2 className="text-xl font-bold text-[#085041]">Vos informations</h2>
 
           {currentService && (
-            <div className="mt-3 mb-5 animate-fadeIn rounded-2xl border-2 border-green-300 border-t-4 border-green-500 shadow-md bg-gradient-to-r from-green-50 to-emerald-50 p-6">
+            <div className="mt-3 mb-5 rounded-2xl border-2 border-green-300 shadow-md bg-gradient-to-r from-green-50 to-emerald-50 p-6">
               <div className="flex items-start gap-4">
                 <span className="text-4xl">{currentService.icon}</span>
                 <div className="flex-1">
@@ -350,8 +297,9 @@ function BookingPageContent() {
               </div>
             </div>
           )}
+
           {service === "promenade" && (
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-2 mb-4">
               <div>
                 <label className="mb-1 block text-sm font-medium text-slate-700">Nom du chien *</label>
                 <input type="text" required value={dogName} onChange={(e) => setDogName(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
@@ -421,27 +369,13 @@ function BookingPageContent() {
               <label className="mb-1 block text-sm font-medium text-slate-700">Heure souhaitée *</label>
               <select required value={time} onChange={(e) => setTime(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
                 <option value="">Choisir une heure</option>
-                <option>8h00</option>
-                <option>8h30</option>
-                <option>9h00</option>
-                <option>9h30</option>
-                <option>10h00</option>
-                <option>10h30</option>
-                <option>11h00</option>
-                <option>11h30</option>
-                <option>12h00</option>
-                <option>12h30</option>
-                <option>13h00</option>
-                <option>13h30</option>
-                <option>14h00</option>
-                <option>14h30</option>
-                <option>15h00</option>
-                <option>15h30</option>
-                <option>16h00</option>
-                <option>16h30</option>
-                <option>17h00</option>
-                <option>17h30</option>
-                <option>18h00</option>
+                <option>8h00</option><option>8h30</option><option>9h00</option>
+                <option>9h30</option><option>10h00</option><option>10h30</option>
+                <option>11h00</option><option>11h30</option><option>12h00</option>
+                <option>12h30</option><option>13h00</option><option>13h30</option>
+                <option>14h00</option><option>14h30</option><option>15h00</option>
+                <option>15h30</option><option>16h00</option><option>16h30</option>
+                <option>17h00</option><option>17h30</option><option>18h00</option>
                 <option>19h00</option>
               </select>
             </div>
@@ -455,16 +389,16 @@ function BookingPageContent() {
             </div>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex gap-3 mt-4">
             <button type="button" onClick={() => setStep(1)} className="rounded-lg border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-700">Retour</button>
             <button type="button" onClick={() => setStep(3)} className="rounded-lg bg-[#1D9E75] px-5 py-2 font-semibold text-white">Continuer</button>
           </div>
         </div>
       )}
 
-      {step === 3 && service ? (
+      {step === 3 && service && (
         <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
-          <h2 className="text-xl font-bold text-slate-900">PASO 3 - Confirmation</h2>
+          <h2 className="text-xl font-bold text-slate-900">Confirmation</h2>
           <p className="mt-1 text-sm text-slate-600">Vérifiez les informations avant validation.</p>
 
           <div className="mt-5 space-y-5 text-sm text-slate-700">
@@ -475,25 +409,15 @@ function BookingPageContent() {
                   {hasDiscount ? (
                     <>
                       <span className="line-through text-gray-400">
-                        {service === "promenade" && walkDuration ? 
-                          `${calculatePromenadePrice(walkDuration)}€` : 
-                          currentService?.price
-                        }
+                        {service === "promenade" && walkDuration ? `${calculatePromenadePrice(walkDuration)}€` : currentService?.price}
                       </span>
                       <span className="ml-2 text-xl font-bold text-[#F59E0B]">
-                        {calculateDiscountedPrice(
-                          service === "promenade" && walkDuration ? 
-                            calculatePromenadePrice(walkDuration).toString() : 
-                            currentService?.price || '0'
-                        )}
+                        {calculateDiscountedPrice(service === "promenade" && walkDuration ? calculatePromenadePrice(walkDuration).toString() : currentService?.price || '0')}€
                       </span>
                     </>
                   ) : (
                     <span>
-                      {service === "promenade" && walkDuration ? 
-                        `${calculatePromenadePrice(walkDuration)}€` : 
-                        currentService?.price
-                      }
+                      {service === "promenade" && walkDuration ? `${calculatePromenadePrice(walkDuration)}€` : currentService?.price}
                     </span>
                   )}
                 </p>
@@ -503,35 +427,18 @@ function BookingPageContent() {
                   </span>
                 )}
               </div>
-              <p className="mt-1 text-sm text-slate-700">
-                Le prix final sera confirmé lors de notre prise de contact
-              </p>
+              <p className="mt-1 text-sm text-slate-700">Le prix final sera confirmé lors de notre prise de contact</p>
             </div>
 
             <div className="border-b border-slate-200 pb-4">
               <h3 className="text-base font-extrabold text-slate-900">Vos coordonnées</h3>
               <div className="mt-2 space-y-1">
-                <p>
-                  <span className="font-semibold">Prénom et Nom:</span> {fullName || "Non renseigné"}
-                </p>
-                <p>
-                  <span className="font-semibold">Email:</span> {email || "Non renseigné"}
-                </p>
-                <p>
-                  <span className="font-semibold">Téléphone:</span> {phone || "Non renseigné"}
-                </p>
-                <p>
-                  <span className="font-semibold">Adresse:</span> {fullAddress || "Non renseignée"}
-                </p>
-                <p>
-                  <span className="font-semibold">Date et heure:</span>{" "}
-                  {date || "Non renseignée"} à {time}
-                </p>
-                {notes && (
-                  <p>
-                    <span className="font-semibold">Notes:</span> {notes}
-                  </p>
-                )}
+                <p><span className="font-semibold">Prénom et Nom:</span> {fullName || "Non renseigné"}</p>
+                <p><span className="font-semibold">Email:</span> {email || "Non renseigné"}</p>
+                <p><span className="font-semibold">Téléphone:</span> {phone || "Non renseigné"}</p>
+                <p><span className="font-semibold">Adresse:</span> {fullAddress || "Non renseignée"}</p>
+                <p><span className="font-semibold">Date et heure:</span> {date || "Non renseignée"} à {time}</p>
+                {notes && <p><span className="font-semibold">Notes:</span> {notes}</p>}
               </div>
             </div>
 
@@ -539,37 +446,21 @@ function BookingPageContent() {
               <div className="border-b border-slate-200 pb-4">
                 <h3 className="text-base font-extrabold text-slate-900">Informations du chien</h3>
                 <div className="mt-2 space-y-1">
-                  <p>
-                    <span className="font-semibold">Nom du chien:</span> {dogName || "Non renseigné"}
-                  </p>
-                  <p>
-                    <span className="font-semibold">Race:</span> {dogBreed || "Non renseignée"}
-                  </p>
-                  <p>
-                    <span className="font-semibold">Taille:</span> {dogSize || "Non renseignée"}
-                  </p>
-                  <p>
-                    <span className="font-semibold">Tempérament:</span> {dogTemperament || "Non renseigné"}
-                  </p>
-                  <p>
-                    <span className="font-semibold">Entente avec autres chiens:</span> {dogSocialization || "Non renseigné"}
-                  </p>
-                  <p>
-                    <span className="font-semibold">Durée de la promenade:</span> {walkDuration || "Non renseignée"}
-                  </p>
-                  <p>
-                    <span className="font-semibold">Vacciné:</span> {isVaccinated || "Non renseigné"}
-                  </p>
-                  <p>
-                    <span className="font-semibold">Stérilisé:</span> {isSterilized || "Non renseigné"}
-                  </p>
+                  <p><span className="font-semibold">Nom du chien:</span> {dogName || "Non renseigné"}</p>
+                  <p><span className="font-semibold">Race:</span> {dogBreed || "Non renseignée"}</p>
+                  <p><span className="font-semibold">Taille:</span> {dogSize || "Non renseignée"}</p>
+                  <p><span className="font-semibold">Tempérament:</span> {dogTemperament || "Non renseigné"}</p>
+                  <p><span className="font-semibold">Entente avec autres chiens:</span> {dogSocialization || "Non renseigné"}</p>
+                  <p><span className="font-semibold">Durée de la promenade:</span> {walkDuration || "Non renseignée"}</p>
+                  <p><span className="font-semibold">Vacciné:</span> {isVaccinated || "Non renseigné"}</p>
+                  <p><span className="font-semibold">Stérilisé:</span> {isSterilized || "Non renseigné"}</p>
                 </div>
               </div>
             )}
 
             <div className="border-b border-slate-200 pb-4">
               <h3 className="text-base font-extrabold text-slate-900">Votre réservation</h3>
-              <div className="mt-2 space-y-1">
+              <div className="mt-2">
                 <p className="flex items-center gap-2">
                   <span className="font-semibold">Service choisi:</span>
                   <span className="rounded-full bg-[#1D9E75]/10 px-2 py-0.5 text-[#085041]">
@@ -581,18 +472,14 @@ function BookingPageContent() {
           </div>
 
           <div className="mt-5 rounded-xl border border-[#1D9E75] bg-[#E1F5EE] p-4 text-[#085041]">
-            <h3 className="text-base font-extrabold">Nous joindre</h3>
+            <h3 className="text-base font-extrabold">💳 Paiement sécurisé</h3>
             <p className="mt-2 text-sm">
-              Une fois confirmée, nous vous contacterons sous 2h au numéro indiqué.
+              Après confirmation, vous serez redirigé vers notre page de paiement sécurisé Stripe.
             </p>
           </div>
 
           <div className="mt-6 flex flex-wrap gap-3">
-            <button
-              type="button"
-              onClick={() => setStep(2)}
-              className="rounded-lg border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-700"
-            >
+            <button type="button" onClick={() => setStep(2)} className="rounded-lg border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-700">
               Modifier
             </button>
             <button
@@ -601,11 +488,11 @@ function BookingPageContent() {
               disabled={isLoading}
               className="rounded-lg bg-[#1D9E75] px-5 py-2 font-semibold text-white hover:bg-[#1a8a63] transition-colors disabled:opacity-50"
             >
-              {isLoading ? "Confirmation en cours..." : "Confirmer la réservation"}
+              {isLoading ? "Redirection vers le paiement..." : "Confirmer et payer"}
             </button>
           </div>
         </div>
-      ) : null}
+      )}
     </section>
   );
 }
