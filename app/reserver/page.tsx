@@ -3,6 +3,9 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 const slots = Array.from({ length: 11 }, (_, i) => `${8 + i}h00`);
 
@@ -72,10 +75,50 @@ function BookingPageContent() {
   };
 
   const calculatePromenadePrice = (duration: string) => {
-    if (duration === "30 minutes") return 8;
-    if (duration === "45 minutes") return 10;
-    if (duration === "1 heure") return 12;
-    return 8; // Default price
+    const prices: { [key: string]: number } = {
+      "30 min": 8,
+      "45 min": 12,
+      "1 heure": 15,
+    };
+    return prices[duration] || 8;
+  };
+
+  const calculatePriceInCents = () => {
+    if (service === 'promenade' && walkDuration) {
+      return calculatePromenadePrice(walkDuration) * 100;
+    }
+    const priceMap: { [key: string]: number } = {
+      'garde': 1500, // 15€
+      'accompagnement': 1200, // 12€
+      'courses': 800, // 8€
+      'menage': 2500, // 25€
+      'espagnol': 1500, // 15€
+    };
+    return priceMap[service] || 0;
+  };
+
+  const handleStripePayment = async (reservationId: string) => {
+    try {
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          amount: calculatePriceInCents(),
+          serviceName: currentService?.name,
+          reservationId,
+        }),
+      });
+
+      const { url } = await response.json();
+      if (url) {
+        window.location.href = url;
+      }
+    } catch (error) {
+      console.error('Stripe payment error:', error);
+      alert('Erreur lors de la redirection vers le paiement');
+    }
   };
 
   const validatePromenadeForm = () => {
@@ -242,7 +285,22 @@ function BookingPageContent() {
           })
         });
 
-        window.location.href = '/reservation-confirmee';
+        // Get the reservation ID from the response
+        const { data: reservationData } = await supabase
+          .from('reservations')
+          .select('id')
+          .eq('user_id', user.id)
+          .eq('service', currentService?.name)
+          .eq('date', date)
+          .eq('heure', time)
+          .single();
+
+        if (reservationData?.id) {
+          // Redirect to Stripe payment
+          await handleStripePayment(reservationData.id);
+        } else {
+          window.location.href = '/reservation-confirmee';
+        }
       }
     } catch (err) {
       console.error('Exception:', err);
