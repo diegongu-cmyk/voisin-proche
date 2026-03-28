@@ -477,7 +477,7 @@ function BookingPageContent() {
                   <div>
                     <label className="mb-1 block text-sm font-medium text-slate-700">Type d'espace *</label>
                     <select required value={menageType} onChange={(e) => {
-                      setMenageType(e.target.value);
+                      setMenageTypesetMenageType(e.target.value);
                       // Auto-complete size based on type
                       if (["Studio / Appartement 1 pièce", "Bureau petit"].includes(e.target.value)) {
                         setMenageSize("Petit");
@@ -780,3 +780,4 @@ export default function BookingPage() {
     </Suspense>
   );
 }
+
