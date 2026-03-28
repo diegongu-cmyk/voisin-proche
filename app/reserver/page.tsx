@@ -545,6 +545,29 @@ function BookingPageContent() {
                   {hasDiscount ? (
                     <>
                       <span className="line-through text-gray-400">
+                        {service === "promenade" && walkDuration ? 
+                          `${calculatePromenadePrice(walkDuration)}€` : 
+                          service === "garde" && guardDays ? 
+                            `${15 * (parseInt(guardDays) || 1)}€` : 
+                          currentService?.price}
+                      </span>
+                      <span className="ml-2 text-xl font-bold text-[#F59E0B]">
+                        {service === "promenade" && walkDuration ? 
+                          `${calculateDiscountedPrice(calculatePromenadePrice(walkDuration).toString())}€` : 
+                          service === "garde" && guardDays ? 
+                            `${calculateDiscountedPrice((15 * (parseInt(guardDays) || 1)).toString())}€` : 
+                          `${calculateDiscountedPrice(currentService?.price || '0')}€`}
+                      </span>
+                    </>
+                  ) : (
+                    <span>
+                      {service === "promenade" && walkDuration ? 
+                        `${calculatePromenadePrice(walkDuration)}€` : 
+                        service === "garde" && guardDays ? 
+                          `${15 * (parseInt(guardDays) || 1)}€` : 
+                        currentService?.price}
+                    </span>
+                  )}
                 </p>
                 {hasDiscount && (
                   <span className="inline-flex animate-pulse rounded-full bg-[#F59E0B] px-3 py-1 text-sm font-bold text-white">
