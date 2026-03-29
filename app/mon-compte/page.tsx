@@ -140,10 +140,30 @@ export default function MonCompte() {
                       <span className="text-lg">⏳</span>
                       <span className="font-semibold text-[#085041]">{r.service}</span>
                     </div>
-                    <div className="text-sm text-slate-600">
-                      <p>{r.date} à {r.heure}</p>
-                      <p className="font-medium text-[#1D9E75]">{r.prix}</p>
+                    
+                    {/* Fecha y hora de la solicitud */}
+                    <div className="text-sm text-slate-600 mb-3">
+                      <p className="font-medium text-slate-700">📅 Demande faite le:</p>
+                      <p>{new Intl.DateTimeFormat('fr-FR', {
+                        timeZone: 'Europe/Paris',
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      }).format(new Date(r.created_at))}</p>
                     </div>
+                    
+                    {/* Divider visual */}
+                    <div className="border-t border-slate-100 my-3"></div>
+                    
+                    {/* Fecha y hora del servicio */}
+                    <div className="text-sm text-slate-600 mb-2">
+                      <p className="font-medium text-slate-700">🗓️ Service souhaité le:</p>
+                      <p>{r.date ? `${r.date} à ${r.heure}` : "Date non renseignée"}</p>
+                    </div>
+                    
+                    <p className="font-medium text-[#1D9E75]">{r.prix}</p>
                   </div>
                   <div className="ml-4">
                     <span className="rounded-full px-3 py-1 text-xs font-medium bg-yellow-100 text-yellow-700">
