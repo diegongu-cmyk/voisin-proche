@@ -46,6 +46,10 @@ export default function AdminPage() {
     newClients: 0,
     unreadMessages: 0
   });
+  const [stripeRevenue, setStripeRevenue] = useState({ 
+    todayRevenue: 0, 
+    monthRevenue: 0 
+  });
 
   const [todayBookings, setTodayBookings] = useState<Reservation[]>([]);
   const [allBookings, setAllBookings] = useState<Reservation[]>([]);
@@ -58,6 +62,10 @@ export default function AdminPage() {
     
     if (admin) {
       loadAdminData();
+      fetch('/api/stripe-revenue')
+        .then(r => r.json())
+        .then(data => setStripeRevenue(data))
+        .catch(error => console.error('Error fetching Stripe revenue:', error));
     }
   }, []);
 
@@ -477,7 +485,7 @@ export default function AdminPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Revenus aujourd'hui</p>
-                <p className="text-2xl font-bold text-gray-900">{todayStats.revenue}€</p>
+                <p className="text-2xl font-bold text-gray-900">{stripeRevenue.todayRevenue}€</p>
               </div>
               <div className="bg-green-100 rounded-full p-3">
                 <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
