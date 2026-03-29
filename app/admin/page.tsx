@@ -753,17 +753,16 @@ export default function AdminPage() {
                           <div className="flex justify-between">
                             <span className="text-sm text-gray-600">Date de demande:</span>
                             <span className="text-sm font-medium text-gray-900">
-  {selectedReservation.created_at ? (() => {
-    const date = new Date(selectedReservation.created_at);
-    const parisDate = new Date(date.toLocaleString('en-US', { timeZone: 'Europe/Paris' }));
-    return parisDate.toLocaleString('fr-FR', {
+  {selectedReservation.created_at ? 
+    new Intl.DateTimeFormat('fr-FR', {
+      timeZone: 'Europe/Paris',
       day: 'numeric',
-      month: 'long', 
+      month: 'long',
       year: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
-    });
-  })() : 'Non spécifiée'}
+    }).format(new Date(selectedReservation.created_at))
+  : 'Non spécifiée'}
 </span>
                           </div>
                           {selectedReservation.statut === 'termine' && selectedReservation.updated_at && (
