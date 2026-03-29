@@ -115,9 +115,6 @@ function BookingPageContent() {
 
 ---
 ```
-git add app/reserver/page.tsx
-git commit -m "Apply fidelity discount to Stripe price"
-git push origin main
       price = priceMap[service] || 1000;
     }
     
