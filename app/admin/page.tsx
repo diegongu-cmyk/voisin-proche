@@ -49,6 +49,7 @@ export default function AdminPage() {
 
   const [todayBookings, setTodayBookings] = useState<Reservation[]>([]);
   const [allBookings, setAllBookings] = useState<Reservation[]>([]);
+  const [statusFilter, setStatusFilter] = useState<string>('all');
 
   useEffect(() => {
     const admin = localStorage.getItem('isAdmin') === 'true';
@@ -576,12 +577,68 @@ export default function AdminPage() {
         {/* Section 2 - Toutes les réservations */}
         <section>
           <h2 className="text-xl font-bold text-[#085041] mb-4">Toutes les réservations ({allBookings.length} au total)</h2>
+          
+          {/* Filtres par état */}
+          <div className="mb-4 flex flex-wrap gap-2">
+            <button
+              onClick={() => setStatusFilter('all')}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                statusFilter === 'all' 
+                  ? 'bg-gray-800 text-white' 
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              Tous ({allBookings.length})
+            </button>
+            <button
+              onClick={() => setStatusFilter('en_attente')}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                statusFilter === 'en_attente' 
+                  ? 'bg-yellow-500 text-white' 
+                  : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
+              }`}
+            >
+              En attente ({allBookings.filter(b => b.statut === 'en_attente').length})
+            </button>
+            <button
+              onClick={() => setStatusFilter('confirme')}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                statusFilter === 'confirme' 
+                  ? 'bg-blue-500 text-white' 
+                  : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+              }`}
+            >
+              Confirmé ({allBookings.filter(b => b.statut === 'confirme').length})
+            </button>
+            <button
+              onClick={() => setStatusFilter('termine')}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                statusFilter === 'termine' 
+                  ? 'bg-green-500 text-white' 
+                  : 'bg-green-100 text-green-700 hover:bg-green-200'
+              }`}
+            >
+              Terminé ({allBookings.filter(b => b.statut === 'termine').length})
+            </button>
+            <button
+              onClick={() => setStatusFilter('annule')}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                statusFilter === 'annule' 
+                  ? 'bg-red-500 text-white' 
+                  : 'bg-red-100 text-red-700 hover:bg-red-200'
+              }`}
+            >
+              Annulé ({allBookings.filter(b => b.statut === 'annule').length})
+            </button>
+          </div>
+          
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="w-full min-w-[800px]">
                 <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date / Heure</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date demande</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date service</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
@@ -592,25 +649,51 @@ export default function AdminPage() {
                 <tbody className="divide-y divide-gray-200">
                   {allBookings.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                      <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
                         Aucune réservation pour le moment
                       </td>
                     </tr>
                   ) : (
-                    allBookings.map((booking) => {
-                      const details = typeof booking.details === 'string' ? JSON.parse(booking.details) : booking.details;
-                      return (
-                        <tr 
-                          key={booking.id} 
-                          className="hover:bg-gray-50 transition-colors cursor-pointer"
-                          onClick={() => openDetailsModal(booking)}
-                        >
-                          <td className="px-6 py-4 whitespace-nowrap text-sm">
-                            <div>
-                              <div className="font-medium text-gray-900">{booking.date}</div>
-                              <div className="text-gray-600">{booking.heure}</div>
-                            </div>
-                          </td>
+                    allBookings
+                      .filter(booking => {
+                        if (statusFilter === 'all') return true;
+                        return booking.statut === statusFilter;
+                      })
+                      .map((booking) => {
+                        const details = typeof booking.details === 'string' ? JSON.parse(booking.details) : booking.details;
+                        return (
+                          <tr 
+                            key={booking.id} 
+                            className="hover:bg-gray-50 transition-colors cursor-pointer"
+                            onClick={() => openDetailsModal(booking)}
+                          >
+                            <td className="px-6 py-4 whitespace-nowrap text-sm">
+                              <div className="text-gray-900">
+                                {booking.created_at ? (() => {
+                                  const d = new Date(booking.created_at);
+                                  d.setHours(d.getHours() + 2);
+                                  return d.toLocaleDateString('fr-FR', { 
+                                    day: 'numeric', 
+                                    month: 'short'
+                                  }) + ' à ' + d.toLocaleTimeString('fr-FR', { 
+                                    hour: '2-digit', 
+                                    minute: '2-digit' 
+                                  });
+                                })() : 'Non spécifiée'}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm">
+                              <div className="text-gray-900">
+                                {booking.date ? (() => {
+                                  const d = new Date(booking.date + 'T00:00:00');
+                                  return d.toLocaleDateString('fr-FR', {
+                                    day: 'numeric',
+                                    month: 'long',
+                                    year: 'numeric'
+                                  });
+                                })() : 'Non spécifiée'}
+                              </div>
+                            </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm">
                             <div className="flex items-center">
                               <span className="mr-2">{getServiceIcon(booking.service)}</span>
