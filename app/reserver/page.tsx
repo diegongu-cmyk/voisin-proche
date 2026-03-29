@@ -90,22 +90,42 @@ function BookingPageContent() {
   };
 
   const getPriceInCents = () => {
+    let price = 0;
     if (service === "promenade" && walkDuration) {
-      return calculatePromenadePrice(walkDuration) * 100;
+      price = calculatePromenadePrice(walkDuration) * 100;
+    } else if (service === "garde" && guardDays) {
+      price = 15 * (parseInt(guardDays) || 1) * 100;
+    } else if (service === "menage" && menageSize) {
+      price = calculateMenagePrice(menageSize) * 100;
+    } else {
+      const priceMap: { [key: string]: number } = {
+        'accompagnement': 1200,
+        'courses': 800,
+        'espagnol': 1500,
+        'autre': 1000,
+      };
+      price = priceMap[service] || 1000;
     }
-    if (service === "garde" && guardDays) {
-      return 15 * (parseInt(guardDays) || 1) * 100;
+    if (hasDiscount) { price = Math.round(price * 0.8); }
+    return price;
+  };
+```
+
+5. Guarda con **Ctrl+S**
+
+---
+```
+git add app/reserver/page.tsx
+git commit -m "Apply fidelity discount to Stripe price"
+git push origin main
+      price = priceMap[service] || 1000;
     }
-    if (service === "menage" && menageSize) {
-      return calculateMenagePrice(menageSize) * 100;
+    
+    if (hasDiscount) {
+      price = Math.round(price * 0.8);
     }
-    const priceMap: { [key: string]: number } = {
-      'accompagnement': 1200,
-      'courses': 800,
-      'espagnol': 1500,
-      'autre': 1000,
-    };
-    return priceMap[service] || 1000;
+    
+    return price;
   };
 
   const validateMenageForm = () => {
@@ -780,7 +800,5 @@ export default function BookingPage() {
     </Suspense>
   );
 }
-
-
 
 
