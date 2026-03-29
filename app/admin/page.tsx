@@ -752,25 +752,25 @@ export default function AdminPage() {
                           </div>
                           <div className="flex justify-between">
                             <span className="text-sm text-gray-600">Date de demande:</span>
-                            <span className="text-sm font-medium text-gray-900">{selectedReservation.created_at ? new Date(selectedReservation.created_at).toLocaleString('fr-FR', { 
-                              timeZone: 'Europe/Paris',
-                              day: 'numeric',
-                              month: 'long',
-                              year: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            }) : 'Non spécifiée'}</span>
+                            <span className="text-sm font-medium text-gray-900">
+  {selectedReservation.created_at ? (() => {
+    const date = new Date(selectedReservation.created_at);
+    const parisDate = new Date(date.toLocaleString('en-US', { timeZone: 'Europe/Paris' }));
+    return parisDate.toLocaleString('fr-FR', {
+      day: 'numeric',
+      month: 'long', 
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  })() : 'Non spécifiée'}
+</span>
                           </div>
                           {selectedReservation.statut === 'termine' && selectedReservation.updated_at && (
                             <div className="flex justify-between">
                               <span className="text-sm text-gray-600">Date de fin:</span>
                               <span className="text-sm font-medium text-gray-900">{new Date(selectedReservation.updated_at).toLocaleString('fr-FR', { 
-                                timeZone: 'Europe/Paris',
-                                day: 'numeric',
-                                month: 'long',
-                                year: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit'
+                                timeZone: 'Europe/Paris', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
                               })}</span>
                             </div>
                           )}
@@ -882,3 +882,4 @@ export default function AdminPage() {
     </div>
   );
 }
+
