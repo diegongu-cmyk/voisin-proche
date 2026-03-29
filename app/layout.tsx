@@ -60,32 +60,32 @@ export default function RootLayout({
               <h3 className="text-lg font-semibold text-[#9FE1CB]">Nos Services</h3>
               <ul className="space-y-2">
                 <li>
-                  <a href="/reserver?service=promenade" className="text-sm text-white/70 hover:text-white transition-colors">
+                  <a href="/services/promenade" className="text-sm text-white/70 hover:text-white transition-colors">
                     Promenade de chiens
                   </a>
                 </li>
                 <li>
-                  <a href="/reserver?service=garde" className="text-sm text-white/70 hover:text-white transition-colors">
+                  <a href="/services/garde" className="text-sm text-white/70 hover:text-white transition-colors">
                     Garde d'animaux
                   </a>
                 </li>
                 <li>
-                  <a href="/reserver?service=accompagnement" className="text-sm text-white/70 hover:text-white transition-colors">
+                  <a href="/services/accompagnement" className="text-sm text-white/70 hover:text-white transition-colors">
                     Accompagnement
                   </a>
                 </li>
                 <li>
-                  <a href="/reserver?service=courses" className="text-sm text-white/70 hover:text-white transition-colors">
+                  <a href="/services/courses" className="text-sm text-white/70 hover:text-white transition-colors">
                     Courses et commissions
                   </a>
                 </li>
                 <li>
-                  <a href="/reserver?service=menage" className="text-sm text-white/70 hover:text-white transition-colors">
+                  <a href="/services/menage" className="text-sm text-white/70 hover:text-white transition-colors">
                     Ménage maison/bureau
                   </a>
                 </li>
                 <li>
-                  <a href="/reserver?service=espagnol" className="text-sm text-white/70 hover:text-white transition-colors">
+                  <a href="/services/espagnol" className="text-sm text-white/70 hover:text-white transition-colors">
                     Cours d'espagnol
                   </a>
                 </li>
