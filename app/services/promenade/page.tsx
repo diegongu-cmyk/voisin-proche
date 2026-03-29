@@ -115,7 +115,7 @@ export default function PromenadeService() {
               <ul className="mt-4 space-y-2 text-sm text-gray-600">
                 <li>• 45 minutes de balade</li>
                 <li>• Photos sur WhatsApp</li>
-                <li>• Rapport simple</li>
+                <li>• Rapport de promenade</li>
               </ul>
             </div>
             <div className="rounded-2xl border border-green-400 bg-green-50 p-6 shadow-md">
@@ -165,3 +165,4 @@ export default function PromenadeService() {
     </div>
   );
 }
+
