@@ -172,36 +172,13 @@ export default function HomePage() {
                 >
                   {sliderServices.map((service, index) => (
                     <div key={index} className="w-full flex-shrink-0">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gradient-to-br from-[#1D9E75] to-[#085041] min-h-[320px]">
-                        {/* Columna izquierda: Imagen */}
-                        <div className="relative">
-                          <img
-                            src={service.image}
-                            alt={service.titre}
-                            className="h-full w-full object-cover rounded-2xl"
-                            loading="lazy"
-                          />
-                        </div>
-                        
-                        {/* Columna derecha: Información del servicio */}
-                        <div className="flex flex-col justify-center text-white space-y-4">
-                          <div className="text-5xl">{service.emoji}</div>
-                          <h3 className="text-2xl font-extrabold text-white">{service.titre}</h3>
-                          <p className="text-white/90 text-sm leading-relaxed whitespace-pre-line">
-                            {service.description}
-                          </p>
-                          <div className="flex items-center justify-between">
-                            <span className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-bold text-white">
-                              {service.prix}
-                            </span>
-                            <Link
-                              href={`/reserver?service=${serviceMapping[service.titre] || "autre"}`}
-                              className="inline-flex items-center justify-center rounded-lg bg-white px-4 py-2 text-sm font-bold text-[#1D9E75] transition hover:opacity-90 hover:scale-105"
-                            >
-                              Réserver maintenant
-                            </Link>
-                          </div>
-                        </div>
+                      <div className="relative">
+                        <img
+                          src={service.image}
+                          alt={service.titre}
+                          className="h-64 w-full object-cover md:h-80"
+                          loading="lazy"
+                        />
                       </div>
                     </div>
                   ))}
