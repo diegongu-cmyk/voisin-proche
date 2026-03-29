@@ -293,7 +293,10 @@ function BookingPageContent() {
           const current = idx + 1;
           const active = step >= current;
           return (
-            <div key={label} className={`rounded-xl px-4 py-3 text-sm font-semibold ${active ? "bg-[#1D9E75] text-white" : "bg-slate-100 text-slate-500"}`}>
+            <div
+              key={label}
+              className={active ? "rounded-xl px-4 py-3 text-sm font-semibold bg-[#1D9E75] text-white" : "rounded-xl px-4 py-3 text-sm font-semibold bg-slate-100 text-slate-500"}
+            >
               {label}
             </div>
           );
