@@ -41,8 +41,7 @@ export default function CoursesService() {
             <p className="mt-4 text-lg leading-relaxed text-gray-600">
               Vous ne payez que pour le service, les courses sont réglées directement par vous ou via une 
               avance remboursée. Je respecte scrupuleusement votre liste de courses, vos préférences et votre 
-              budget. Service disponible dans tout Fontenay-le-Comte et ses environs, avec une grande flexibilité 
-              horaire pour s'adapter à vos besoins.
+              budget. Service disponible avec une grande flexibilité horaire pour s'adapter à vos besoins.
             </p>
           </div>
 
@@ -90,7 +89,7 @@ export default function CoursesService() {
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-blue-600">ℹ️</span>
-                  <span>Zone: Fontenay-le-Comte et environs</span>
+                  <span>Zone disponible sur demande</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-blue-600">ℹ️</span>
