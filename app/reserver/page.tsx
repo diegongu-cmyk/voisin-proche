@@ -9,7 +9,7 @@ const services = [
   { id: "garde", icon: "🐾", name: "Garde d'animaux", price: "depuis 15€/jour", description: "Nous gardons votre animal à votre domicile pendant votre absence. Votre compagnon ne remarquera même pas votre absence ! Nous aimons les animaux et savons à quel point ils sont importants dans nos familles. Le service comprend des visites régulières à votre domicile et l'envoi de photos quotidiennes sur votre WhatsApp pour vous rassurer. Depuis 15€/jour." },
   { id: "accompagnement", icon: "🤝", name: "Accompagnement de personnes", price: "depuis 12€/h", description: "Nous accompagnons vos proches pour leurs rendez-vous médicaux, courses ou sorties. Nous pouvons également être simplement une présence chaleureuse et bienveillante, en conversant sur des sujets agréables, des cultures différentes et la vie en général. Notre langue natale est l'espagnol, ce qui enrichit nos échanges, et si nécessaire nous utilisons des traducteurs en ligne pour faciliter la communication. Si la personne ne connaît pas ce type de technologies, nous serons ravis de lui apprendre à les utiliser. Disponible 7j/7. Depuis 12€/heure." },
   { id: "courses", icon: "🛒", name: "Courses et commissions", price: "8€", description: "Nous effectuons vos courses et commissions dans le lieu de votre choix, de la manière la plus rapide possible. Vous payez uniquement le service de courses et de récupération (8€), le montant des articles à acheter est à la charge du client. Rapide, fiable et sans complications." },
-  { id: "menage", icon: "🧹", name: "Ménage maison/bureau", price: "depuis 25€", description: "Nous effectuons un nettoyage détaillé et professionnel de votre domicile ou bureau. Nous respectons et préservons la vie privée de nos clients à tout moment. Depuis 25€." },
+  { id: "menage", icon: "🧹", name: "Ménage maison/bureau", price: "depuis 22€", description: "Nous effectuons un nettoyage détaillé et professionnel de votre domicile ou bureau. Nous respectons et préservons la vie privée de nos clients à tout moment. Depuis 22€." },
   { id: "espagnol", icon: "🇪🇸", name: "Cours d'espagnol", price: "depuis 15€/h", description: "Nous proposons des cours particuliers d'espagnol pour tous les niveaux, des débutants aux avancés, aussi bien pour les enfants que pour les adultes. Notre langue natale est l'espagnol, ce qui garantit un enseignement authentique, naturel et chaleureux. Les cours s'adaptent entièrement au rythme et aux besoins de chaque élève. Disponibles à domicile ou en ligne selon votre préférence. Vous apprendrez non seulement la langue mais aussi la culture, les expressions du quotidien et la richesse du monde hispanophone. Depuis 15€/heure." },
   { id: "autre", icon: "✨", name: "Autres services", price: "nous contacter", description: "Vous avez un besoin spécifique ? Contactez-nous et nous ferons notre possible pour vous aider." },
 ];
@@ -27,7 +27,9 @@ function BookingPageContent() {
   const [fullAddress, setFullAddress] = useState("");
   const [hasDiscount, setHasDiscount] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("");
 
+  // Promenade states
   const [dogName, setDogName] = useState("");
   const [dogBreed, setDogBreed] = useState("");
   const [dogSize, setDogSize] = useState("");
@@ -36,20 +38,19 @@ function BookingPageContent() {
   const [walkDuration, setWalkDuration] = useState("");
   const [isVaccinated, setIsVaccinated] = useState("");
   const [isSterilized, setIsSterilized] = useState("");
-  
-  // Garde d'animaux specific states
-  const [petType, setPetType] = useState("");
-  const [petBreed, setPetBreed] = useState("");
-  const [petAge, setPetAge] = useState("");
-  const [guardDays, setGuardDays] = useState("");
+
+  // Garde states
   const [animalName, setAnimalName] = useState("");
+  const [animalType, setAnimalType] = useState("");
+  const [animalBreed, setAnimalBreed] = useState("");
+  const [animalAge, setAnimalAge] = useState("");
   const [animalTemperament, setAnimalTemperament] = useState("");
-  
-  // Ménage specific states
+  const [gardeNbJours, setGardeNbJours] = useState("");
+
+  // Menage states
   const [menageType, setMenageType] = useState("");
   const [menageSize, setMenageSize] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("");
-  
+
   const [formErrors, setFormErrors] = useState<string[]>([]);
 
   useEffect(() => {
@@ -76,13 +77,6 @@ function BookingPageContent() {
     return Math.round(numericPrice * 0.8);
   };
 
-  const calculateMenagePrice = (size: string) => {
-    if (size === "Petit") return 22;
-    if (size === "Moyen") return 33;
-    if (size === "Grand") return 55;
-    return 22;
-  };
-
   const calculatePromenadePrice = (duration: string) => {
     if (duration === "30 minutes") return 8;
     if (duration === "45 minutes") return 10;
@@ -90,12 +84,19 @@ function BookingPageContent() {
     return 8;
   };
 
+  const calculateMenagePrice = (size: string) => {
+    if (size === "Petit") return 22;
+    if (size === "Moyen") return 33;
+    if (size === "Grand") return 55;
+    return 22;
+  };
+
   const getPriceInCents = () => {
     let price = 0;
     if (service === "promenade" && walkDuration) {
       price = calculatePromenadePrice(walkDuration) * 100;
-    } else if (service === "garde" && guardDays) {
-      price = 15 * (parseInt(guardDays) || 1) * 100;
+    } else if (service === "garde" && gardeNbJours) {
+      price = 15 * (parseInt(gardeNbJours) || 1) * 100;
     } else if (service === "menage" && menageSize) {
       price = calculateMenagePrice(menageSize) * 100;
     } else {
@@ -111,24 +112,6 @@ function BookingPageContent() {
     return price;
   };
 
-  const validateMenageForm = () => {
-    const errors: string[] = [];
-    if (!menageType) errors.push("Le type d'espace est obligatoire");
-    if (!menageSize) errors.push("La taille de l'espace est obligatoire");
-    return errors;
-  };
-
-  const validateGardeForm = () => {
-    const errors: string[] = [];
-    if (!animalName.trim()) errors.push("Le nom de l'animal est obligatoire");
-    if (!petType) errors.push("Le type d'animal est obligatoire");
-    if (petType === "Chien" && !petBreed.trim()) errors.push("La race du chien est obligatoire");
-    if (!petAge) errors.push("L'âge de l'animal est obligatoire");
-    if (!animalTemperament) errors.push("Le tempérament de l'animal est obligatoire");
-    if (!guardDays.trim()) errors.push("Le nombre de jours de garde est obligatoire");
-    return errors;
-  };
-
   const validatePromenadeForm = () => {
     const errors: string[] = [];
     if (!dogName.trim()) errors.push("Le nom du chien est obligatoire");
@@ -137,6 +120,24 @@ function BookingPageContent() {
     if (!dogTemperament) errors.push("Le tempérament du chien est obligatoire");
     if (!dogSocialization) errors.push("L'entente avec autres chiens est obligatoire");
     if (!walkDuration) errors.push("La durée de la promenade est obligatoire");
+    return errors;
+  };
+
+  const validateGardeForm = () => {
+    const errors: string[] = [];
+    if (!animalName.trim()) errors.push("Le nom de l'animal est obligatoire");
+    if (!animalType) errors.push("Le type d'animal est obligatoire");
+    if (animalType === "Chien" && !animalBreed.trim()) errors.push("La race du chien est obligatoire");
+    if (!animalAge) errors.push("L'âge de l'animal est obligatoire");
+    if (!animalTemperament) errors.push("Le tempérament est obligatoire");
+    if (!gardeNbJours) errors.push("Le nombre de jours est obligatoire");
+    return errors;
+  };
+
+  const validateMenageForm = () => {
+    const errors: string[] = [];
+    if (!menageType) errors.push("Le type d'espace est obligatoire");
+    if (!menageSize) errors.push("La taille de l'espace est obligatoire");
     return errors;
   };
 
@@ -164,28 +165,25 @@ function BookingPageContent() {
       }
 
       if (service === "promenade") {
-        const promenadeErrors = validatePromenadeForm();
-        if (promenadeErrors.length > 0) {
-          setFormErrors(promenadeErrors);
-          alert("Veuillez compléter tous les champs obligatoires:\n" + promenadeErrors.join("\n"));
+        const errors = validatePromenadeForm();
+        if (errors.length > 0) {
+          alert("Veuillez compléter tous les champs obligatoires:\n" + errors.join("\n"));
           return;
         }
       }
-      
+
       if (service === "garde") {
-        const gardeErrors = validateGardeForm();
-        if (gardeErrors.length > 0) {
-          setFormErrors(gardeErrors);
-          alert("Veuillez compléter tous les champs obligatoires:\n" + gardeErrors.join("\n"));
+        const errors = validateGardeForm();
+        if (errors.length > 0) {
+          alert("Veuillez compléter tous les champs obligatoires:\n" + errors.join("\n"));
           return;
         }
       }
 
       if (service === "menage") {
-        const menageErrors = validateMenageForm();
-        if (menageErrors.length > 0) {
-          setFormErrors(menageErrors);
-          alert("Veuillez compléter tous les champs obligatoires:\n" + menageErrors.join("\n"));
+        const errors = validateMenageForm();
+        if (errors.length > 0) {
+          alert("Veuillez compléter tous les champs obligatoires:\n" + errors.join("\n"));
           return;
         }
       }
@@ -202,17 +200,22 @@ function BookingPageContent() {
       let precioNumerico = 0;
       if (service === "promenade" && walkDuration) {
         precioNumerico = calculatePromenadePrice(walkDuration);
+      } else if (service === "garde" && gardeNbJours) {
+        precioNumerico = 15 * (parseInt(gardeNbJours) || 1);
+      } else if (service === "menage" && menageSize) {
+        precioNumerico = calculateMenagePrice(menageSize);
       } else {
         precioNumerico = parseInt(currentService?.price.replace(/[^0-9]/g, '') || '0');
       }
-      const precioFinal = hasDiscount ? calculateDiscountedPrice(precioNumerico.toString()) : precioNumerico;
+      const precioFinal = hasDiscount ? Math.round(precioNumerico * 0.8) : precioNumerico;
 
       let detailsObject: any = { fullName, phone, email, fullAddress, notes, paymentMethod };
+
       if (service === "promenade") {
         detailsObject = { ...detailsObject, dogName, dogBreed, dogSize, dogTemperament, dogSocialization, walkDuration };
       }
       if (service === "garde") {
-        detailsObject = { ...detailsObject, animalName, petType, petBreed, petAge, animalTemperament, guardDays };
+        detailsObject = { ...detailsObject, animalName, animalType, animalBreed, animalAge, animalTemperament, gardeNbJours };
       }
       if (service === "menage") {
         detailsObject = { ...detailsObject, menageType, menageSize };
@@ -254,6 +257,7 @@ function BookingPageContent() {
                 <p><strong>Date souhaitée:</strong> ${date}</p>
                 <p><strong>Heure souhaitée:</strong> ${time}</p>
                 <p><strong>Prix estimé:</strong> ${precioFinal}€</p>
+                <p><strong>Méthode de paiement:</strong> ${paymentMethod}</p>
               </div>
               <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin: 15px 0;">
                 <h3 style="color: #085041; margin-top: 0;">👤 Coordonnées du client</h3>
@@ -262,25 +266,58 @@ function BookingPageContent() {
                 <p><strong>Téléphone / WhatsApp:</strong> ${phone}</p>
                 <p><strong>Adresse:</strong> ${fullAddress}</p>
               </div>
-              ${service === 'promenade' ? `
-              <div style="background: #fef9f0; padding: 15px; border-radius: 8px; margin: 15px 0;">
-                <h3 style="color: #085041; margin-top: 0;">🐕 Informations du chien</h3>
-                <p><strong>Nom:</strong> ${dogName}</p>
-                <p><strong>Race:</strong> ${dogBreed}</p>
-                <p><strong>Taille:</strong> ${dogSize}</p>
-                <p><strong>Tempérament:</strong> ${dogTemperament}</p>
-                <p><strong>Entente avec autres chiens:</strong> ${dogSocialization}</p>
-                <p><strong>Durée de la promenade:</strong> ${walkDuration}</p>
-              </div>` : ''}
-              ${notes ? `<div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin: 15px 0;">
-                <h3 style="color: #085041; margin-top: 0;">📝 Notes du client</h3>
-                <p>${notes}</p>
-              </div>` : ''}
               <div style="text-align: center; margin-top: 20px;">
                 <a href="https://voisin-proche.vercel.app/admin" style="background: #1D9E75; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold;">
                   Voir dans le panel admin
                 </a>
               </div>
+            </div>
+          `
+        })
+      });
+
+      // Redirect based on payment method
+      if (paymentMethod === "carte" && service !== "autre") {
+        const stripeResponse = await fetch('/api/create-checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            amount: getPriceInCents(),
+            serviceName: currentService?.name || 'Service',
+            reservationId: ''
+          })
+        });
+        const stripeData = await stripeResponse.json();
+        if (stripeData.url) {
+          window.location.href = stripeData.url;
+          return;
+        }
+      }
+
+      window.location.href = '/reservation-confirmee';
+
+    } catch (err) {
+      console.error('Exception:', err);
+      alert("Une erreur est survenue lors de la réservation");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const getDisplayPrice = () => {
+    if (service === "promenade" && walkDuration) {
+      const base = calculatePromenadePrice(walkDuration);
+      return hasDiscount ? `${Math.round(base * 0.8)}€` : `${base}€`;
+    }
+    if (service === "garde" && gardeNbJours) {
+      const base = 15 * (parseInt(gardeNbJours) || 1);
+      return hasDiscount ? `${Math.round(base * 0.8)}€` : `${base}€`;
+    }
+    if (service === "menage" && menageSize) {
+      const base = calculateMenagePrice(menageSize);
+      return hasDiscount ? `${Math.round(base * 0.8)}€` : `${base}€`;
+    }
+    return currentService?.price || '';
   };
 
   return (
@@ -314,7 +351,7 @@ function BookingPageContent() {
                   key={item.id}
                   type="button"
                   onClick={() => { setService(item.id); setStep(2); }}
-                  className={`rounded-2xl border bg-white p-4 text-left transition ${selected ? "border-[#1D9E75] ring-2 ring-[#1D9E75]/30" : "border-slate-200 hover:border-[#1D9E75]/60"}`}
+                  className={selected ? "rounded-2xl border bg-white p-4 text-left transition border-[#1D9E75] ring-2 ring-[#1D9E75]/30" : "rounded-2xl border bg-white p-4 text-left transition border-slate-200 hover:border-[#1D9E75]/60"}
                 >
                   <p className="text-2xl">{item.icon}</p>
                   <p className="mt-2 text-base font-bold text-slate-900">{item.name}</p>
@@ -328,10 +365,9 @@ function BookingPageContent() {
 
       {step === 2 && (
         <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
-          <h2 className="text-xl font-bold text-[#085041]">Vos informations</h2>
 
           {currentService && (
-            <div className="mt-3 mb-5 rounded-2xl border-2 border-green-300 shadow-md bg-gradient-to-r from-green-50 to-emerald-50 p-6">
+            <div className="mb-5 rounded-2xl border-2 border-green-300 shadow-md bg-gradient-to-r from-green-50 to-emerald-50 p-6">
               <div className="flex items-start gap-4">
                 <span className="text-4xl">{currentService.icon}</span>
                 <div className="flex-1">
@@ -342,315 +378,206 @@ function BookingPageContent() {
             </div>
           )}
 
-          {service === "garde" && (
-            <div className="space-y-6">
-              {/* Section Animal */}
-              <div className="bg-green-50 border border-green-200 rounded-xl p-4">
-                <h3 className="text-lg font-bold text-green-800 mb-4">🐾 Informations sur votre animal</h3>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Nom de l'animal *</label>
-                    <input type="text" required value={animalName} onChange={(e) => setAnimalName(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
-                  </div>
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Type d'animal *</label>
-                    <select required value={petType} onChange={(e) => setPetType(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
-                      <option value="">Sélectionner</option>
-                      <option>Chien</option>
-                      <option>Chat</option>
-                      <option>Oiseau</option>
-                      <option>Lapin</option>
-                      <option>Autre</option>
-                    </select>
-                  </div>
-                  {petType === "Chien" && (
-                    <div>
-                      <label className="mb-1 block text-sm font-medium text-slate-700">Race *</label>
-                      <input type="text" required value={petBreed} onChange={(e) => setPetBreed(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
-                    </div>
-                  )}
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Âge de l'animal *</label>
-                    <select required value={petAge} onChange={(e) => setPetAge(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
-                      <option value="">Sélectionner</option>
-                      <option>Moins de 1 an</option>
-                      <option>1 à 3 ans</option>
-                      <option>3 à 7 ans</option>
-                      <option>Plus de 7 ans</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Tempérament *</label>
-                    <select required value={animalTemperament} onChange={(e) => setAnimalTemperament(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
-                      <option value="">Sélectionner</option>
-                      <option>Calme</option>
-                      <option>Joueur</option>
-                      <option>Nerveux</option>
-                      <option>Craintif</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Nombre de jours de garde *</label>
-                    <input type="number" required value={guardDays} onChange={(e) => setGuardDays(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" min="1" />
-                  </div>
+          {service === "promenade" && (
+            <div className="mb-6 rounded-xl bg-green-50 border border-green-200 p-4">
+              <h3 className="text-lg font-bold text-green-800 mb-4">🐕 Informations sur votre chien</h3>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-slate-700">Nom du chien *</label>
+                  <input type="text" required value={dogName} onChange={(e) => setDogName(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-slate-700">Race *</label>
+                  <input type="text" required value={dogBreed} onChange={(e) => setDogBreed(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-slate-700">Taille *</label>
+                  <select required value={dogSize} onChange={(e) => setDogSize(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
+                    <option value="">Sélectionner</option>
+                    <option>Petit - moins de 10kg</option>
+                    <option>Moyen - 10 à 25kg</option>
+                    <option>Grand - plus de 25kg</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-slate-700">Tempérament *</label>
+                  <select required value={dogTemperament} onChange={(e) => setDogTemperament(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
+                    <option value="">Sélectionner</option>
+                    <option>Calme</option>
+                    <option>Joueur</option>
+                    <option>Nerveux</option>
+                    <option>Agressif avec autres chiens</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-slate-700">Entente avec autres chiens *</label>
+                  <select required value={dogSocialization} onChange={(e) => setDogSocialization(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
+                    <option value="">Sélectionner</option>
+                    <option>Oui, très sociable</option>
+                    <option>Oui, mais supervisé</option>
+                    <option>Non, préfère être seul</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-slate-700">Durée de la promenade *</label>
+                  <select required value={walkDuration} onChange={(e) => setWalkDuration(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
+                    <option value="">Sélectionner</option>
+                    <option value="30 minutes">30 minutes - 8€</option>
+                    <option value="45 minutes">45 minutes - 10€</option>
+                    <option value="1 heure">1 heure - 12€</option>
+                  </select>
                 </div>
               </div>
+            </div>
+          )}
 
-              {/* Section Client */}
-              <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
-                <h3 className="text-lg font-bold text-slate-800 mb-4">👤 Vos coordonnées</h3>
-                <div className="grid gap-4 md:grid-cols-2">
+          {service === "garde" && (
+            <div className="mb-6 rounded-xl bg-green-50 border border-green-200 p-4">
+              <h3 className="text-lg font-bold text-green-800 mb-4">🐾 Informations sur votre animal</h3>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-slate-700">Nom de l'animal *</label>
+                  <input type="text" required value={animalName} onChange={(e) => setAnimalName(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-slate-700">Type d'animal *</label>
+                  <select required value={animalType} onChange={(e) => setAnimalType(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
+                    <option value="">Sélectionner</option>
+                    <option>Chien</option>
+                    <option>Chat</option>
+                    <option>Oiseau</option>
+                    <option>Lapin</option>
+                    <option>Autre</option>
+                  </select>
+                </div>
+                {animalType === "Chien" && (
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Prénom et Nom *</label>
-                    <input type="text" required value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Race *</label>
+                    <input type="text" required value={animalBreed} onChange={(e) => setAnimalBreed(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
                   </div>
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Téléphone / WhatsApp *</label>
-                    <input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
-                  </div>
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Email *</label>
-                    <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
-                  </div>
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Adresse complète *</label>
-                    <input type="text" required value={fullAddress} onChange={(e) => setFullAddress(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
-                  </div>
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Date souhaitée *</label>
-                    <input type="date" required value={date} onChange={(e) => setDate(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
-                  </div>
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Heure souhaitée *</label>
-                    <select required value={time} onChange={(e) => setTime(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
-                      <option value="">Choisir une heure</option>
-                      <option>8h00</option><option>8h30</option><option>9h00</option>
-                      <option>9h30</option><option>10h00</option><option>10h30</option>
-                      <option>11h00</option><option>11h30</option><option>12h00</option>
-                      <option>12h30</option><option>13h00</option><option>13h30</option>
-                      <option>14h00</option><option>14h30</option><option>15h00</option>
-                      <option>15h30</option><option>16h00</option><option>16h30</option>
-                      <option>17h00</option><option>17h30</option><option>18h00</option>
-                      <option>19h00</option>
-                    </select>
-                  </div>
-                  <div className="md:col-span-2">
-                    <label className="mb-1 block text-sm font-medium text-slate-700">
-                      💳 Méthode de paiement préférée *
-                    </label>
-                    <select 
-                      required 
-                      value={paymentMethod} 
-                      onChange={(e) => setPaymentMethod(e.target.value)} 
-                      className="w-full rounded-lg border border-slate-300 px-3 py-2"
-                    >
-                      <option value="">Sélectionner</option>
-                      <option value="carte">💳 Paiement en ligne (Stripe)</option>
-                      <option value="especes">💵 Espèces (cash)</option>
-                      <option value="virement">🏦 Virement bancaire</option>
-                    </select>
-                  </div>
-                  <div className="md:col-span-2">
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Notes libres</label>
-                    <textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
-                  </div>
+                )}
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-slate-700">Âge de l'animal *</label>
+                  <select required value={animalAge} onChange={(e) => setAnimalAge(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
+                    <option value="">Sélectionner</option>
+                    <option>Moins de 1 an</option>
+                    <option>1 à 3 ans</option>
+                    <option>3 à 7 ans</option>
+                    <option>Plus de 7 ans</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-slate-700">Tempérament *</label>
+                  <select required value={animalTemperament} onChange={(e) => setAnimalTemperament(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
+                    <option value="">Sélectionner</option>
+                    <option>Calme</option>
+                    <option>Joueur</option>
+                    <option>Nerveux</option>
+                    <option>Craintif</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-slate-700">Nombre de jours de garde *</label>
+                  <input type="number" min="1" required value={gardeNbJours} onChange={(e) => setGardeNbJours(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
                 </div>
               </div>
+              {gardeNbJours && (
+                <p className="mt-3 text-sm font-semibold text-green-700">
+                  Prix estimé: {hasDiscount ? Math.round(15 * (parseInt(gardeNbJours) || 1) * 0.8) : 15 * (parseInt(gardeNbJours) || 1)}€ ({gardeNbJours} jour(s) à 15€/jour{hasDiscount ? " avec -20% fidélité" : ""})
+                </p>
+              )}
             </div>
           )}
 
           {service === "menage" && (
-            <div className="space-y-6">
-              {/* Section Ménage */}
-              <div className="bg-green-50 border border-green-200 rounded-xl p-4">
-                <h3 className="text-lg font-bold text-green-800 mb-4">🧹 Informations sur le ménage</h3>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Type d'espace *</label>
-                    <select required value={menageType} onChange={(e) => {
-                      setMenageType(e.target.value);
-                      // Auto-complete size based on type
-                      if (["Studio / Appartement 1 pièce", "Bureau petit"].includes(e.target.value)) {
-                        setMenageSize("Petit");
-                      } else if (["Appartement 2 pièces", "Appartement 3 pièces ou plus", "Maison petite (1-2 chambres)", "Bureau moyen"].includes(e.target.value)) {
-                        setMenageSize("Moyen");
-                      } else if (["Maison moyenne (3 chambres)", "Maison grande (4 chambres ou plus)", "Bureau grand"].includes(e.target.value)) {
-                        setMenageSize("Grand");
-                      }
-                    }} className="w-full rounded-lg border border-slate-300 px-3 py-2">
-                      <option value="">Sélectionner</option>
-                      <option>Studio / Appartement 1 pièce</option>
-                      <option>Appartement 2 pièces</option>
-                      <option>Appartement 3 pièces ou plus</option>
-                      <option>Maison petite (1-2 chambres)</option>
-                      <option>Maison moyenne (3 chambres)</option>
-                      <option>Maison grande (4 chambres ou plus)</option>
-                      <option>Bureau petit</option>
-                      <option>Bureau moyen</option>
-                      <option>Bureau grand</option>
-                    </select>
-                  </div>
-                  <div className="mt-2">
-                    <p className="text-sm text-slate-600">
-                      {menageSize === "Petit" && "Prix estimé: 22€ (2h minimum à 11€/h)"}
-                      {menageSize === "Moyen" && "Prix estimé: 33€ (3h minimum à 11€/h)"}
-                      {menageSize === "Grand" && "Prix estimé: 55€ (5h minimum à 11€/h)"}
-                    </p>
-                  </div>
+            <div className="mb-6 rounded-xl bg-green-50 border border-green-200 p-4">
+              <h3 className="text-lg font-bold text-green-800 mb-4">🧹 Informations sur le ménage</h3>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="md:col-span-2">
+                  <label className="mb-1 block text-sm font-medium text-slate-700">Type d'espace *</label>
+                  <select required value={menageType} onChange={(e) => {
+                    setMenageType(e.target.value);
+                    if (["Studio / Appartement 1 pièce", "Bureau petit"].includes(e.target.value)) {
+                      setMenageSize("Petit");
+                    } else if (["Appartement 2 pièces", "Appartement 3 pièces ou plus", "Maison petite (1-2 chambres)", "Bureau moyen"].includes(e.target.value)) {
+                      setMenageSize("Moyen");
+                    } else if (["Maison moyenne (3 chambres)", "Maison grande (4 chambres ou plus)", "Bureau grand"].includes(e.target.value)) {
+                      setMenageSize("Grand");
+                    }
+                  }} className="w-full rounded-lg border border-slate-300 px-3 py-2">
+                    <option value="">Sélectionner</option>
+                    <option>Studio / Appartement 1 pièce</option>
+                    <option>Appartement 2 pièces</option>
+                    <option>Appartement 3 pièces ou plus</option>
+                    <option>Maison petite (1-2 chambres)</option>
+                    <option>Maison moyenne (3 chambres)</option>
+                    <option>Maison grande (4 chambres ou plus)</option>
+                    <option>Bureau petit</option>
+                    <option>Bureau moyen</option>
+                    <option>Bureau grand</option>
+                  </select>
                 </div>
               </div>
-
-              {/* Section Client */}
-              <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
-                <h3 className="text-lg font-bold text-slate-800 mb-4">👤 Vos coordonnées</h3>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Prénom et Nom *</label>
-                    <input type="text" required value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
-                  </div>
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Téléphone / WhatsApp *</label>
-                    <input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
-                  </div>
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Email *</label>
-                    <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
-                  </div>
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Adresse complète *</label>
-                    <input type="text" required value={fullAddress} onChange={(e) => setFullAddress(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
-                  </div>
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Date souhaitée *</label>
-                    <input type="date" required value={date} onChange={(e) => setDate(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
-                  </div>
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Heure souhaitée *</label>
-                    <select required value={time} onChange={(e) => setTime(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
-                      <option value="">Choisir une heure</option>
-                      <option>8h00</option><option>8h30</option><option>9h00</option>
-                      <option>9h30</option><option>10h00</option><option>10h30</option>
-                      <option>11h00</option><option>11h30</option><option>12h00</option>
-                      <option>12h30</option><option>13h00</option><option>13h30</option>
-                      <option>14h00</option><option>14h30</option><option>15h00</option>
-                      <option>15h30</option><option>16h00</option><option>16h30</option>
-                      <option>17h00</option><option>17h30</option><option>18h00</option>
-                      <option>19h00</option>
-                    </select>
-                  </div>
-                  <div className="md:col-span-2">
-                    <label className="mb-1 block text-sm font-medium text-slate-700">
-                      💳 Méthode de paiement préférée *
-                    </label>
-                    <select 
-                      required 
-                      value={paymentMethod} 
-                      onChange={(e) => setPaymentMethod(e.target.value)} 
-                      className="w-full rounded-lg border border-slate-300 px-3 py-2"
-                    >
-                      <option value="">Sélectionner</option>
-                      <option value="carte">💳 Paiement en ligne (Stripe)</option>
-                      <option value="especes">💵 Espèces (cash)</option>
-                      <option value="virement">🏦 Virement bancaire</option>
-                    </select>
-                  </div>
-                  <div className="md:col-span-2">
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Notes libres</label>
-                    <textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
-                  </div>
-                </div>
-              </div>
+              {menageSize && (
+                <p className="mt-3 text-sm font-semibold text-green-700">
+                  {menageSize === "Petit" && `Prix estimé: ${hasDiscount ? Math.round(22 * 0.8) : 22}€ (2h minimum à 11€/h)`}
+                  {menageSize === "Moyen" && `Prix estimé: ${hasDiscount ? Math.round(33 * 0.8) : 33}€ (3h minimum à 11€/h)`}
+                  {menageSize === "Grand" && `Prix estimé: ${hasDiscount ? Math.round(55 * 0.8) : 55}€ (5h minimum à 11€/h)`}
+                </p>
+              )}
             </div>
           )}
 
-          {service === "promenade" && (
-            <div className="grid gap-4 md:grid-cols-2 mb-4">
+          <div className="rounded-xl bg-slate-50 border border-slate-200 p-4">
+            <h3 className="text-lg font-bold text-slate-800 mb-4">👤 Vos coordonnées</h3>
+            <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">Nom du chien *</label>
-                <input type="text" required value={dogName} onChange={(e) => setDogName(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+                <label className="mb-1 block text-sm font-medium text-slate-700">Prénom et Nom *</label>
+                <input type="text" required value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
               </div>
               <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">Race *</label>
-                <input type="text" required value={dogBreed} onChange={(e) => setDogBreed(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+                <label className="mb-1 block text-sm font-medium text-slate-700">Téléphone WhatsApp *</label>
+                <input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
               </div>
               <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">Taille *</label>
-                <select required value={dogSize} onChange={(e) => setDogSize(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
-                  <option value="">Sélectionner</option>
-                  <option>Petit - moins de 10kg</option>
-                  <option>Moyen - 10 à 25kg</option>
-                  <option>Grand - plus de 25kg</option>
+                <label className="mb-1 block text-sm font-medium text-slate-700">Email *</label>
+                <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-slate-700">Date souhaitée *</label>
+                <input type="date" required value={date} onChange={(e) => setDate(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-slate-700">Heure souhaitée *</label>
+                <select required value={time} onChange={(e) => setTime(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
+                  <option value="">Choisir une heure</option>
+                  <option>8h00</option><option>8h30</option><option>9h00</option>
+                  <option>9h30</option><option>10h00</option><option>10h30</option>
+                  <option>11h00</option><option>11h30</option><option>12h00</option>
+                  <option>12h30</option><option>13h00</option><option>13h30</option>
+                  <option>14h00</option><option>14h30</option><option>15h00</option>
+                  <option>15h30</option><option>16h00</option><option>16h30</option>
+                  <option>17h00</option><option>17h30</option><option>18h00</option>
+                  <option>19h00</option>
                 </select>
               </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">Tempérament *</label>
-                <select required value={dogTemperament} onChange={(e) => setDogTemperament(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
+              <div className="md:col-span-2">
+                <label className="mb-1 block text-sm font-medium text-slate-700">Adresse à Fontenay-le-Comte *</label>
+                <input type="text" required value={fullAddress} onChange={(e) => setFullAddress(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+              </div>
+              <div className="md:col-span-2">
+                <label className="mb-1 block text-sm font-medium text-slate-700">💳 Méthode de paiement préférée *</label>
+                <select required value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
                   <option value="">Sélectionner</option>
-                  <option>Calme</option>
-                  <option>Joueur</option>
-                  <option>Nerveux</option>
-                  <option>Agressif avec autres chiens</option>
+                  <option value="carte">💳 Paiement en ligne (Stripe)</option>
+                  <option value="especes">💵 Espèces (cash)</option>
+                  <option value="virement">🏦 Virement bancaire</option>
                 </select>
               </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">Entente avec autres chiens *</label>
-                <select required value={dogSocialization} onChange={(e) => setDogSocialization(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
-                  <option value="">Sélectionner</option>
-                  <option>Oui, très sociable</option>
-                  <option>Oui, mais supervisé</option>
-                  <option>Non, préfère être seul</option>
-                </select>
+              <div className="md:col-span-2">
+                <label className="mb-1 block text-sm font-medium text-slate-700">Notes libres</label>
+                <textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
               </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">Durée de la promenade *</label>
-                <select required value={walkDuration} onChange={(e) => setWalkDuration(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
-                  <option value="">Sélectionner</option>
-                  <option value="30 minutes">30 minutes - 8€</option>
-                  <option value="45 minutes">45 minutes - 10€</option>
-                  <option value="1 heure">1 heure - 12€</option>
-                </select>
-              </div>
-            </div>
-          )}
-
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Prénom et Nom *</label>
-              <input type="text" required value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Téléphone WhatsApp *</label>
-              <input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Email *</label>
-              <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Date souhaitée *</label>
-              <input type="date" required value={date} onChange={(e) => setDate(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Heure souhaitée *</label>
-              <select required value={time} onChange={(e) => setTime(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
-                <option value="">Choisir une heure</option>
-                <option>8h00</option><option>8h30</option><option>9h00</option>
-                <option>9h30</option><option>10h00</option><option>10h30</option>
-                <option>11h00</option><option>11h30</option><option>12h00</option>
-                <option>12h30</option><option>13h00</option><option>13h30</option>
-                <option>14h00</option><option>14h30</option><option>15h00</option>
-                <option>15h30</option><option>16h00</option><option>16h30</option>
-                <option>17h00</option><option>17h30</option><option>18h00</option>
-                <option>19h00</option>
-              </select>
-            </div>
-            <div className="md:col-span-2">
-              <label className="mb-1 block text-sm font-medium text-slate-700">Adresse à Fontenay-le-Comte *</label>
-              <input type="text" required value={fullAddress} onChange={(e) => setFullAddress(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
-            </div>
-            <div className="md:col-span-2">
-              <label className="mb-1 block text-sm font-medium text-slate-700">Notes libres</label>
-              <textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
             </div>
           </div>
 
@@ -667,41 +594,22 @@ function BookingPageContent() {
           <p className="mt-1 text-sm text-slate-600">Vérifiez les informations avant validation.</p>
 
           <div className="mt-5 space-y-5 text-sm text-slate-700">
-            <div className="mt-5 rounded-xl border border-slate-200 bg-[#1D9E75]/10 p-4">
+            <div className="rounded-xl border border-slate-200 bg-[#1D9E75]/10 p-4">
               <h3 className="text-base font-extrabold text-slate-900">Prix estimé</h3>
               <div className="flex items-center gap-3">
                 <p className="text-2xl font-extrabold text-[#1D9E75]">
                   {hasDiscount ? (
                     <>
-                      <span className="line-through text-gray-400">
-                        {service === "promenade" && walkDuration ? 
-                          `${calculatePromenadePrice(walkDuration)}€` : 
-                          service === "garde" && guardDays ? 
-                            `${15 * (parseInt(guardDays) || 1)}€` : 
-                          service === "menage" && menageSize ? 
-                            `${calculateMenagePrice(menageSize)}€` :
-                          currentService?.price}
-                      </span>
-                      <span className="ml-2 text-xl font-bold text-[#F59E0B]">
-                        {service === "promenade" && walkDuration ? 
-                          `${calculateDiscountedPrice(calculatePromenadePrice(walkDuration).toString())}€` : 
-                          service === "garde" && guardDays ? 
-                            `${calculateDiscountedPrice((15 * (parseInt(guardDays) || 1)).toString())}€` : 
-                          service === "menage" && menageSize ? 
-                            `${calculateDiscountedPrice(calculateMenagePrice(menageSize).toString())}€` :
-                          `${calculateDiscountedPrice(currentService?.price || '0')}€`}
-                      </span>
+                      <span className="line-through text-gray-400 text-lg">{
+                        service === "promenade" && walkDuration ? `${calculatePromenadePrice(walkDuration)}€` :
+                        service === "garde" && gardeNbJours ? `${15 * (parseInt(gardeNbJours) || 1)}€` :
+                        service === "menage" && menageSize ? `${calculateMenagePrice(menageSize)}€` :
+                        currentService?.price
+                      }</span>
+                      <span className="ml-2 text-xl font-bold text-[#F59E0B]">{getDisplayPrice()}</span>
                     </>
                   ) : (
-                    <span>
-                      {service === "promenade" && walkDuration ? 
-                        `${calculatePromenadePrice(walkDuration)}€` : 
-                        service === "garde" && guardDays ? 
-                          `${15 * (parseInt(guardDays) || 1)}€` : 
-                        service === "menage" && menageSize ? 
-                          `${calculateMenagePrice(menageSize)}€` :
-                        currentService?.price}
-                    </span>
+                    <span>{getDisplayPrice()}</span>
                   )}
                 </p>
                 {hasDiscount && (
@@ -721,6 +629,11 @@ function BookingPageContent() {
                 <p><span className="font-semibold">Téléphone:</span> {phone || "Non renseigné"}</p>
                 <p><span className="font-semibold">Adresse:</span> {fullAddress || "Non renseignée"}</p>
                 <p><span className="font-semibold">Date et heure:</span> {date || "Non renseignée"} à {time}</p>
+                <p><span className="font-semibold">Méthode de paiement:</span> {
+                  paymentMethod === "carte" ? "💳 Paiement en ligne (Stripe)" :
+                  paymentMethod === "especes" ? "💵 Espèces (cash)" :
+                  paymentMethod === "virement" ? "🏦 Virement bancaire" : "Non renseignée"
+                }</p>
                 {notes && <p><span className="font-semibold">Notes:</span> {notes}</p>}
               </div>
             </div>
@@ -735,8 +648,30 @@ function BookingPageContent() {
                   <p><span className="font-semibold">Tempérament:</span> {dogTemperament || "Non renseigné"}</p>
                   <p><span className="font-semibold">Entente avec autres chiens:</span> {dogSocialization || "Non renseigné"}</p>
                   <p><span className="font-semibold">Durée de la promenade:</span> {walkDuration || "Non renseignée"}</p>
-                  <p><span className="font-semibold">Vacciné:</span> {isVaccinated || "Non renseigné"}</p>
-                  <p><span className="font-semibold">Stérilisé:</span> {isSterilized || "Non renseigné"}</p>
+                </div>
+              </div>
+            )}
+
+            {service === "garde" && (
+              <div className="border-b border-slate-200 pb-4">
+                <h3 className="text-base font-extrabold text-slate-900">Informations de l'animal</h3>
+                <div className="mt-2 space-y-1">
+                  <p><span className="font-semibold">Nom:</span> {animalName || "Non renseigné"}</p>
+                  <p><span className="font-semibold">Type:</span> {animalType || "Non renseigné"}</p>
+                  {animalType === "Chien" && <p><span className="font-semibold">Race:</span> {animalBreed || "Non renseignée"}</p>}
+                  <p><span className="font-semibold">Âge:</span> {animalAge || "Non renseigné"}</p>
+                  <p><span className="font-semibold">Tempérament:</span> {animalTemperament || "Non renseigné"}</p>
+                  <p><span className="font-semibold">Nombre de jours:</span> {gardeNbJours || "Non renseigné"}</p>
+                </div>
+              </div>
+            )}
+
+            {service === "menage" && (
+              <div className="border-b border-slate-200 pb-4">
+                <h3 className="text-base font-extrabold text-slate-900">Informations du ménage</h3>
+                <div className="mt-2 space-y-1">
+                  <p><span className="font-semibold">Type d'espace:</span> {menageType || "Non renseigné"}</p>
+                  <p><span className="font-semibold">Taille:</span> {menageSize || "Non renseignée"}</p>
                 </div>
               </div>
             )}
@@ -755,9 +690,13 @@ function BookingPageContent() {
           </div>
 
           <div className="mt-5 rounded-xl border border-[#1D9E75] bg-[#E1F5EE] p-4 text-[#085041]">
-            <h3 className="text-base font-extrabold">💳 Paiement sécurisé</h3>
+            <h3 className="text-base font-extrabold">
+              {paymentMethod === "carte" ? "💳 Paiement sécurisé" : "✅ Confirmation de réservation"}
+            </h3>
             <p className="mt-2 text-sm">
-              Après confirmation, vous serez redirigé vers notre page de paiement sécurisé Stripe.
+              {paymentMethod === "carte"
+                ? "Après confirmation, vous serez redirigé vers notre page de paiement sécurisé Stripe."
+                : "Votre réservation sera confirmée dans les 15 prochaines minutes."}
             </p>
           </div>
 
@@ -771,7 +710,7 @@ function BookingPageContent() {
               disabled={isLoading}
               className="rounded-lg bg-[#1D9E75] px-5 py-2 font-semibold text-white hover:bg-[#1a8a63] transition-colors disabled:opacity-50"
             >
-              {isLoading ? "Redirection vers le paiement..." : "Confirmer et payer"}
+              {isLoading ? "Confirmation en cours..." : paymentMethod === "carte" ? "Confirmer et payer" : "Confirmer la réservation"}
             </button>
           </div>
         </div>
@@ -787,5 +726,3 @@ export default function BookingPage() {
     </Suspense>
   );
 }
-
-
