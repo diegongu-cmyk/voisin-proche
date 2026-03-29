@@ -132,19 +132,31 @@ export default function MonCompte() {
           </div>
         ) : (
           <div className="space-y-3">
-            {pendingReservations.map((r) => (
-              <div key={r.id} className="border-l-4 border-yellow-400 rounded-r-lg bg-white p-4">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-lg">⏳</span>
-                      <span className="font-semibold text-[#085041]">{r.service}</span>
+            {pendingReservations.map((r) => {
+              const details = r.details ? JSON.parse(r.details) : {};
+              const getServiceIcon = (serviceName: string) => {
+                const service = serviciosBase.find(s => s.name === serviceName);
+                return service?.emoji || '📋';
+              };
+              
+              return (
+                <div key={r.id} className="shadow-sm border-l-4 border-yellow-400 rounded-xl bg-white p-4">
+                  {/* ENCABEZADO de la tarjeta */}
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl">{getServiceIcon(r.service)}</span>
+                      <span className="font-bold text-[#085041]">{r.service}</span>
                     </div>
-                    
-                    {/* Fecha y hora de la solicitud */}
-                    <div className="text-sm text-slate-600 mb-3">
-                      <p className="font-medium text-slate-700">📅 Demande faite le:</p>
-                      <p>{new Intl.DateTimeFormat('fr-FR', {
+                    <span className="rounded-full px-3 py-1 text-xs font-medium bg-yellow-100 text-yellow-700">
+                      ⏳ En attente de confirmation
+                    </span>
+                  </div>
+
+                  {/* SECCIÓN FECHAS (2 columnas) */}
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div className="text-sm">
+                      <p className="font-medium text-slate-700 mb-1">📅 Demande faite le:</p>
+                      <p className="text-slate-600">{new Intl.DateTimeFormat('fr-FR', {
                         timeZone: 'Europe/Paris',
                         day: 'numeric',
                         month: 'long',
@@ -153,26 +165,48 @@ export default function MonCompte() {
                         minute: '2-digit'
                       }).format(new Date(r.created_at))}</p>
                     </div>
-                    
-                    {/* Divider visual */}
-                    <div className="border-t border-slate-100 my-3"></div>
-                    
-                    {/* Fecha y hora del servicio */}
-                    <div className="text-sm text-slate-600 mb-2">
-                      <p className="font-medium text-slate-700">🗓️ Service souhaité le:</p>
-                      <p>{r.date ? `${r.date} à ${r.heure}` : "Date non renseignée"}</p>
+                    <div className="text-sm">
+                      <p className="font-medium text-slate-700 mb-1">🗓️ Service souhaité:</p>
+                      <p className="text-slate-600">{r.date ? `${r.date} à ${r.heure}` : "Date non renseignée"}</p>
                     </div>
-                    
-                    <p className="font-medium text-[#1D9E75]">{r.prix}</p>
                   </div>
-                  <div className="ml-4">
-                    <span className="rounded-full px-3 py-1 text-xs font-medium bg-yellow-100 text-yellow-700">
-                      En attente de confirmation
-                    </span>
+
+                  {/* Separator */}
+                  <div className="border-t border-slate-100 my-3"></div>
+
+                  {/* SECCIÓN DETALLES DEL SERVICIO */}
+                  <div className="space-y-2 mb-4">
+                    <div className="text-sm">
+                      <p className="font-medium text-slate-700 mb-1">🕐 Durée / Détails:</p>
+                      <p className="text-slate-600">
+                        {details.walkDuration || 
+                         (details.gardeNbJours && `${details.gardeNbJours} jour(s)`) || 
+                         details.menageType || 
+                         "Voir avec le prestataire"}
+                      </p>
+                    </div>
+                    <div className="text-sm">
+                      <p className="font-medium text-slate-700 mb-1">💳 Méthode de paiement:</p>
+                      <p className="text-slate-600">
+                        {details.paymentMethod === "carte" ? "💳 Paiement en ligne" :
+                         details.paymentMethod === "especes" ? "💵 Espèces" :
+                         details.paymentMethod === "virement" ? "🏦 Virement bancaire" :
+                         "Non renseignée"}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Separator */}
+                  <div className="border-t border-slate-100 my-3"></div>
+
+                  {/* SECCIÓN PRIX */}
+                  <div className="text-center">
+                    <p className="font-medium text-slate-700 mb-1">💰 Montant:</p>
+                    <p className="text-2xl font-bold text-green-600">{r.prix}€</p>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
