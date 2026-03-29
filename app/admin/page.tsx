@@ -801,7 +801,7 @@ export default function AdminPage() {
                           </div>
                           <div className="flex justify-between mt-3">
                             <span className="text-sm text-gray-600">Prix estimé:</span>
-                            <span className="text-sm font-semibold text-gray-900">{getServicePrice(selectedReservation.service)}€</span>
+                            <span className="text-sm font-semibold text-gray-900">{selectedReservation.prix}€</span>
                           </div>
                         </div>
                       </div>
