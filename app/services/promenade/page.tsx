@@ -65,7 +65,7 @@ export default function PromenadeService() {
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-green-600">✓</span>
-                  <span>Rapport post-promenade détaillé</span>
+                  <span>Rapport de promenade</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-green-600">✓</span>
@@ -130,7 +130,6 @@ export default function PromenadeService() {
                 <li>• Photos</li>
                 <li>• Rapport détaillé</li>
                 <li>• Jeux éducatifs</li>
-                <li>• Brossage si nécessaire</li>
               </ul>
             </div>
             <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
