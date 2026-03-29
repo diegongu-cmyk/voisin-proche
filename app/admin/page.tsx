@@ -57,6 +57,14 @@ export default function AdminPage() {
   const [selectedReservations, setSelectedReservations] = useState<string[]>([]);
 
   useEffect(() => {
+    const navbar = document.querySelector('nav');
+    if (navbar) navbar.style.display = 'none';
+    return () => {
+      if (navbar) navbar.style.display = '';
+    };
+  }, []);
+
+  useEffect(() => {
     const admin = localStorage.getItem('isAdmin') === 'true';
     setIsAdmin(admin);
     
