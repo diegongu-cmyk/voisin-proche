@@ -109,21 +109,6 @@ function BookingPageContent() {
     if (hasDiscount) { price = Math.round(price * 0.8); }
     return price;
   };
-```
-
-5. Guarda con **Ctrl+S**
-
----
-```
-      price = priceMap[service] || 1000;
-    }
-    
-    if (hasDiscount) {
-      price = Math.round(price * 0.8);
-    }
-    
-    return price;
-  };
 
   const validateMenageForm = () => {
     const errors: string[] = [];
