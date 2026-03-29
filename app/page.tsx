@@ -59,34 +59,46 @@ const services = [
 
 const sliderServices = [
   {
+    emoji: "🐕",
     titre: "Promenade de chiens",
     prix: "Depuis 8€",
+    description: "Promenades sécurisées avec jeux et caresses.\nPhotos envoyées sur WhatsApp. Depuis 8€.",
     image: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=600",
   },
   {
+    emoji: "🐾",
     titre: "Garde d'animaux",
     prix: "Depuis 15€/jour",
+    description: "Votre animal gardé à domicile avec amour.\nPhotos quotidiennes sur WhatsApp. Depuis 15€/jour.",
     image: "https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?w=600",
   },
   {
-    titre: "Cours d'espagnol",
-    prix: "Depuis 15€/heure",
-    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600",
-  },
-  {
+    emoji: "🤝",
     titre: "Accompagnement",
-    prix: "Depuis 12€",
+    prix: "Depuis 12€/h",
+    description: "Accompagnement pour rendez-vous ou simplement\nune présence chaleureuse. Depuis 12€/h.",
     image: "https://images.unsplash.com/photo-1706806594516-75f93dab6295?w=600",
   },
   {
+    emoji: "🛒",
+    titre: "Courses et commissions",
+    prix: "Depuis 8€",
+    description: "Vos courses effectuées rapidement.\nVous payez uniquement le service. 8€.",
+    image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=600",
+  },
+  {
+    emoji: "🧹",
     titre: "Ménage maison/bureau",
     prix: "Depuis 22€",
+    description: "Nettoyage détaillé et professionnel.\nConfidentialité garantie. Depuis 22€.",
     image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600",
   },
   {
-    titre: "Courses et commissions",
-    prix: "Depuis 8€",
-    image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=600",
+    emoji: "🇪🇸",
+    titre: "Cours d'espagnol",
+    prix: "Depuis 15€/h",
+    description: "Cours authentiques par natif espagnol.\nTous niveaux, enfants et adultes. Depuis 15€/h.",
+    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600",
   },
 ];
 
@@ -142,17 +154,37 @@ export default function HomePage() {
                   style={{ transform: `translateX(-${currentSlide * 100}%)` }}
                 >
                   {sliderServices.map((service, index) => (
-                                <div key={index} className="w-full flex-shrink-0">
-                      <div className="relative">
-                        <img
-              src={service.image}
-                          alt={service.titre}
-                          className="h-64 w-full object-cover md:h-80"
-                          loading="lazy"
-                        />
-                        <span className="absolute right-3 top-3 rounded-full bg-[#1D9E75] px-3 py-1 text-xs font-bold text-white">
-                          {service.prix}
-                        </span>
+                    <div key={index} className="w-full flex-shrink-0">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gradient-to-br from-[#1D9E75] to-[#085041] min-h-[320px]">
+                        {/* Columna izquierda: Imagen */}
+                        <div className="relative">
+                          <img
+                            src={service.image}
+                            alt={service.titre}
+                            className="h-full w-full object-cover rounded-2xl"
+                            loading="lazy"
+                          />
+                        </div>
+                        
+                        {/* Columna derecha: Información del servicio */}
+                        <div className="flex flex-col justify-center text-white space-y-4">
+                          <div className="text-5xl">{service.emoji}</div>
+                          <h3 className="text-2xl font-extrabold text-white">{service.titre}</h3>
+                          <p className="text-white/90 text-sm leading-relaxed whitespace-pre-line">
+                            {service.description}
+                          </p>
+                          <div className="flex items-center justify-between">
+                            <span className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-bold text-white">
+                              {service.prix}
+                            </span>
+                            <Link
+                              href={`/reserver?service=${serviceMapping[service.titre] || "autre"}`}
+                              className="inline-flex items-center justify-center rounded-lg bg-white px-4 py-2 text-sm font-bold text-[#1D9E75] transition hover:opacity-90 hover:scale-105"
+                            >
+                              Réserver maintenant
+                            </Link>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   ))}
