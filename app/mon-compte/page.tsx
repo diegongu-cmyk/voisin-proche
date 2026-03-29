@@ -13,6 +13,7 @@ export default function MonCompte() {
   const [fideliteData, setFideliteData] = useState<any[]>([])
   const [historique, setHistorique] = useState<any[]>([])
   const [reservations, setReservations] = useState<any[]>([])
+  const [pendingReservations, setPendingReservations] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [serviceFilter, setServiceFilter] = useState('tous')
 
@@ -27,11 +28,13 @@ export default function MonCompte() {
       Promise.all([
         supabase.from('fidelite').select('*').eq('user_id', user.id),
         supabase.from('reservations').select('*').eq('user_id', user.id).eq('statut', 'termine').order('date', { ascending: false }),
-        supabase.from('reservations').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(3)
-      ]).then(([fidelite, hist, res]) => {
+        supabase.from('reservations').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(3),
+        supabase.from('reservations').select('*').eq('user_id', user.id).eq('statut', 'en_attente').order('created_at', { ascending: false })
+      ]).then(([fidelite, hist, res, pending]) => {
         setFideliteData(fidelite.data || [])
         setHistorique(hist.data || [])
         setReservations(res.data || [])
+        setPendingReservations(pending.data || [])
         setLoading(false)
       })
     })
@@ -117,6 +120,41 @@ export default function MonCompte() {
             )
           })}
         </div>
+      </div>
+
+      {/* Mes réservations en attente */}
+      <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-4">
+        <h2 className="mb-4 text-xl font-bold text-[#085041]">⏳ Réservations en attente de confirmation</h2>
+        
+        {pendingReservations.length === 0 ? (
+          <div className="text-center py-8">
+            <p className="text-gray-500">Aucune réservation en attente</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {pendingReservations.map((r) => (
+              <div key={r.id} className="border-l-4 border-yellow-400 rounded-r-lg bg-white p-4">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-lg">⏳</span>
+                      <span className="font-semibold text-[#085041]">{r.service}</span>
+                    </div>
+                    <div className="text-sm text-slate-600">
+                      <p>{r.date} à {r.heure}</p>
+                      <p className="font-medium text-[#1D9E75]">{r.prix}</p>
+                    </div>
+                  </div>
+                  <div className="ml-4">
+                    <span className="rounded-full px-3 py-1 text-xs font-medium bg-yellow-100 text-yellow-700">
+                      En attente de confirmation
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
