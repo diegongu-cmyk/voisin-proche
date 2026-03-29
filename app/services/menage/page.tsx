@@ -36,7 +36,7 @@ export default function MenageService() {
               Nettoyage détaillé et professionnel pour votre maison ou votre bureau. Je propose un service 
               de ménage complet et soigné, adapté à vos besoins spécifiques. Que ce soit pour un entretien 
               régulier, un grand nettoyage de printemps, ou une préparation pour un événement, j'assure 
-              un travail méticuleux avec des produits de qualité.
+              un travail méticuleux avec des produits adaptés à vos besoins.
             </p>
             <p className="mt-4 text-lg leading-relaxed text-gray-600">
               Je respecte votre intimité et votre espace personnel, avec une discrétion totale garantie. 
@@ -90,7 +90,7 @@ export default function MenageService() {
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-blue-600">ℹ️</span>
-                  <span>Zone: Fontenay-le-Comte et environs</span>
+                  <span>Zone disponible sur demande</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-blue-600">ℹ️</span>
@@ -98,19 +98,7 @@ export default function MenageService() {
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-blue-600">ℹ️</span>
-                  <span>Produits écologiques disponibles sur demande</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600">ℹ️</span>
-                  <span>Équipement personnel fourni</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600">ℹ️</span>
                   <span>Devis gratuit pour grands espaces</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600">ℹ️</span>
-                  <span>Assurance responsabilité civile incluse</span>
                 </li>
               </ul>
             </div>
