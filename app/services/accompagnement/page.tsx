@@ -43,6 +43,12 @@ export default function AccompagnementService() {
               un moment de convivialité. Disponible 7 jours sur 7, je m'adapte à votre emploi du temps pour vous 
               apporter le soutien dont vous avez besoin.
             </p>
+            <p className="mt-4 text-lg leading-relaxed text-gray-600">
+              Notre niveau de français est limité, mais cela ne constitue pas un obstacle à la qualité de notre service. 
+              Si nécessaire, nous utilisons des outils de traduction en ligne pour faciliter la communication. 
+              Cela devient même une opportunité d'immersion linguistique pour la personne accompagnée, permettant 
+              un partage enrichissant entre différentes cultures et une ouverture sur le monde hispanophone.
+            </p>
           </div>
 
           <div className="grid gap-8 md:grid-cols-2">
@@ -52,10 +58,6 @@ export default function AccompagnementService() {
                 <li className="flex items-start gap-3">
                   <span className="text-green-600">✓</span>
                   <span>Accompagnement aux rendez-vous</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-green-600">✓</span>
-                  <span>Aide aux courses et commissions</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-green-600">✓</span>
@@ -93,7 +95,7 @@ export default function AccompagnementService() {
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-blue-600">ℹ️</span>
-                  <span>Zone: Fontenay-le-Comte et environs</span>
+                  <span>Zone disponible sur demande</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-blue-600">ℹ️</span>
@@ -106,10 +108,6 @@ export default function AccompagnementService() {
                 <li className="flex items-start gap-3">
                   <span className="text-blue-600">ℹ️</span>
                   <span>Permis de conduire valide</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600">ℹ️</span>
-                  <span>Formation premiers secours</span>
                 </li>
               </ul>
             </div>
