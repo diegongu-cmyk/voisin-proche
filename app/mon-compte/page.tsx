@@ -13,7 +13,7 @@ export default function MonCompte() {
   const [fideliteData, setFideliteData] = useState<any[]>([])
   const [historique, setHistorique] = useState<any[]>([])
   const [reservations, setReservations] = useState<any[]>([])
-  const [pendingReservations, setPendingReservations] = useState<any[]>([])
+  const [allReservations, setAllReservations] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [serviceFilter, setServiceFilter] = useState('tous')
 
@@ -29,12 +29,12 @@ export default function MonCompte() {
         supabase.from('fidelite').select('*').eq('user_id', user.id),
         supabase.from('reservations').select('*').eq('user_id', user.id).eq('statut', 'termine').order('date', { ascending: false }),
         supabase.from('reservations').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(3),
-        supabase.from('reservations').select('*').eq('user_id', user.id).eq('statut', 'en_attente').order('created_at', { ascending: false })
-      ]).then(([fidelite, hist, res, pending]) => {
+        supabase.from('reservations').select('*').eq('user_id', user.id).order('created_at', { ascending: false })
+      ]).then(([fidelite, hist, res, all]) => {
         setFideliteData(fidelite.data || [])
         setHistorique(hist.data || [])
         setReservations(res.data || [])
-        setPendingReservations(pending.data || [])
+        setAllReservations(all.data || [])
         setLoading(false)
       })
     })
@@ -59,6 +59,22 @@ export default function MonCompte() {
     return historique.filter(r => r.service === serviceFilter)
   }, [historique, serviceFilter])
 
+  // Filtrar reservas por estado
+  const pendingReservations = useMemo(() => 
+    allReservations.filter(r => r.statut === 'en_attente'), 
+    [allReservations]
+  )
+
+  const confirmedReservations = useMemo(() => 
+    allReservations.filter(r => r.statut === 'confirme'), 
+    [allReservations]
+  )
+
+  const completedReservations = useMemo(() => 
+    allReservations.filter(r => r.statut === 'termine'), 
+    [allReservations]
+  )
+
   const getStatusBadge = (statut: string) => {
     const statusConfig = {
       'en_attente': 'bg-yellow-100 text-yellow-700',
@@ -77,6 +93,24 @@ export default function MonCompte() {
       'annule': 'Annulé'
     }
     return statusText[statut as keyof typeof statusText] || statut
+  }
+
+  const getStatusIcon = (statut: string) => {
+    const statusIcons = {
+      'en_attente': '⏳',
+      'confirme': '✅',
+      'termine': '🏆'
+    }
+    return statusIcons[statut as keyof typeof statusIcons] || '📋'
+  }
+
+  const getSectionColor = (statut: string) => {
+    const colors = {
+      'en_attente': { border: 'border-yellow-400', bg: 'bg-yellow-50', text: 'text-yellow-700' },
+      'confirme': { border: 'border-blue-400', bg: 'bg-blue-50', text: 'text-blue-700' },
+      'termine': { border: 'border-green-400', bg: 'bg-green-50', text: 'text-green-700' }
+    }
+    return colors[statut as keyof typeof colors] || { border: 'border-gray-400', bg: 'bg-gray-50', text: 'text-gray-700' }
   }
 
   if (loading) return <div className="p-8 text-center text-[#085041]">Chargement...</div>
@@ -122,17 +156,19 @@ export default function MonCompte() {
         </div>
       </div>
 
-      {/* Mes réservations en attente */}
+      {/* SECCIÓN EN ATTENTE */}
       <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-4">
-        <h2 className="mb-4 text-xl font-bold text-[#085041]">⏳ Réservations en attente de confirmation</h2>
+        <h2 className="mb-4 text-xl font-bold text-[#085041]">
+          ⏳ En attente de confirmation ({pendingReservations.length})
+        </h2>
         
         {pendingReservations.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-gray-500">Aucune réservation en attente</p>
           </div>
         ) : (
-          <div className="space-y-3">
-            {pendingReservations.map((r, index) => {
+          <div className="space-y-2">
+            {pendingReservations.map((r: any, index: number) => {
               const details = r.details ? JSON.parse(r.details) : {};
               const getServiceIcon = (serviceName: string) => {
                 const service = serviciosBase.find(s => s.name === serviceName);
@@ -141,7 +177,7 @@ export default function MonCompte() {
               
               return (
                 <div key={r.id}>
-                  <div className="shadow-md border-l-4 border-yellow-400 border border-yellow-200 rounded-xl bg-white p-3">
+                  <div className="shadow-sm border-l-4 border-yellow-400 border border-yellow-200 rounded-xl bg-white p-3 mb-2">
                     {/* FILA SUPERIOR */}
                     <div className="flex justify-between items-center mb-2">
                       <div className="flex items-center gap-2">
@@ -171,7 +207,7 @@ export default function MonCompte() {
                         <p className="text-slate-600">{r.date ? `${r.date} à ${r.heure}` : "Date non renseignée"}</p>
                       </div>
                       <div className="text-xs">
-                        <p className="font-medium text-slate-700">� Paiement:</p>
+                        <p className="font-medium text-slate-700">💳 Paiement:</p>
                         <p className="text-slate-600">
                           {details.paymentMethod === "carte" ? "💳 En ligne" :
                            details.paymentMethod === "especes" ? "💵 Espèces" :
@@ -180,7 +216,7 @@ export default function MonCompte() {
                         </p>
                       </div>
                       <div className="text-xs">
-                        <p className="font-medium text-slate-700">� Montant:</p>
+                        <p className="font-medium text-slate-700">💰 Montant:</p>
                         <p className="font-bold text-green-600">{r.prix}€</p>
                       </div>
                     </div>
@@ -188,7 +224,7 @@ export default function MonCompte() {
                     {/* DETALLES ADICIONALES */}
                     {(details.walkDuration || details.gardeNbJours || details.menageType) && (
                       <div className="mt-2 text-xs text-slate-500">
-                        � Détail: {
+                        🕐 Détail: {
                           details.walkDuration || 
                           (details.gardeNbJours && `${details.gardeNbJours} jour(s)`) || 
                           details.menageType
@@ -196,11 +232,172 @@ export default function MonCompte() {
                       </div>
                     )}
                   </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
 
-                  {/* SEPARACIÓN ENTRE TARJETAS */}
-                  {index < pendingReservations.length - 1 && (
-                    <div className="border-t-2 border-yellow-100 my-3"></div>
-                  )}
+      {/* SECCIÓN CONFIRMÉES */}
+      <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 mt-6">
+        <h2 className="mb-4 text-xl font-bold text-[#085041]">
+          ✅ Réservations confirmées ({confirmedReservations.length})
+        </h2>
+        
+        {confirmedReservations.length === 0 ? (
+          <div className="text-center py-8">
+            <p className="text-gray-500">Aucune réservation confirmée</p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {confirmedReservations.map((r: any, index: number) => {
+              const details = r.details ? JSON.parse(r.details) : {};
+              const getServiceIcon = (serviceName: string) => {
+                const service = serviciosBase.find(s => s.name === serviceName);
+                return service?.emoji || '📋';
+              };
+              
+              return (
+                <div key={r.id}>
+                  <div className="shadow-sm border-l-4 border-blue-400 border border-blue-200 rounded-xl bg-white p-3 mb-2">
+                    {/* FILA SUPERIOR */}
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm">{getServiceIcon(r.service)}</span>
+                        <span className="font-bold text-[#085041] text-sm">{r.service}</span>
+                      </div>
+                      <span className="bg-blue-100 text-blue-700 text-xs px-2 py-0.5 rounded-full">
+                        ✅ Confirmé
+                      </span>
+                    </div>
+
+                    {/* GRID DE INFORMACIÓN */}
+                    <div className="grid grid-cols-2 gap-2 mt-2">
+                      <div className="text-xs">
+                        <p className="font-medium text-slate-700">📅 Demandé le:</p>
+                        <p className="text-slate-600">{new Intl.DateTimeFormat('fr-FR', {
+                          timeZone: 'Europe/Paris',
+                          day: 'numeric',
+                          month: 'short',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        }).format(new Date(r.created_at))}</p>
+                      </div>
+                      <div className="text-xs">
+                        <p className="font-medium text-slate-700">🗓️ Service le:</p>
+                        <p className="text-slate-600">{r.date ? `${r.date} à ${r.heure}` : "Date non renseignée"}</p>
+                      </div>
+                      <div className="text-xs">
+                        <p className="font-medium text-slate-700">💳 Paiement:</p>
+                        <p className="text-slate-600">
+                          {details.paymentMethod === "carte" ? "💳 En ligne" :
+                           details.paymentMethod === "especes" ? "💵 Espèces" :
+                           details.paymentMethod === "virement" ? "🏦 Virement" :
+                           "Non renseigné"}
+                        </p>
+                      </div>
+                      <div className="text-xs">
+                        <p className="font-medium text-slate-700">💰 Montant:</p>
+                        <p className="font-bold text-green-600">{r.prix}€</p>
+                      </div>
+                    </div>
+
+                    {/* DETALLES ADICIONALES */}
+                    {(details.walkDuration || details.gardeNbJours || details.menageType) && (
+                      <div className="mt-2 text-xs text-slate-500">
+                        🕐 Détail: {
+                          details.walkDuration || 
+                          (details.gardeNbJours && `${details.gardeNbJours} jour(s)`) || 
+                          details.menageType
+                        }
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* SECCIÓN TERMINÉES */}
+      <div className="bg-green-50 border border-green-200 rounded-2xl p-4 mt-6">
+        <h2 className="mb-4 text-xl font-bold text-[#085041]">
+          🏆 Services terminés ({completedReservations.length})
+        </h2>
+        
+        {completedReservations.length === 0 ? (
+          <div className="text-center py-8">
+            <p className="text-gray-500">Aucun service terminé</p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {completedReservations.map((r: any, index: number) => {
+              const details = r.details ? JSON.parse(r.details) : {};
+              const getServiceIcon = (serviceName: string) => {
+                const service = serviciosBase.find(s => s.name === serviceName);
+                return service?.emoji || '📋';
+              };
+              
+              return (
+                <div key={r.id}>
+                  <div className="shadow-sm border-l-4 border-green-400 border border-green-200 rounded-xl bg-white p-3 mb-2">
+                    {/* FILA SUPERIOR */}
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm">{getServiceIcon(r.service)}</span>
+                        <span className="font-bold text-[#085041] text-sm">{r.service}</span>
+                      </div>
+                      <span className="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full">
+                        🏆 Terminé
+                      </span>
+                    </div>
+
+                    {/* GRID DE INFORMACIÓN */}
+                    <div className="grid grid-cols-2 gap-2 mt-2">
+                      <div className="text-xs">
+                        <p className="font-medium text-slate-700">📅 Demandé le:</p>
+                        <p className="text-slate-600">{new Intl.DateTimeFormat('fr-FR', {
+                          timeZone: 'Europe/Paris',
+                          day: 'numeric',
+                          month: 'short',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        }).format(new Date(r.created_at))}</p>
+                      </div>
+                      <div className="text-xs">
+                        <p className="font-medium text-slate-700">🗓️ Service le:</p>
+                        <p className="text-slate-600">{r.date ? `${r.date} à ${r.heure}` : "Date non renseignée"}</p>
+                      </div>
+                      <div className="text-xs">
+                        <p className="font-medium text-slate-700">💳 Paiement:</p>
+                        <p className="text-slate-600">
+                          {details.paymentMethod === "carte" ? "💳 En ligne" :
+                           details.paymentMethod === "especes" ? "💵 Espèces" :
+                           details.paymentMethod === "virement" ? "🏦 Virement" :
+                           "Non renseigné"}
+                        </p>
+                      </div>
+                      <div className="text-xs">
+                        <p className="font-medium text-slate-700">💰 Montant:</p>
+                        <p className="font-bold text-green-600">{r.prix}€</p>
+                      </div>
+                    </div>
+
+                    {/* DETALLES ADICIONALES */}
+                    {(details.walkDuration || details.gardeNbJours || details.menageType) && (
+                      <div className="mt-2 text-xs text-slate-500">
+                        🕐 Détail: {
+                          details.walkDuration || 
+                          (details.gardeNbJours && `${details.gardeNbJours} jour(s)`) || 
+                          details.menageType
+                        }
+                      </div>
+                    )}
+                  </div>
                 </div>
               );
             })}
