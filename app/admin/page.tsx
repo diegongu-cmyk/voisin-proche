@@ -743,7 +743,14 @@ export default function AdminPage() {
                         <div className="space-y-2">
                           <div className="flex justify-between">
                             <span className="text-sm text-gray-600">Date du service:</span>
-                            <span className="text-sm font-medium text-gray-900">{selectedReservation.date} à {selectedReservation.heure}</span>
+                            <span className="text-sm font-medium text-gray-900">{selectedReservation.date && selectedReservation.heure ? new Date(`${selectedReservation.date}T${selectedReservation.heure}`).toLocaleString('fr-FR', { 
+                              timeZone: 'Europe/Paris',
+                              day: 'numeric',
+                              month: 'long',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            }) : `${selectedReservation.date || 'Non spécifiée'} à ${selectedReservation.heure || 'Non spécifiée'}`}</span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-sm text-gray-600">Date de demande:</span>
