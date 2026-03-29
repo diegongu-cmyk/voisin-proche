@@ -48,6 +48,7 @@ function BookingPageContent() {
   // Ménage specific states
   const [menageType, setMenageType] = useState("");
   const [menageSize, setMenageSize] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");
   
   const [formErrors, setFormErrors] = useState<string[]>([]);
 
@@ -147,6 +148,7 @@ function BookingPageContent() {
     if (!date.trim()) errors.push("La date est obligatoire");
     if (!time.trim()) errors.push("L'heure est obligatoire");
     if (!fullAddress.trim()) errors.push("L'adresse est obligatoire");
+    if (!paymentMethod) errors.push("La méthode de paiement est obligatoire");
     return errors;
   };
 
