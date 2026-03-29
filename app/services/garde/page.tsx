@@ -99,15 +99,7 @@ export default function GardeService() {
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-blue-600">ℹ️</span>
-                  <span>Zone: Fontenay-le-Comte et environs</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600">ℹ️</span>
-                  <span>Assurance responsabilité civile incluse</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600">ℹ️</span>
-                  <span>Références disponibles sur demande</span>
+                  <span>Zone disponible sur demande</span>
                 </li>
               </ul>
             </div>
