@@ -207,7 +207,7 @@ function BookingPageContent() {
       }
       const precioFinal = hasDiscount ? calculateDiscountedPrice(precioNumerico.toString()) : precioNumerico;
 
-      let detailsObject: any = { fullName, phone, email, fullAddress, notes };
+      let detailsObject: any = { fullName, phone, email, fullAddress, notes, paymentMethod };
       if (service === "promenade") {
         detailsObject = { ...detailsObject, dogName, dogBreed, dogSize, dogTemperament, dogSocialization, walkDuration };
       }
@@ -281,38 +281,6 @@ function BookingPageContent() {
                   Voir dans le panel admin
                 </a>
               </div>
-            </div>
-          `
-        })
-      });
-
-      // Redirect to Stripe
-      if (service !== "autre") {
-        const stripeResponse = await fetch('/api/create-checkout-session', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            amount: getPriceInCents(),
-            serviceName: currentService?.name || 'Service',
-            reservationId: ''
-          })
-        });
-
-        const stripeData = await stripeResponse.json();
-        if (stripeData.url) {
-          window.location.href = stripeData.url;
-          return;
-        }
-      }
-
-      window.location.href = '/reservation-confirmee';
-
-    } catch (err) {
-      console.error('Exception:', err);
-      alert("Une erreur est survenue lors de la réservation");
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   return (
@@ -464,6 +432,22 @@ function BookingPageContent() {
                     </select>
                   </div>
                   <div className="md:col-span-2">
+                    <label className="mb-1 block text-sm font-medium text-slate-700">
+                      💳 Méthode de paiement préférée *
+                    </label>
+                    <select 
+                      required 
+                      value={paymentMethod} 
+                      onChange={(e) => setPaymentMethod(e.target.value)} 
+                      className="w-full rounded-lg border border-slate-300 px-3 py-2"
+                    >
+                      <option value="">Sélectionner</option>
+                      <option value="carte">💳 Paiement en ligne (Stripe)</option>
+                      <option value="especes">💵 Espèces (cash)</option>
+                      <option value="virement">🏦 Virement bancaire</option>
+                    </select>
+                  </div>
+                  <div className="md:col-span-2">
                     <label className="mb-1 block text-sm font-medium text-slate-700">Notes libres</label>
                     <textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
                   </div>
@@ -549,6 +533,22 @@ function BookingPageContent() {
                       <option>15h30</option><option>16h00</option><option>16h30</option>
                       <option>17h00</option><option>17h30</option><option>18h00</option>
                       <option>19h00</option>
+                    </select>
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="mb-1 block text-sm font-medium text-slate-700">
+                      💳 Méthode de paiement préférée *
+                    </label>
+                    <select 
+                      required 
+                      value={paymentMethod} 
+                      onChange={(e) => setPaymentMethod(e.target.value)} 
+                      className="w-full rounded-lg border border-slate-300 px-3 py-2"
+                    >
+                      <option value="">Sélectionner</option>
+                      <option value="carte">💳 Paiement en ligne (Stripe)</option>
+                      <option value="especes">💵 Espèces (cash)</option>
+                      <option value="virement">🏦 Virement bancaire</option>
                     </select>
                   </div>
                   <div className="md:col-span-2">
