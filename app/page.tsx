@@ -64,6 +64,8 @@ const sliderServices = [
     prix: "Depuis 8€",
     description: "Promenades sécurisées avec jeux et caresses.\nPhotos envoyées sur WhatsApp. Depuis 8€.",
     image: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=600",
+    heroTitle: "Promenade de chiens",
+    heroText: "Promenades sécurisées avec jeux, caresses et exercice. Photos envoyées sur WhatsApp pendant la balade. Depuis 8€.",
   },
   {
     emoji: "🐾",
@@ -71,6 +73,8 @@ const sliderServices = [
     prix: "Depuis 15€/jour",
     description: "Votre animal gardé à domicile avec amour.\nPhotos quotidiennes sur WhatsApp. Depuis 15€/jour.",
     image: "https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?w=600",
+    heroTitle: "Garde d'animaux à domicile",
+    heroText: "Votre animal gardé chez vous avec tout l'amour qu'il mérite. Visites régulières et photos quotidiennes sur WhatsApp. Depuis 15€/jour.",
   },
   {
     emoji: "🤝",
@@ -78,6 +82,8 @@ const sliderServices = [
     prix: "Depuis 12€/h",
     description: "Accompagnement pour rendez-vous ou simplement\nune présence chaleureuse. Depuis 12€/h.",
     image: "https://images.unsplash.com/photo-1706806594516-75f93dab6295?w=600",
+    heroTitle: "Accompagnement de personnes",
+    heroText: "Présence chaleureuse pour vos rendez-vous ou simplement pour échanger. Disponible 7j/7. Depuis 12€/h.",
   },
   {
     emoji: "🛒",
@@ -85,6 +91,8 @@ const sliderServices = [
     prix: "Depuis 8€",
     description: "Vos courses effectuées rapidement.\nVous payez uniquement le service. 8€.",
     image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=600",
+    heroTitle: "Courses et commissions",
+    heroText: "Vos courses effectuées rapidement dans le lieu de votre choix. Vous payez uniquement le service. 8€.",
   },
   {
     emoji: "🧹",
@@ -92,6 +100,8 @@ const sliderServices = [
     prix: "Depuis 22€",
     description: "Nettoyage détaillé et professionnel.\nConfidentialité garantie. Depuis 22€.",
     image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600",
+    heroTitle: "Ménage maison/bureau",
+    heroText: "Nettoyage détaillé et professionnel. Confidentialité et discrétion garanties. Depuis 22€.",
   },
   {
     emoji: "🇪🇸",
@@ -99,6 +109,8 @@ const sliderServices = [
     prix: "Depuis 15€/h",
     description: "Cours authentiques par natif espagnol.\nTous niveaux, enfants et adultes. Depuis 15€/h.",
     image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600",
+    heroTitle: "Cours d'espagnol",
+    heroText: "Cours authentiques dispensés par un natif espagnol. Tous niveaux, enfants et adultes, à domicile ou en ligne. Depuis 15€/h.",
   },
 ];
 
@@ -126,11 +138,16 @@ export default function HomePage() {
           <div className="flex flex-col gap-8 md:flex-row md:items-center md:gap-12">
             <div className="flex-1 text-center md:text-left">
               <h1 className="text-3xl font-extrabold leading-tight md:text-4xl lg:text-5xl">
-                Votre voisin de confiance à Fontenay-le-Comte
+                {sliderServices[currentSlide].heroTitle}
               </h1>
               <p className="mt-4 text-lg text-white/90 md:text-xl">
-                Services de proximité pour vous simplifier le quotidien : promenade de chiens, garde d'animaux, accompagnement et bien plus encore.
+                {sliderServices[currentSlide].heroText}
               </p>
+              <div className="mt-4 flex items-center gap-3">
+                <span className="rounded-full bg-white/20 backdrop-blur-sm px-4 py-2 text-sm font-bold text-white">
+                  {sliderServices[currentSlide].prix}
+                </span>
+              </div>
               <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:gap-4">
                 <Link
                   href="/services"
@@ -139,10 +156,10 @@ export default function HomePage() {
                   Découvrir nos services
                 </Link>
                 <Link
-                  href="/reserver"
+                  href={`/reserver?service=${serviceMapping[sliderServices[currentSlide].titre] || "autre"}`}
                   className="inline-flex items-center justify-center rounded-xl bg-white px-5 py-3 text-sm font-bold text-[#1D9E75] transition hover:opacity-90"
                 >
-                  Réserver maintenant
+                  Réserver
                 </Link>
               </div>
             </div>
