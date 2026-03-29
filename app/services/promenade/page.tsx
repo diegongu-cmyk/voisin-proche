@@ -39,7 +39,7 @@ export default function PromenadeService() {
             </p>
             <p className="mt-4 text-lg leading-relaxed text-gray-600">
               Les promenades incluent des jeux, des caresses, et bien sûr de l'exercice physique adapté à la race et à l'âge de votre animal. 
-              Je vous envoie régulièrement des photos et des vidéos pendant la balade pour que vous puissiez suivre les aventures de votre compagnon.
+              Je vous envoie régulièrement des photos pendant la balade pour que vous puissiez suivre les aventures de votre compagnon.
             </p>
           </div>
 
@@ -57,7 +57,7 @@ export default function PromenadeService() {
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-green-600">✓</span>
-                  <span>Photos et vidéos sur WhatsApp</span>
+                  <span>Photos sur WhatsApp</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-green-600">✓</span>
@@ -91,15 +91,11 @@ export default function PromenadeService() {
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-blue-600">ℹ️</span>
-                  <span>Zone: Fontenay-le-Comte et environs</span>
+                  <span>Zone disponible sur demande</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-blue-600">ℹ️</span>
                   <span>Première promenade: rencontre gratuite</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600">ℹ️</span>
-                  <span>Assurance responsabilité civile incluse</span>
                 </li>
               </ul>
             </div>
@@ -131,7 +127,7 @@ export default function PromenadeService() {
               <p className="text-gray-600">Promenade de 1 heure avec extras</p>
               <ul className="mt-4 space-y-2 text-sm text-gray-600">
                 <li>• 1 heure de balade</li>
-                <li>• Photos et vidéos</li>
+                <li>• Photos</li>
                 <li>• Rapport détaillé</li>
                 <li>• Jeux éducatifs</li>
                 <li>• Brossage si nécessaire</li>
