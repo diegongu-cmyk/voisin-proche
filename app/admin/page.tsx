@@ -50,6 +50,7 @@ export default function AdminPage() {
   const [todayBookings, setTodayBookings] = useState<Reservation[]>([]);
   const [allBookings, setAllBookings] = useState<Reservation[]>([]);
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [selectedReservations, setSelectedReservations] = useState<string[]>([]);
 
   useEffect(() => {
     const admin = localStorage.getItem('isAdmin') === 'true';
@@ -223,6 +224,71 @@ export default function AdminPage() {
     const phone = details?.phone?.replace(/[^0-9]/g, '');
     const message = encodeURIComponent(`Bonjour ${details?.fullName}, votre réservation pour ${reservation.service} le ${reservation.date} à ${reservation.heure} est confirmée ! À bientôt — Voisin Proche 🌿`);
     window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      const visibleIds = allBookings
+        .filter(booking => {
+          if (statusFilter === 'all') return true;
+          return booking.statut === statusFilter;
+        })
+        .map(booking => booking.id);
+      setSelectedReservations(visibleIds);
+    } else {
+      setSelectedReservations([]);
+    }
+  };
+
+  const handleSelectReservation = (id: string, checked: boolean) => {
+    if (checked) {
+      setSelectedReservations(prev => [...prev, id]);
+    } else {
+      setSelectedReservations(prev => prev.filter(resId => resId !== id));
+    }
+  };
+
+  const handleMassConfirm = async () => {
+    try {
+      for (const id of selectedReservations) {
+        await supabase.from('reservations').update({ statut: 'confirme' }).eq('id', id);
+      }
+      alert(`${selectedReservations.length} réservation(s) confirmée(s) avec succès!`);
+      setSelectedReservations([]);
+      loadAdminData();
+    } catch (error) {
+      alert('Erreur lors de la confirmation massive');
+    }
+  };
+
+  const handleMassCancel = async () => {
+    try {
+      for (const id of selectedReservations) {
+        await supabase.from('reservations').update({ statut: 'annule' }).eq('id', id);
+      }
+      alert(`${selectedReservations.length} réservation(s) annulée(s) avec succès!`);
+      setSelectedReservations([]);
+      loadAdminData();
+    } catch (error) {
+      alert('Erreur lors de l\'annulation massive');
+    }
+  };
+
+  const handleMassDelete = async () => {
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer ${selectedReservations.length} réservations ?`)) {
+      return;
+    }
+    
+    try {
+      for (const id of selectedReservations) {
+        await supabase.from('reservations').delete().eq('id', id);
+      }
+      alert(`${selectedReservations.length} réservation(s) supprimée(s) avec succès!`);
+      setSelectedReservations([]);
+      loadAdminData();
+    } catch (error) {
+      alert('Erreur lors de la suppression massive');
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -632,11 +698,59 @@ export default function AdminPage() {
             </button>
           </div>
           
+          {/* Barre d'actions massives */}
+          {selectedReservations.length > 0 && (
+            <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+              <div className="flex items-center justify-between flex-wrap gap-4">
+                <span className="font-medium text-green-800">
+                  {selectedReservations.length} réservation(s) sélectionnée(s)
+                </span>
+                <div className="flex gap-2 flex-wrap">
+                  <button
+                    onClick={handleMassConfirm}
+                    className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded font-medium transition-colors"
+                  >
+                    ✅ Confirmer tout
+                  </button>
+                  <button
+                    onClick={handleMassCancel}
+                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded font-medium transition-colors"
+                  >
+                    ❌ Annuler tout
+                  </button>
+                  <button
+                    onClick={handleMassDelete}
+                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-medium transition-colors"
+                  >
+                    🗑️ Supprimer tout
+                  </button>
+                  <button
+                    onClick={() => setSelectedReservations([])}
+                    className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded font-medium transition-colors"
+                  >
+                    Désélectionner
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+          
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[800px]">
+              <table className="w-full min-w-[900px]">
                 <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
+                    <th className="px-6 py-3 text-left">
+                      <input
+                        type="checkbox"
+                        checked={selectedReservations.length > 0 && selectedReservations.length === allBookings.filter(booking => {
+                          if (statusFilter === 'all') return true;
+                          return booking.statut === statusFilter;
+                        }).length}
+                        onChange={(e) => handleSelectAll(e.target.checked)}
+                        className="rounded border-gray-300"
+                      />
+                    </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date demande</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date service</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
@@ -649,7 +763,7 @@ export default function AdminPage() {
                 <tbody className="divide-y divide-gray-200">
                   {allBookings.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
+                      <td colSpan={8} className="px-6 py-12 text-center text-gray-500">
                         Aucune réservation pour le moment
                       </td>
                     </tr>
@@ -667,6 +781,18 @@ export default function AdminPage() {
                             className="hover:bg-gray-50 transition-colors cursor-pointer"
                             onClick={() => openDetailsModal(booking)}
                           >
+                            <td className="px-6 py-4 whitespace-nowrap text-sm">
+                              <input
+                                type="checkbox"
+                                checked={selectedReservations.includes(booking.id)}
+                                onChange={(e) => {
+                                  e.stopPropagation();
+                                  handleSelectReservation(booking.id, e.target.checked);
+                                }}
+                                onClick={(e) => e.stopPropagation()}
+                                className="rounded border-gray-300"
+                              />
+                            </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm">
                               <div className="text-gray-900">
                                 {booking.created_at ? (() => {
