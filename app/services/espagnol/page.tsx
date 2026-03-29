@@ -75,11 +75,22 @@ export default function EspagnolService() {
                   <span className="text-green-600">✓</span>
                   <span>Pédagogie adaptée enfants et adultes</span>
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-green-600">✓</span>
-                  <span>Supports de cours fournis</span>
-                </li>
               </ul>
+            </div>
+
+            <div className="mt-8 rounded-2xl border border-green-200 bg-green-50 p-6">
+              <div className="mb-4">
+                <span className="rounded-full bg-green-500 px-3 py-1 text-xs font-bold text-white">AVANTAGE UNIQUE</span>
+              </div>
+              <div className="flex items-center gap-4 mb-4">
+                <span className="text-4xl">🌎</span>
+                <h3 className="text-xl font-bold text-green-800">Authenticité Latino-Américaine</h3>
+              </div>
+              <p className="text-gray-700 leading-relaxed">
+                Nous sommes des locuteurs natifs d'Amérique Latine, ce qui vous garantit un apprentissage authentique 
+                de l'espagnol latino-américain. Vous bénéficierez non seulement d'une maîtrise parfaite de la langue, 
+                mais aussi d'une immersion dans la richesse culturelle et la diversité de l'Amérique Latine.
+              </p>
             </div>
 
             <div className="rounded-2xl border border-blue-200 bg-blue-50 p-6">
@@ -103,15 +114,11 @@ export default function EspagnolService() {
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-blue-600">ℹ️</span>
-                  <span>Zone: Fontenay-le-Comte et environs</span>
+                  <span>Zone disponible sur demande</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-blue-600">ℹ️</span>
                   <span>Accent natif espagnol (castillan)</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600">ℹ️</span>
-                  <span>Premier cours découverte gratuit</span>
                 </li>
               </ul>
             </div>
