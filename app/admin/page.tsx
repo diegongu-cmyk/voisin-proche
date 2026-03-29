@@ -754,14 +754,7 @@ export default function AdminPage() {
                             <span className="text-sm text-gray-600">Date de demande:</span>
                             <span className="text-sm font-medium text-gray-900">
   {selectedReservation.created_at ? 
-    new Intl.DateTimeFormat('fr-FR', {
-      timeZone: 'Europe/Paris',
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(new Date(selectedReservation.created_at))
+    (() => { const d = new Date(selectedReservation.created_at); d.setHours(d.getHours() + 2); return d.toLocaleString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }); })()
   : 'Non spécifiée'}
 </span>
                           </div>
@@ -881,4 +874,5 @@ export default function AdminPage() {
     </div>
   );
 }
+
 
