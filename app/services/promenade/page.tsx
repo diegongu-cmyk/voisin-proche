@@ -109,38 +109,40 @@ export default function PromenadeService() {
           <h2 className="mb-8 text-center text-3xl font-bold text-gray-900">Tarifs</h2>
           <div className="grid gap-6 md:grid-cols-3">
             <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-              <h3 className="mb-2 text-xl font-bold text-gray-900">Simple</h3>
+              <h3 className="mb-2 text-xl font-bold text-gray-900">30 minutes</h3>
               <p className="mb-4 text-3xl font-bold text-green-600">8€</p>
-              <p className="text-gray-600">Promenade de 45 minutes</p>
+              <p className="text-gray-600">Promenade de 30 minutes</p>
               <ul className="mt-4 space-y-2 text-sm text-gray-600">
-                <li>• 45 minutes de balade</li>
+                <li>• 30 minutes de balade</li>
                 <li>• Photos sur WhatsApp</li>
                 <li>• Rapport de promenade</li>
+                <li>• Jeux et caresses</li>
               </ul>
             </div>
             <div className="rounded-2xl border border-green-400 bg-green-50 p-6 shadow-md">
               <div className="mb-2">
                 <span className="rounded-full bg-green-500 px-3 py-1 text-xs font-bold text-white">POPULAIRE</span>
               </div>
-              <h3 className="mb-2 text-xl font-bold text-gray-900">Complet</h3>
-              <p className="mb-4 text-3xl font-bold text-green-600">12€</p>
-              <p className="text-gray-600">Promenade de 1 heure avec extras</p>
+              <h3 className="mb-2 text-xl font-bold text-gray-900">45 minutes</h3>
+              <p className="mb-4 text-3xl font-bold text-green-600">10€</p>
+              <p className="text-gray-600">Promenade de 45 minutes</p>
               <ul className="mt-4 space-y-2 text-sm text-gray-600">
-                <li>• 1 heure de balade</li>
-                <li>• Photos</li>
-                <li>• Rapport détaillé</li>
-                <li>• Jeux éducatifs</li>
+                <li>• 45 minutes de balade</li>
+                <li>• Photos sur WhatsApp</li>
+                <li>• Rapport de promenade</li>
+                <li>• Jeux et exercices adaptés</li>
               </ul>
             </div>
             <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-              <h3 className="mb-2 text-xl font-bold text-gray-900">Abonnement</h3>
-              <p className="mb-4 text-3xl font-bold text-green-600">30€</p>
-              <p className="text-gray-600">3 promenades par semaine</p>
+              <h3 className="mb-2 text-xl font-bold text-gray-900">1 heure</h3>
+              <p className="mb-4 text-3xl font-bold text-green-600">12€</p>
+              <p className="text-gray-600">Promenade d'1 heure complète</p>
               <ul className="mt-4 space-y-2 text-sm text-gray-600">
-                <li>• 3 promenades/semaine</li>
-                <li>• Tarif réduit: 10€/promenade</li>
-                <li>• Flexibilité des jours</li>
-                <li>• Priorité en haute saison</li>
+                <li>• 1 heure de balade</li>
+                <li>• Photos sur WhatsApp</li>
+                <li>• Rapport détaillé</li>
+                <li>• Jeux éducatifs</li>
+                <li>• Exercice complet</li>
               </ul>
             </div>
           </div>
