@@ -111,42 +111,33 @@ export default function GardeService() {
       <section className="bg-gray-50 py-16">
         <div className="mx-auto max-w-4xl px-4">
           <h2 className="mb-8 text-center text-3xl font-bold text-gray-900">Tarifs</h2>
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2">
             <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-              <h3 className="mb-2 text-xl font-bold text-gray-900">Journée</h3>
-              <p className="mb-4 text-3xl font-bold text-green-600">15€</p>
-              <p className="text-gray-600">Garde sur une journée</p>
+              <h3 className="mb-2 text-xl font-bold text-gray-900">Par jour</h3>
+              <p className="mb-4 text-3xl font-bold text-green-600">15€/jour</p>
+              <p className="text-gray-600">Garde avec visites régulières</p>
               <ul className="mt-4 space-y-2 text-sm text-gray-600">
-                <li>• Garde 12h (8h-20h)</li>
-                <li>• 2 promenades (chiens)</li>
-                <li>• Photos quotidiennes</li>
-                <li>• Alimentation incluse</li>
+                <li>• Visites régulières à domicile</li>
+                <li>• Photos quotidiennes sur WhatsApp</li>
+                <li>• Alimentation selon vos instructions et dosages</li>
+                <li>• Jeux et attention personnalisée</li>
+                <li>• Promenades pour les chiens</li>
               </ul>
             </div>
             <div className="rounded-2xl border border-green-400 bg-green-50 p-6 shadow-md">
               <div className="mb-2">
                 <span className="rounded-full bg-green-500 px-3 py-1 text-xs font-bold text-white">POPULAIRE</span>
               </div>
-              <h3 className="mb-2 text-xl font-bold text-gray-900">24h</h3>
-              <p className="mb-4 text-3xl font-bold text-green-600">25€</p>
-              <p className="text-gray-600">Garde jour et nuit</p>
+              <h3 className="mb-2 text-xl font-bold text-gray-900">24h / Week-end</h3>
+              <p className="mb-4 text-3xl font-bold text-green-600">Sur devis</p>
+              <p className="text-gray-600">Garde prolongée jour et nuit</p>
               <ul className="mt-4 space-y-2 text-sm text-gray-600">
-                <li>• Garde 24h complète</li>
-                <li>• 3 promenades (chiens)</li>
-                <li>• Photos et vidéos</li>
-                <li>• Nuit sur place</li>
-                <li>• Rapport détaillé</li>
-              </ul>
-            </div>
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-              <h3 className="mb-2 text-xl font-bold text-gray-900">Week-end</h3>
-              <p className="mb-4 text-3xl font-bold text-green-600">60€</p>
-              <p className="text-gray-600">Du vendredi soir au dimanche soir</p>
-              <ul className="mt-4 space-y-2 text-sm text-gray-600">
-                <li>• 3 jours de garde</li>
-                <li>• Tarif préférentiel</li>
-                <li>• Service complet</li>
-                <li>• Disponibilité totale</li>
+                <li>• Garde 24h ou week-end complet</li>
+                <li>• Service personnalisé</li>
+                <li>• Photos quotidiennes sur WhatsApp</li>
+                <li>• Alimentation selon vos instructions</li>
+                <li>• Tarif établi selon la durée et le type d'animal</li>
+                <li>• Contactez-nous pour un devis personnalisé</li>
               </ul>
             </div>
           </div>
