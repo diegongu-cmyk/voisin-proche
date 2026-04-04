@@ -75,7 +75,7 @@ const services = [
     description: "Vous avez un besoin spécifique ? Contactez-nous !",
     details: ["Sur mesure", "Consultation", "Solutions adaptées", "Contact direct"],
     image:
-      "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800",
+      "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=800",
   },
 ];
 
