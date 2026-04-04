@@ -33,10 +33,10 @@ export default function CoursesService() {
           <div>
             <h2 className="mb-4 text-3xl font-bold text-gray-900">Description du service</h2>
             <p className="text-lg leading-relaxed text-gray-600">
-              Vos courses effectuées rapidement dans le lieu de votre choix. Je propose un service de courses 
-              et commissions personnalisé pour vous simplifier le quotidien. Que ce soit pour faire vos 
-              courses alimentaires, retirer des documents, ou effectuer diverses démarches, je m'en occupe 
-              efficacement et avec sérieux.
+              Nous effectuons vos courses et commissions dans le lieu de votre choix, de la manière la plus 
+              rapide possible. Le tarif de 8€ est valable pour une seule enseigne ou magasin. Si vous 
+              souhaitez des courses dans plusieurs magasins, le tarif sera ajusté en conséquence. Le montant 
+              des articles à acheter reste à la charge du client. Rapide, fiable et sans complications.
             </p>
             <p className="mt-4 text-lg leading-relaxed text-gray-600">
               Vous ne payez que pour le service, les courses sont réglées directement par vous ou via une 
