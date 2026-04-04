@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase";
 
 const services = [
   { id: "promenade", icon: "🐕", name: "Promenade de chiens", price: "depuis 8€", description: "Nous promenons votre chien en toute sécurité dans les environs de Fontenay-le-Comte. Chaque promenade est accompagnée de jeux, caresses et un peu d'exercice pour le bonheur de votre compagnon. Des photos seront envoyées sur votre WhatsApp pendant la promenade. Disponible en 30 min, 45 min ou 1 heure. Depuis 8€." },
-  { id: "garde", icon: "🐾", name: "Garde d'animaux", price: "depuis 15€/jour", description: "Nous gardons votre animal à votre domicile pendant votre absence. Votre compagnon ne remarquera même pas votre absence ! Nous aimons les animaux et savons à quel point ils sont importants dans nos familles. Le service comprend des visites régulières à votre domicile et l'envoi de photos quotidiennes sur votre WhatsApp pour vous rassurer. Depuis 15€/jour." },
+  { id: "garde", icon: "🐾", name: "Garde d'animaux", price: "depuis 12€/jour", description: "Nous gardons votre animal à votre domicile pendant votre absence. Votre compagnon ne remarquera même pas votre absence ! Nous aimons les animaux et savons à quel point ils sont importants dans nos familles. Le service comprend des visites régulières à votre domicile et l'envoi de photos quotidiennes sur votre WhatsApp pour vous rassurer. Depuis 12€/jour." },
   { id: "accompagnement", icon: "🤝", name: "Accompagnement de personnes", price: "depuis 12€/h", description: "Nous accompagnons vos proches pour leurs rendez-vous médicaux, courses ou sorties. Nous pouvons également être simplement une présence chaleureuse et bienveillante, en conversant sur des sujets agréables, des cultures différentes et la vie en général. Notre langue natale est l'espagnol, ce qui enrichit nos échanges, et si nécessaire nous utilisons des traducteurs en ligne pour faciliter la communication. Si la personne ne connaît pas ce type de technologies, nous serons ravis de lui apprendre à les utiliser. Disponible 7j/7. Depuis 12€/heure." },
   { id: "courses", icon: "🛒", name: "Courses et commissions", price: "8€", description: "Nous effectuons vos courses et commissions dans le lieu de votre choix, de la manière la plus rapide possible. Vous payez uniquement le service de courses et de récupération (8€), le montant des articles à acheter est à la charge du client. Rapide, fiable et sans complications." },
   { id: "menage", icon: "🧹", name: "Ménage maison/bureau", price: "depuis 22€", description: "Nous effectuons un nettoyage détaillé et professionnel de votre domicile ou bureau. Nous respectons et préservons la vie privée de nos clients à tout moment. Depuis 22€." },
@@ -51,6 +51,10 @@ function BookingPageContent() {
   // Menage states
   const [menageType, setMenageType] = useState("");
   const [menageSize, setMenageSize] = useState("");
+
+  // Espagnol states
+  const [espagnolLieu, setEspagnolLieu] = useState("");
+  const [espagnolNiveau, setEspagnolNiveau] = useState("");
 
   const [formErrors, setFormErrors] = useState<string[]>([]);
 
@@ -142,6 +146,13 @@ function BookingPageContent() {
     return errors;
   };
 
+  const validateEspagnolForm = () => {
+    const errors: string[] = [];
+    if (!espagnolLieu) errors.push("Le lieu du cours est obligatoire");
+    if (!espagnolNiveau) errors.push("Le niveau d'espagnol est obligatoire");
+    return errors;
+  };
+
   const validateCommonForm = () => {
     const errors: string[] = [];
     if (!fullName.trim()) errors.push("Le prénom et nom sont obligatoires");
@@ -189,6 +200,14 @@ function BookingPageContent() {
         }
       }
 
+      if (service === "espagnol") {
+        const errors = validateEspagnolForm();
+        if (errors.length > 0) {
+          alert("Veuillez compléter tous les champs obligatoires:\n" + errors.join("\n"));
+          return;
+        }
+      }
+
       const { data: { session } } = await supabase.auth.getSession();
       await new Promise(resolve => setTimeout(resolve, 500));
       const { data: { session: session2 } } = await supabase.auth.getSession();
@@ -220,6 +239,9 @@ function BookingPageContent() {
       }
       if (service === "menage") {
         detailsObject = { ...detailsObject, menageType, menageSize };
+      }
+      if (service === "espagnol") {
+        detailsObject = { ...detailsObject, espagnolLieu, espagnolNiveau };
       }
 
       const reservationData = {
@@ -485,7 +507,7 @@ function BookingPageContent() {
               </div>
               {gardeNbJours && (
                 <p className="mt-3 text-sm font-semibold text-green-700">
-                  Prix estimé: {hasDiscount ? Math.round(15 * (parseInt(gardeNbJours) || 1) * 0.8) : 15 * (parseInt(gardeNbJours) || 1)}€ ({gardeNbJours} jour(s) à 15€/jour{hasDiscount ? " avec -20% fidélité" : ""})
+                  Prix estimé: {hasDiscount ? Math.round(15 * (parseInt(gardeNbJours) || 1) * 0.8) : 15 * (parseInt(gardeNbJours) || 1)}€ ({gardeNbJours} jour(s) à 12€/jour{hasDiscount ? " avec -20% fidélité" : ""})
                 </p>
               )}
             </div>
@@ -527,6 +549,35 @@ function BookingPageContent() {
                   {menageSize === "Grand" && `Prix estimé: ${hasDiscount ? Math.round(55 * 0.8) : 55}€ (5h minimum à 11€/h)`}
                 </p>
               )}
+            </div>
+          )}
+
+          {service === "espagnol" && (
+            <div className="mb-6 rounded-xl bg-green-50 border border-green-200 p-4">
+              <h3 className="text-lg font-bold text-green-800 mb-4">🇪🇸 Informations sur le cours</h3>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-slate-700">Lieu du cours *</label>
+                  <select required value={espagnolLieu} onChange={(e) => setEspagnolLieu(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
+                    <option value="">Sélectionner</option>
+                    <option>À domicile (chez vous)</option>
+                    <option>En extérieur — Parc</option>
+                    <option>En extérieur — Promenade / Marche</option>
+                    <option>En ligne (visioconférence)</option>
+                    <option>À définir ensemble</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-slate-700">Niveau d'espagnol *</label>
+                  <select required value={espagnolNiveau} onChange={(e) => setEspagnolNiveau(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
+                    <option value="">Sélectionner</option>
+                    <option>Débutant (aucune connaissance)</option>
+                    <option>Élémentaire (quelques bases)</option>
+                    <option>Intermédiaire (conversations simples)</option>
+                    <option>Avancé (bonne maîtrise)</option>
+                  </select>
+                </div>
+              </div>
             </div>
           )}
 
@@ -691,6 +742,16 @@ function BookingPageContent() {
                   <p><span className="font-semibold">Âge:</span> {animalAge || "Non renseigné"}</p>
                   <p><span className="font-semibold">Tempérament:</span> {animalTemperament || "Non renseigné"}</p>
                   <p><span className="font-semibold">Nombre de jours:</span> {gardeNbJours || "Non renseigné"}</p>
+                </div>
+              </div>
+            )}
+
+            {service === "espagnol" && (
+              <div className="border-b border-slate-200 pb-4">
+                <h3 className="text-base font-extrabold text-slate-900">Informations sur le cours</h3>
+                <div className="mt-2 space-y-1">
+                  <p><span className="font-semibold">Lieu du cours:</span> {espagnolLieu || "Non renseigné"}</p>
+                  <p><span className="font-semibold">Niveau d'espagnol:</span> {espagnolNiveau || "Non renseigné"}</p>
                 </div>
               </div>
             )}
