@@ -326,8 +326,10 @@ function BookingPageContent() {
         }
       }
 
-      // Show modal for non-card payments
-      setShowModal(true);
+      // Show modal only for non-card payments
+      if (paymentMethod !== "carte") {
+        setShowModal(true);
+      }
 
     } catch (err) {
       console.error('Exception:', err);
