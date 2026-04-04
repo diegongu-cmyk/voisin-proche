@@ -74,7 +74,7 @@ const sliderServices = [
     description: "Votre animal gardé à domicile avec amour.\nPhotos quotidiennes sur WhatsApp. Depuis 12€/jour.",
     image: "https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?w=600",
     heroTitle: "Garde d'animaux à domicile",
-    heroText: "Votre animal gardé chez vous avec tout l'amour qu'il mérite. Visites régulières et photos quotidiennes sur WhatsApp. Depuis 15€/jour.",
+    heroText: "Votre animal gardé chez vous avec tout l'amour qu'il mérite. Visites régulières et photos quotidiennes sur WhatsApp. Depuis 12€/jour.",
   },
   {
     emoji: "🤝",
