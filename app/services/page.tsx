@@ -19,7 +19,7 @@ const services = [
     titre: "Promenade de chiens",
     prixPrincipal: "depuis 8€",
     description: "Nous promenons votre chien en toute sécurité dans les environs de Fontenay-le-Comte. Disponible en 30 min, 45 min ou 1 heure. Depuis 8€.",
-    details: ["30min 8€", "45min 11€", "1h 14€", "GPS inclus", "Photos incluses"],
+    details: ["30min 8€", "45min 10€", "1h 12€", "Photos sur WhatsApp"],
     image:
       "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=600",
   },
@@ -28,7 +28,7 @@ const services = [
     titre: "Garde d'animaux",
     prixPrincipal: "depuis 12€/jour",
     description: "Nous gardons votre animal chez vous pendant votre absence. Depuis 12€/jour.",
-    details: ["Chats 12€/jour", "Photos quotidiennes", "7j/7"],
+    details: ["Depuis 12€/jour", "Photos quotidiennes", "7j/7"],
     image:
       "https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?w=600",
   },
@@ -53,9 +53,9 @@ const services = [
   {
     emoji: "🧹",
     titre: "Ménage maison/bureau",
-    prixPrincipal: "depuis 25€",
-    description: "Nettoyage complet de votre domicile ou bureau. Depuis 25€.",
-    details: ["Maison", "Bureau", "Produits inclus", "Sur mesure"],
+    prixPrincipal: "depuis 22€",
+    description: "Nettoyage complet de votre domicile ou bureau. Depuis 22€.",
+    details: ["Maison", "Bureau", "Sur mesure"],
     image:
       "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600",
   },
