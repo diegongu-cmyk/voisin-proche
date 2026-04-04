@@ -568,18 +568,34 @@ function BookingPageContent() {
                 <input type="text" required value={fullAddress} onChange={(e) => setFullAddress(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
               </div>
               <div className="md:col-span-2">
-                <label className="mb-1 block text-sm font-medium text-slate-700">💳 Méthode de paiement préférée *</label>
-                <select required value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
-                  <option value="">Sélectionner</option>
-                  <option value="carte">💳 Paiement en ligne (Stripe)</option>
-                  <option value="especes">💵 Espèces (cash)</option>
-                  <option value="virement">🏦 Virement bancaire</option>
-                </select>
-              </div>
-              <div className="md:col-span-2">
                 <label className="mb-1 block text-sm font-medium text-slate-700">Notes libres</label>
                 <textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
               </div>
+              
+              {service === "garde" && (
+                <div className="md:col-span-2">
+                  <div className="mt-4 rounded-xl border border-yellow-200 bg-yellow-50 p-4">
+                    <p className="text-sm text-yellow-800">
+                      � <strong>Information tarif:</strong> Le tarif minimum 
+                      est de 12€/jour. Le prix final sera établi selon la durée, 
+                      le type d'animal et vos besoins spécifiques. Nous vous 
+                      contacterons via WhatsApp après réception de votre demande.
+                    </p>
+                  </div>
+                </div>
+              )}
+              
+              {service !== "garde" && (
+                <div className="md:col-span-2">
+                  <label className="mb-1 block text-sm font-medium text-slate-700">💳 Méthode de paiement préférée *</label>
+                  <select required value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
+                    <option value="">Sélectionner</option>
+                    <option value="carte">💳 Paiement en ligne (Stripe)</option>
+                    <option value="especes">💵 Espèces (cash)</option>
+                    <option value="virement">🏦 Virement bancaire</option>
+                  </select>
+                </div>
+              )}
             </div>
           </div>
 
@@ -597,29 +613,39 @@ function BookingPageContent() {
 
           <div className="mt-5 space-y-5 text-sm text-slate-700">
             <div className="rounded-xl border border-slate-200 bg-[#1D9E75]/10 p-4">
-              <h3 className="text-base font-extrabold text-slate-900">Prix estimé</h3>
-              <div className="flex items-center gap-3">
-                <p className="text-2xl font-extrabold text-[#1D9E75]">
-                  {hasDiscount ? (
-                    <>
-                      <span className="line-through text-gray-400 text-lg">{
-                        service === "promenade" && walkDuration ? `${calculatePromenadePrice(walkDuration)}€` :
-                        service === "garde" && gardeNbJours ? `${15 * (parseInt(gardeNbJours) || 1)}€` :
-                        service === "menage" && menageSize ? `${calculateMenagePrice(menageSize)}€` :
-                        currentService?.price
-                      }</span>
-                      <span className="ml-2 text-xl font-bold text-[#F59E0B]">{getDisplayPrice()}</span>
-                    </>
-                  ) : (
-                    <span>{getDisplayPrice()}</span>
+              <h3 className="text-base font-extrabold text-slate-900">
+                {service === "garde" ? "💛 Tarif" : "Prix estimé"}
+              </h3>
+              {service === "garde" ? (
+                <div className="rounded-xl border border-yellow-200 bg-yellow-50 p-4">
+                  <p className="text-sm text-yellow-800">
+                    💛 <strong>Tarif:</strong> À partir de 12€/jour — 
+                    Prix final confirmé par WhatsApp
+                  </p>
+                </div>
+              ) : (
+                <div className="flex items-center gap-3">
+                  <p className="text-2xl font-extrabold text-[#1D9E75]">
+                    {hasDiscount ? (
+                      <>
+                        <span className="line-through text-gray-400 text-lg">{
+                          service === "promenade" && walkDuration ? `${calculatePromenadePrice(walkDuration)}€` :
+                          service === "menage" && menageSize ? `${calculateMenagePrice(menageSize)}€` :
+                          currentService?.price
+                        }</span>
+                        <span className="ml-2 text-xl font-bold text-[#F59E0B]">{getDisplayPrice()}</span>
+                      </>
+                    ) : (
+                      <span>{getDisplayPrice()}</span>
+                    )}
+                  </p>
+                  {hasDiscount && (
+                    <span className="inline-flex animate-pulse rounded-full bg-[#F59E0B] px-3 py-1 text-sm font-bold text-white">
+                      🎁 -20% fidélité appliqué !
+                    </span>
                   )}
-                </p>
-                {hasDiscount && (
-                  <span className="inline-flex animate-pulse rounded-full bg-[#F59E0B] px-3 py-1 text-sm font-bold text-white">
-                    🎁 -20% fidélité appliqué !
-                  </span>
-                )}
-              </div>
+                </div>
+              )}
               <p className="mt-1 text-sm text-slate-700">Le prix final sera confirmé lors de notre prise de contact</p>
             </div>
 
@@ -632,6 +658,7 @@ function BookingPageContent() {
                 <p><span className="font-semibold">Adresse:</span> {fullAddress || "Non renseignée"}</p>
                 <p><span className="font-semibold">Date et heure:</span> {date || "Non renseignée"} à {time}</p>
                 <p><span className="font-semibold">Méthode de paiement:</span> {
+                  service === "garde" ? "💛 Prix à confirmer par WhatsApp" :
                   paymentMethod === "carte" ? "💳 Paiement en ligne (Stripe)" :
                   paymentMethod === "especes" ? "💵 Espèces (cash)" :
                   paymentMethod === "virement" ? "🏦 Virement bancaire" : "Non renseignée"
@@ -693,10 +720,13 @@ function BookingPageContent() {
 
           <div className="mt-5 rounded-xl border border-[#1D9E75] bg-[#E1F5EE] p-4 text-[#085041]">
             <h3 className="text-base font-extrabold">
-              {paymentMethod === "carte" ? "💳 Paiement sécurisé" : "✅ Confirmation de réservation"}
+              {service === "garde" ? "💛 Confirmation de réservation" : 
+               paymentMethod === "carte" ? "💳 Paiement sécurisé" : "✅ Confirmation de réservation"}
             </h3>
             <p className="mt-2 text-sm">
-              {paymentMethod === "carte"
+              {service === "garde"
+                ? "Votre réservation sera confirmée dans les 15 prochaines minutes via WhatsApp."
+                : paymentMethod === "carte"
                 ? "Après confirmation, vous serez redirigé vers notre page de paiement sécurisé Stripe."
                 : "Votre réservation sera confirmée dans les 15 prochaines minutes."}
             </p>
