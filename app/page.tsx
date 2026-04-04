@@ -17,7 +17,7 @@ const services = [
     emoji: "🐕",
     titre: "Promenade de chiens",
     prix: "Depuis 8€",
-    description: "Balades adaptées à votre compagnon.\nSuivi GPS en temps réel et photos incluses.",
+    description: "Balades adaptées à votre compagnon.\nSuivi GPS en temps réel et Photos sur WhatsApp.",
     image: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=400",
   },
   {
