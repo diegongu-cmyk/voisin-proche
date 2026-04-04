@@ -28,6 +28,7 @@ function BookingPageContent() {
   const [hasDiscount, setHasDiscount] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   // Promenade states
   const [dogName, setDogName] = useState("");
@@ -294,7 +295,8 @@ function BookingPageContent() {
         }
       }
 
-      window.location.href = '/reservation-confirmee';
+      // Show modal for non-card payments
+      setShowModal(true);
 
     } catch (err) {
       console.error('Exception:', err);
@@ -700,6 +702,15 @@ function BookingPageContent() {
             </p>
           </div>
 
+          <div className="mt-5 rounded-xl border border-blue-200 bg-blue-50 p-4">
+            <p className="text-sm text-blue-800">
+              ⚠️ <strong>Important:</strong> Votre réservation est soumise 
+              à confirmation de notre part. Après envoi de votre demande, 
+              nous vous contacterons via WhatsApp dans les plus brefs délais 
+              pour finaliser les détails et confirmer le service.
+            </p>
+          </div>
+
           <div className="mt-6 flex flex-wrap gap-3">
             <button type="button" onClick={() => setStep(2)} className="rounded-lg border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-700">
               Modifier
@@ -712,6 +723,43 @@ function BookingPageContent() {
             >
               {isLoading ? "Confirmation en cours..." : paymentMethod === "carte" ? "Confirmer et payer" : "Confirmer la réservation"}
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de confirmation */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm"></div>
+          <div className="relative z-50 mx-4 max-w-md rounded-2xl bg-white p-6 shadow-2xl">
+            <div className="text-center">
+              <div className="mb-4 text-6xl">✅</div>
+              <h3 className="mb-2 text-2xl font-bold text-gray-900">Demande reçue !</h3>
+              <p className="mb-6 text-gray-600">
+                Votre demande de réservation a bien été reçue. 
+                Nous vous contacterons via WhatsApp dans les prochaines 
+                minutes pour finaliser les détails et établir le prix définitif.
+                
+                Merci de votre confiance ! 🙏
+              </p>
+              
+              <div className="flex flex-col gap-3">
+                <a
+                  href="https://wa.me/33602353569"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-xl bg-green-600 px-6 py-3 font-semibold text-white hover:bg-green-700 transition-colors"
+                >
+                  📱 Nous contacter maintenant sur WhatsApp
+                </a>
+                <a
+                  href="/mon-compte"
+                  className="rounded-xl border border-gray-300 bg-white px-6 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  Voir mes réservations
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       )}
