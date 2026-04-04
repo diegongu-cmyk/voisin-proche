@@ -161,13 +161,19 @@ function BookingPageContent() {
     if (!date.trim()) errors.push("La date est obligatoire");
     if (!time.trim()) errors.push("L'heure est obligatoire");
     if (!fullAddress.trim()) errors.push("L'adresse est obligatoire");
-    if (!paymentMethod) errors.push("La méthode de paiement est obligatoire");
+    if (service !== "espagnol" && !paymentMethod) errors.push("La méthode de paiement est obligatoire");
     return errors;
   };
 
   const handleConfirmReservation = async () => {
     try {
       setIsLoading(true);
+
+      // Debug logs
+      console.log("Service:", service);
+      console.log("PaymentMethod:", paymentMethod);
+      console.log("EspagnolLieu:", espagnolLieu);
+      console.log("EspagnolNiveau:", espagnolNiveau);
 
       const commonErrors = validateCommonForm();
       if (commonErrors.length > 0) {
@@ -201,10 +207,13 @@ function BookingPageContent() {
       }
 
       if (service === "espagnol") {
-        const errors = validateEspagnolForm();
-        if (errors.length > 0) {
-          alert("Veuillez compléter tous les champs obligatoires:\n" + errors.join("\n"));
-          return;
+        // Solo validar si los campos existen
+        if (espagnolLieu || espagnolNiveau) {
+          const errors = validateEspagnolForm();
+          if (errors.length > 0) {
+            alert("Veuillez compléter tous les champs obligatoires:\n" + errors.join("\n"));
+            return;
+          }
         }
       }
 
