@@ -26,9 +26,9 @@ const services = [
   {
     emoji: "🐾",
     titre: "Garde d'animaux",
-    prixPrincipal: "depuis 12€/jour",
-    description: "Nous gardons votre animal chez vous pendant votre absence. Depuis 12€/jour.",
-    details: ["Depuis 12€/jour", "Photos quotidiennes", "7j/7"],
+    prixPrincipal: "12€/jour",
+    description: "Nous gardons votre animal chez vous pendant votre absence. Prix minimum — détails confirmés par WhatsApp.",
+    details: ["12€/jour", "Photos quotidiennes", "7j/7"],
     image:
       "https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?w=600",
   },
@@ -46,7 +46,7 @@ const services = [
     titre: "Courses et commissions",
     prixPrincipal: "8€",
     description: "Nous effectuons vos courses et commissions à votre place. Rapide et fiable. 8€.",
-    details: ["Supermarché", "Pharmacie", "La Poste", "Livraison le jour même"],
+    details: ["Supermarché", "Pharmacie", "La Poste", "Articles à charge du client"],
     image:
       "https://images.unsplash.com/photo-1542838132-92c53300491e?w=600",
   },
