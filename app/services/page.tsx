@@ -26,9 +26,9 @@ const services = [
   {
     emoji: "🐾",
     titre: "Garde d'animaux",
-    prixPrincipal: "depuis 15€/jour",
-    description: "Nous gardons votre animal chez vous pendant votre absence. Depuis 15€/jour.",
-    details: ["Chats 15€/jour", "Chiens 20€/jour", "Photos quotidiennes", "7j/7"],
+    prixPrincipal: "depuis 12€/jour",
+    description: "Nous gardons votre animal chez vous pendant votre absence. Depuis 12€/jour.",
+    details: ["Chats 12€/jour", "Photos quotidiennes", "7j/7"],
     image:
       "https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?w=600",
   },
