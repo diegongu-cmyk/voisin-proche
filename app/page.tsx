@@ -23,7 +23,7 @@ const services = [
   {
     emoji: "🐾",
     titre: "Garde d'animaux",
-    prix: "Depuis 15€/jour",
+    prix: "Depuis 12€/jour",
     description: "Visites à domicile tous les jours.\nSoin attentif et nouvelles régulières.",
     image: "https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?w=400",
   },
