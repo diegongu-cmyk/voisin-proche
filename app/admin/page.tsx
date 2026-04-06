@@ -366,11 +366,16 @@ export default function AdminPage() {
       console.log('PRIX VALUES:', todayCreatedReservations?.map((r: any) => r.prix));
 
       // Contar nuevos clientes de hoy
-      const { data: todayNewClients, error: todayNewClientsError } = await supabase
-        .from('auth.users')
-        .select('*')
-        .gte('created_at', `${today}T00:00:00.000Z`)
-        .lte('created_at', `${today}T23:59:59.999Z`);
+      const { data: todayNewClients, error: todayNewClientsError } = await fetch('/api/new-clients')
+        .then(r => r.json())
+        .then(data => {
+          console.log('NEW CLIENTS FROM API:', data);
+          return data;
+        })
+        .catch(error => {
+          console.error('Error fetching new clients:', error);
+          return { count: 0, clients: [] };
+        });
 
       setTodayStats({
         reservations: todayCreatedReservations?.length || 0,
