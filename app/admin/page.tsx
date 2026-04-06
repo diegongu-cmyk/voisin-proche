@@ -358,10 +358,17 @@ export default function AdminPage() {
         return sum + (parseFloat(r.prix) || getServicePrice(r.service));
       }, 0) || 0;
 
+      // Contar nuevos clientes de hoy
+      const { data: todayNewClients, error: todayNewClientsError } = await supabase
+        .from('profiles')
+        .select('*')
+        .gte('created_at', `${today}T00:00:00.000Z`)
+        .lte('created_at', `${today}T23:59:59.999Z`);
+
       setTodayStats({
         reservations: todayCreatedReservations?.length || 0,
         revenue: todayRevenue,
-        newClients: 0,
+        newClients: todayNewClients?.length || 0,
         unreadMessages: 0
       });
 
