@@ -351,8 +351,14 @@ export default function AdminPage() {
         return sum + (r.prix || getServicePrice(r.service));
       }, 0) || 0;
 
+      // Contar todas las reservas de hoy sin importar el estado
+      const { data: allTodayReservations, error: allTodayError } = await supabase
+        .from('reservations')
+        .select('*')
+        .eq('date', today);
+
       setTodayStats({
-        reservations: reservations?.length || 0,
+        reservations: allTodayReservations?.length || 0,
         revenue: revenue,
         newClients: 0,
         unreadMessages: 0
