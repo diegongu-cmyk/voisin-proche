@@ -548,13 +548,13 @@ export default function AdminPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     {/* Stats Cards - Fila 1 */}
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      <div className="bg-white rounded-xl shadow-sm p-6 border-2 border-[#085041]">
+      <div className="bg-gradient-to-br from-[#f0fdf4] to-[#dcfce7] rounded-xl shadow-sm p-6 border-l-4 border-[#16a34a]">
         <div className="flex flex-col h-full">
-          <p className="text-xs font-bold text-[#085041] mb-2">GÉNÉRAL</p>
+          <p className="text-xs font-bold text-[#16a34a] mb-2">GÉNÉRAL</p>
           <div className="flex items-center justify-between flex-1">
             <div>
-              <p className="text-sm font-medium text-gray-600">Reservations aujourd'hui</p>
-              <p className="text-2xl font-bold text-gray-900">{todayStats.reservations}</p>
+              <p className="text-sm font-medium text-[#15803d]">Reservations aujourd'hui</p>
+              <p className="text-2xl font-bold text-[#15803d]">{todayStats.reservations}</p>
             </div>
             <div className="bg-green-100 rounded-full p-3">
               <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -565,30 +565,30 @@ export default function AdminPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm p-6 border-2 border-[#085041]">
+      <div className="bg-gradient-to-br from-[#f0fdf4] to-[#dcfce7] rounded-xl shadow-sm p-6 border-l-4 border-[#16a34a]">
         <div className="flex flex-col h-full">
-          <p className="text-xs font-bold text-[#085041] mb-2">GÉNÉRAL</p>
+          <p className="text-xs font-bold text-[#16a34a] mb-2">GÉNÉRAL</p>
           <div className="flex items-center justify-between flex-1">
             <div>
-              <p className="text-sm font-medium text-gray-600">Revenus aujourd'hui</p>
-              <p className="text-2xl font-bold text-gray-900">{todayStats.revenue}€</p>
+              <p className="text-sm font-medium text-[#15803d]">Revenus aujourd'hui</p>
+              <p className="text-2xl font-bold text-[#15803d]">{todayStats.revenue}€</p>
             </div>
             <div className="bg-green-100 rounded-full p-3">
               <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v8m0-8c-1.11 0-2.08-.402-2.599-1" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0V8m0-8c-1.11 0-2.08-.402-2.599-1" />
               </svg>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm p-6 border-2 border-[#7c3aed]">
+      <div className="bg-gradient-to-br from-[#faf5ff] to-[#ede9fe] rounded-xl shadow-sm p-6 border-l-4 border-[#7c3aed]">
         <div className="flex flex-col h-full">
           <p className="text-xs font-bold text-[#7c3aed] mb-2">CLIENTS</p>
           <div className="flex items-center justify-between flex-1">
             <div>
-              <p className="text-sm font-medium text-gray-600">Nouveaux clients</p>
-              <p className="text-2xl font-bold text-gray-900">{todayStats.newClients}</p>
+              <p className="text-sm font-medium text-[#6d28d9]">Nouveaux clients</p>
+              <p className="text-2xl font-bold text-[#6d28d9]">{todayStats.newClients}</p>
             </div>
             <div className="bg-purple-100 rounded-full p-3">
               <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -599,13 +599,13 @@ export default function AdminPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm p-6 border-2 border-[#7c3aed]">
+      <div className="bg-gradient-to-br from-[#faf5ff] to-[#ede9fe] rounded-xl shadow-sm p-6 border-l-4 border-[#7c3aed]">
         <div className="flex flex-col h-full">
           <p className="text-xs font-bold text-[#7c3aed] mb-2">CLIENTS</p>
           <div className="flex items-center justify-between flex-1">
             <div>
-              <p className="text-sm font-medium text-gray-600">Nouveaux inscrits</p>
-              <p className="text-2xl font-bold text-gray-900">{todayStats.newSignups}</p>
+              <p className="text-sm font-medium text-[#6d28d9]">Nouveaux inscrits</p>
+              <p className="text-2xl font-bold text-[#6d28d9]">{todayStats.newSignups}</p>
             </div>
             <div className="bg-purple-100 rounded-full p-3">
               <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -618,13 +618,13 @@ export default function AdminPage() {
     </div>
 
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      <div className="bg-white rounded-xl shadow-sm p-6 border-2 border-[#1a6b9a]">
+      <div className="bg-gradient-to-br from-[#eff6ff] to-[#dbeafe] rounded-xl shadow-sm p-6 border-l-4 border-[#2563eb]">
         <div className="flex flex-col h-full">
-          <p className="text-xs font-bold text-[#1a6b9a] mb-2">PAIEMENTS</p>
+          <p className="text-xs font-bold text-[#2563eb] mb-2">PAIEMENTS</p>
           <div className="flex items-center justify-between flex-1">
             <div>
-              <p className="text-sm font-medium text-gray-600">Paiements carte</p>
-              <p className="text-2xl font-bold text-gray-900">{stripeRevenue.carteRevenue}€</p>
+              <p className="text-sm font-medium text-[#1d4ed8]">Paiements carte</p>
+              <p className="text-2xl font-bold text-[#1d4ed8]">{stripeRevenue.carteRevenue}€</p>
             </div>
             <div className="bg-blue-100 rounded-full p-3">
               <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -635,13 +635,13 @@ export default function AdminPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm p-6 border-2 border-[#1a6b9a]">
+      <div className="bg-gradient-to-br from-[#eff6ff] to-[#dbeafe] rounded-xl shadow-sm p-6 border-l-4 border-[#2563eb]">
         <div className="flex flex-col h-full">
-          <p className="text-xs font-bold text-[#1a6b9a] mb-2">PAIEMENTS</p>
+          <p className="text-xs font-bold text-[#2563eb] mb-2">PAIEMENTS</p>
           <div className="flex items-center justify-between flex-1">
             <div>
-              <p className="text-sm font-medium text-gray-600">Paiements virement</p>
-              <p className="text-2xl font-bold text-gray-900">{stripeRevenue.virementRevenue}€</p>
+              <p className="text-sm font-medium text-[#1d4ed8]">Paiements virement</p>
+              <p className="text-2xl font-bold text-[#1d4ed8]">{stripeRevenue.virementRevenue}€</p>
             </div>
             <div className="bg-green-100 rounded-full p-3">
               <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -652,13 +652,13 @@ export default function AdminPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm p-6 border-2 border-[#1a6b9a]">
+      <div className="bg-gradient-to-br from-[#eff6ff] to-[#dbeafe] rounded-xl shadow-sm p-6 border-l-4 border-[#2563eb]">
         <div className="flex flex-col h-full">
-          <p className="text-xs font-bold text-[#1a6b9a] mb-2">PAIEMENTS</p>
+          <p className="text-xs font-bold text-[#2563eb] mb-2">PAIEMENTS</p>
           <div className="flex items-center justify-between flex-1">
             <div>
-              <p className="text-sm font-medium text-gray-600">Paiements especes</p>
-              <p className="text-2xl font-bold text-gray-900">{stripeRevenue.especesRevenue}€</p>
+              <p className="text-sm font-medium text-[#1d4ed8]">Paiements especes</p>
+              <p className="text-2xl font-bold text-[#1d4ed8]">{stripeRevenue.especesRevenue}€</p>
             </div>
             <div className="bg-yellow-100 rounded-full p-3">
               <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -669,13 +669,13 @@ export default function AdminPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm p-6 border-2 border-[#ea580c]">
+      <div className="bg-gradient-to-br from-[#fff7ed] to-[#ffedd5] rounded-xl shadow-sm p-6 border-l-4 border-[#ea580c]">
         <div className="flex flex-col h-full">
           <p className="text-xs font-bold text-[#ea580c] mb-2">ALERTES</p>
           <div className="flex items-center justify-between flex-1">
             <div>
-              <p className="text-sm font-medium text-gray-600">Messages non lus</p>
-              <p className="text-2xl font-bold text-gray-900">{todayStats.unreadMessages}</p>
+              <p className="text-sm font-medium text-[#c2410c]">Messages non lus</p>
+              <p className="text-2xl font-bold text-[#c2410c]">{todayStats.unreadMessages}</p>
             </div>
             <div className="bg-red-100 rounded-full p-3">
               <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
