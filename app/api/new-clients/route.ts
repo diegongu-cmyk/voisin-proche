@@ -8,26 +8,15 @@ const supabase = createClient(
 export async function GET() {
   try {
     const today = new Date().toISOString().split('T')[0];
-    
-    const { data: newClients, error } = await supabase
-      .from('auth.users')
-      .select('*')
-      .gte('created_at', `${today}T00:00:00.000Z`)
-      .lte('created_at', `${today}T23:59:59.999Z`);
-
+    const { data, error } = await supabase.auth.admin.listUsers();
     if (error) {
-      console.error('Error counting new clients:', error);
       return Response.json({ error: 'Failed to count new clients' }, { status: 500 });
     }
-
-    console.log('NEW CLIENTS FROM API:', newClients);
-
-    return Response.json({ 
-      count: newClients?.length || 0,
-      clients: newClients || []
-    });
+    const newClients = data.users.filter(user => 
+      user.created_at.startsWith(today)
+    );
+    return Response.json({ count: newClients.length });
   } catch (error) {
-    console.error('API Error:', error);
     return Response.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
