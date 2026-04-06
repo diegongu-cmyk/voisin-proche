@@ -355,7 +355,7 @@ export default function AdminPage() {
         .lte('created_at', `${today}T23:59:59.999Z`);
 
       const todayRevenue = todayCreatedReservations?.reduce((sum: number, r: any) => {
-        return sum + (r.prix || getServicePrice(r.service));
+        return sum + (parseFloat(r.prix) || getServicePrice(r.service));
       }, 0) || 0;
 
       setTodayStats({
