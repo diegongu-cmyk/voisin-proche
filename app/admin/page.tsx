@@ -389,7 +389,8 @@ export default function AdminPage() {
       // Filtrar solo los user_id que no tienen reservas anteriores
       const previousUserIds = previousReservations?.map(r => r.user_id) || [];
       const todayUserIds = todayReservations?.map(r => r.user_id) || [];
-      const newUserIds = todayUserIds.filter(userId => !previousUserIds.includes(userId));
+      const uniqueTodayUserIds = [...new Set(todayUserIds)];
+      const newUserIds = uniqueTodayUserIds.filter(userId => !previousUserIds.includes(userId));
 
       // Obtener detalles de los nuevos clientes (opcional, para el conteo solo necesitamos el array)
       const todayNewClientsWithFirstReservation = newUserIds.length || 0;
