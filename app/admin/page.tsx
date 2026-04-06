@@ -44,6 +44,7 @@ export default function AdminPage() {
     reservations: 0,
     revenue: 0,
     newClients: 0,
+    newSignups: 0,
     unreadMessages: 0
   });
   const [stripeRevenue, setStripeRevenue] = useState({ 
@@ -371,10 +372,20 @@ export default function AdminPage() {
         .catch(() => ({ count: 0 }));
       const todayNewClientsCount = newClientsData.count || 0;
 
+      // Contar nuevos clientes que hicieron su primera reserva hoy
+      const { data: firstTimeClients, error: firstTimeError } = await supabase
+        .from('reservations')
+        .select('user_id, created_at')
+        .gte('created_at', `${today}T00:00:00.000Z`)
+        .lte('created_at', `${today}T23:59:59.999Z`);
+
+      const todayNewClientsWithFirstReservation = firstTimeClients?.length || 0;
+
       setTodayStats({
         reservations: todayCreatedReservations?.length || 0,
         revenue: todayRevenue,
-        newClients: todayNewClientsCount,
+        newClients: todayNewClientsWithFirstReservation,
+        newSignups: todayNewClientsCount,
         unreadMessages: 0
       });
 
@@ -532,6 +543,20 @@ export default function AdminPage() {
               <div className="bg-purple-100 rounded-full p-3">
                 <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Nouveaux inscrits</p>
+                <p className="text-2xl font-bold text-gray-900">{todayStats.newSignups}</p>
+              </div>
+              <div className="bg-orange-100 rounded-full p-3">
+                <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0 0h3m-3 0h-3m2-2h3a2 2 0 012 2v3a2 2 0 01-2 2H6a2 2 0 01-2-2V9a2 2 0 012-2h3a2 2 0 012 2zm-2 4h16a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6a2 2 0 012-2h4z" />
                 </svg>
               </div>
             </div>
