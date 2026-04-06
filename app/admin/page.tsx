@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { supabase } from '@/lib/supabase';
@@ -242,7 +242,7 @@ export default function AdminPage() {
   const handleWhatsApp = (reservation: Reservation) => {
     const details = typeof reservation.details === 'string' ? JSON.parse(reservation.details) : reservation.details;
     const phone = details?.phone?.replace(/[^0-9]/g, '');
-    const message = encodeURIComponent(`Bonjour ${details?.fullName}, votre réservation pour ${reservation.service} le ${reservation.date} à ${reservation.heure} est confirmée ! À bientôt — Voisin Proche 🌿`);
+    const message = encodeURIComponent(`Bonjour ${details?.fullName}, votre reservation pour ${reservation.service} le ${reservation.date} à ${reservation.heure} est confirmée ! À bientôt — Voisin Proche 🌿`);
     window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
   };
 
@@ -273,7 +273,7 @@ export default function AdminPage() {
       for (const id of selectedReservations) {
         await supabase.from('reservations').update({ statut: 'confirme' }).eq('id', id);
       }
-      alert(`${selectedReservations.length} réservation(s) confirmée(s) avec succès!`);
+      alert(`${selectedReservations.length} reservation(s) confirmée(s) avec succès!`);
       setSelectedReservations([]);
       loadAdminData();
     } catch (error) {
@@ -286,7 +286,7 @@ export default function AdminPage() {
       for (const id of selectedReservations) {
         await supabase.from('reservations').update({ statut: 'annule' }).eq('id', id);
       }
-      alert(`${selectedReservations.length} réservation(s) annulée(s) avec succès!`);
+      alert(`${selectedReservations.length} reservation(s) annulée(s) avec succès!`);
       setSelectedReservations([]);
       loadAdminData();
     } catch (error) {
@@ -295,7 +295,7 @@ export default function AdminPage() {
   };
 
   const handleMassDelete = async () => {
-    if (!confirm(`Êtes-vous sûr de vouloir supprimer ${selectedReservations.length} réservations ?`)) {
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer ${selectedReservations.length} reservations ?`)) {
       return;
     }
     
@@ -303,7 +303,7 @@ export default function AdminPage() {
       for (const id of selectedReservations) {
         await supabase.from('reservations').delete().eq('id', id);
       }
-      alert(`${selectedReservations.length} réservation(s) supprimée(s) avec succès!`);
+      alert(`${selectedReservations.length} reservation(s) supprimée(s) avec succès!`);
       setSelectedReservations([]);
       loadAdminData();
     } catch (error) {
@@ -313,13 +313,13 @@ export default function AdminPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "Confirmé":
+      case "Confirme":
         return "bg-green-100 text-green-800";
       case "En attente":
         return "bg-yellow-100 text-yellow-800";
-      case "Annulé":
+      case "Annule":
         return "bg-red-100 text-red-800";
-      case "Terminé":
+      case "Termine":
         return "bg-gray-100 text-gray-800";
       default:
         return "bg-gray-100 text-gray-800";
@@ -551,7 +551,7 @@ export default function AdminPage() {
       <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-gray-600">Réservations aujourd'hui</p>
+            <p className="text-sm font-medium text-gray-600">Reservations aujourd'hui</p>
             <p className="text-2xl font-bold text-gray-900">{todayStats.reservations}</p>
           </div>
           <div className="bg-blue-100 rounded-full p-3">
@@ -561,10 +561,11 @@ export default function AdminPage() {
           </div>
         </div>
       </div>
+      </div>
 
-        {/* Section 1 - Réservations du jour */}
+        {/* Section 1 - Reservations du jour */}
         <section className="mb-8">
-          <h2 className="text-xl font-bold text-[#085041] mb-4">Réservations du jour</h2>
+          <h2 className="text-xl font-bold text-[#085041] mb-4">Reservations du jour</h2>
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -582,7 +583,7 @@ export default function AdminPage() {
                   {todayBookings.length === 0 ? (
                     <tr>
                       <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
-                        Aucune réservation aujourd'hui
+                        Aucune reservation aujourd'hui
                       </td>
                     </tr>
                   ) : (
@@ -613,8 +614,8 @@ export default function AdminPage() {
                             {details?.email || 'Non spécifié'}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(booking.statut === 'en_attente' ? 'En attente' : booking.statut === 'confirme' ? 'Confirmé' : booking.statut === 'annule' ? 'Annulé' : 'Terminé')}`}>
-                              {booking.statut === 'en_attente' ? 'En attente' : booking.statut === 'confirme' ? 'Confirmé' : booking.statut === 'annule' ? 'Annulé' : 'Terminé'}
+                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(booking.statut === 'en_attente' ? 'En attente' : booking.statut === 'confirme' ? 'Confirme' : booking.statut === 'annule' ? 'Annule' : 'Termine')}`}>
+                              {booking.statut === 'en_attente' ? 'En attente' : booking.statut === 'confirme' ? 'Confirme' : booking.statut === 'annule' ? 'Annule' : 'Termine'}
                             </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm">
@@ -626,7 +627,7 @@ export default function AdminPage() {
                                 }}
                                 className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
                               >
-                                Voir détails
+                                Voir Détails
                               </button>
                               {booking.statut === 'en_attente' && (
                                 <>
@@ -686,9 +687,9 @@ export default function AdminPage() {
           </div>
         </section>
 
-        {/* Section 2 - Toutes les réservations */}
+        {/* Section 2 - Toutes les reservations */}
         <section>
-          <h2 className="text-xl font-bold text-[#085041] mb-4">Toutes les réservations ({allBookings.length} au total)</h2>
+          <h2 className="text-xl font-bold text-[#085041] mb-4">Toutes les reservations ({allBookings.length} au total)</h2>
           
           {/* Filtres par état */}
           <div className="mb-4 flex flex-wrap gap-2">
@@ -720,7 +721,7 @@ export default function AdminPage() {
                   : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
               }`}
             >
-              Confirmé ({allBookings.filter(b => b.statut === 'confirme').length})
+              Confirme ({allBookings.filter(b => b.statut === 'confirme').length})
             </button>
             <button
               onClick={() => setStatusFilter('termine')}
@@ -730,7 +731,7 @@ export default function AdminPage() {
                   : 'bg-green-100 text-green-700 hover:bg-green-200'
               }`}
             >
-              Terminé ({allBookings.filter(b => b.statut === 'termine').length})
+              Termine ({allBookings.filter(b => b.statut === 'termine').length})
             </button>
             <button
               onClick={() => setStatusFilter('annule')}
@@ -740,7 +741,7 @@ export default function AdminPage() {
                   : 'bg-red-100 text-red-700 hover:bg-red-200'
               }`}
             >
-              Annulé ({allBookings.filter(b => b.statut === 'annule').length})
+              Annule ({allBookings.filter(b => b.statut === 'annule').length})
             </button>
           </div>
           
@@ -749,7 +750,7 @@ export default function AdminPage() {
             <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
               <div className="flex items-center justify-between flex-wrap gap-4">
                 <span className="font-medium text-green-800">
-                  {selectedReservations.length} réservation(s) sélectionnée(s)
+                  {selectedReservations.length} reservation(s) sélectionnée(s)
                 </span>
                 <div className="flex gap-2 flex-wrap">
                   <button
@@ -810,7 +811,7 @@ export default function AdminPage() {
                   {allBookings.length === 0 ? (
                     <tr>
                       <td colSpan={8} className="px-6 py-12 text-center text-gray-500">
-                        Aucune réservation pour le moment
+                        Aucune reservation pour le moment
                       </td>
                     </tr>
                   ) : (
@@ -879,8 +880,8 @@ export default function AdminPage() {
                             {details?.email || 'Non spécifié'}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(booking.statut === 'en_attente' ? 'En attente' : booking.statut === 'confirme' ? 'Confirmé' : booking.statut === 'annule' ? 'Annulé' : 'Terminé')}`}>
-                              {booking.statut === 'en_attente' ? 'En attente' : booking.statut === 'confirme' ? 'Confirmé' : booking.statut === 'annule' ? 'Annulé' : 'Terminé'}
+                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(booking.statut === 'en_attente' ? 'En attente' : booking.statut === 'confirme' ? 'Confirme' : booking.statut === 'annule' ? 'Annule' : 'Termine')}`}>
+                              {booking.statut === 'en_attente' ? 'En attente' : booking.statut === 'confirme' ? 'Confirme' : booking.statut === 'annule' ? 'Annule' : 'Termine'}
                             </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm">
@@ -892,7 +893,7 @@ export default function AdminPage() {
                                 }}
                                 className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
                               >
-                                Voir détails
+                                Voir Détails
                               </button>
                               {booking.statut === 'en_attente' && (
                                 <>
@@ -953,19 +954,19 @@ export default function AdminPage() {
         </section>
       </main>
 
-      {/* Modal Détails */}
+      {/* Modal */}
       {showDetailsModal && selectedReservation && (
         <>
-          {/* Fondo oscuro semitransparente */}
+          {/* Fondo oscuro */}
           <div 
             className="fixed inset-0 bg-black bg-opacity-50 z-40"
             onClick={closeDetailsModal}
           ></div>
           
-          {/* Panel deslizante desde la derecha */}
+          {/* Panel */}
           <div className="fixed right-0 top-0 h-full w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out">
             <div className="h-full flex flex-col">
-              {/* Header del modal */}
+              {/* Header */}
               <div className="bg-[#085041] text-white p-6 flex justify-between items-center">
                 <div>
                   <h3 className="text-lg font-semibold flex items-center">
@@ -973,7 +974,7 @@ export default function AdminPage() {
                     {selectedReservation.service}
                   </h3>
                   <p className="text-sm opacity-90 mt-1">
-                    {selectedReservation.date} à {selectedReservation.heure}
+                    {selectedReservation.date} a {selectedReservation.heure}
                   </p>
                 </div>
                 <button
