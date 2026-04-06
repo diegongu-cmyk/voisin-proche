@@ -362,6 +362,9 @@ export default function AdminPage() {
         return sum + (parseFloat(r.prix) || getServicePrice(r.service));
       }, 0) || 0;
 
+      console.log('TODAY REVENUE:', todayRevenue);
+      console.log('PRIX VALUES:', todayCreatedReservations?.map((r: any) => r.prix));
+
       // Contar nuevos clientes de hoy
       const { data: todayNewClients, error: todayNewClientsError } = await supabase
         .from('profiles')
