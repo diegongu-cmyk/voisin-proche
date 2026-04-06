@@ -347,19 +347,20 @@ export default function AdminPage() {
         return;
       }
 
-      const revenue = reservations?.reduce((sum: number, r: any) => {
+      // Contar reservas creadas hoy y calcular ingresos de hoy
+      const { data: todayCreatedReservations, error: todayCreatedError } = await supabase
+        .from('reservations')
+        .select('*')
+        .gte('created_at', `${today}T00:00:00.000Z`)
+        .lte('created_at', `${today}T23:59:59.999Z`);
+
+      const todayRevenue = todayCreatedReservations?.reduce((sum: number, r: any) => {
         return sum + (r.prix || getServicePrice(r.service));
       }, 0) || 0;
 
-      // Contar todas las reservas de hoy sin importar el estado
-      const { data: allTodayReservations, error: allTodayError } = await supabase
-        .from('reservations')
-        .select('*')
-        .eq('date', today);
-
       setTodayStats({
-        reservations: allTodayReservations?.length || 0,
-        revenue: revenue,
+        reservations: todayCreatedReservations?.length || 0,
+        revenue: todayRevenue,
         newClients: 0,
         unreadMessages: 0
       });
