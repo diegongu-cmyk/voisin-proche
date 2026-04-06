@@ -16,7 +16,7 @@ const services = [
   {
     emoji: "🐕",
     titre: "Promenade de chiens",
-    prix: "depuis 8€",
+    prix: "Depuis 8€",
     description: "Balades adaptées à votre compagnon.\nSuivi GPS en temps réel et Photos sur WhatsApp.",
     image: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=400",
   },
@@ -51,7 +51,7 @@ const services = [
   {
     emoji: "🛒",
     titre: "Courses",
-    prix: "depuis 8€",
+    prix: "Depuis 8€",
     description: "Commissions du quotidien simplifiées.\nLivraison rapide à Fontenay-le-Comte.",
     image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=400",
   },
@@ -61,7 +61,7 @@ const sliderServices = [
   {
     emoji: "🐕",
     titre: "Promenade de chiens",
-    prix: "depuis 8€",
+    prix: "Depuis 8€",
     description: "Promenades sécurisées avec jeux et caresses.\nPhotos envoyées sur WhatsApp. Depuis 8€.",
     image: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=600",
     heroTitle: "Promenade de chiens",
@@ -88,7 +88,7 @@ const sliderServices = [
   {
     emoji: "🛒",
     titre: "Courses et commissions",
-    prix: "depuis 8€",
+    prix: "Depuis 8€",
     description: "Vos courses effectuées rapidement.\nVous payez uniquement le service. 8€.",
     image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=600",
     heroTitle: "Courses et commissions",

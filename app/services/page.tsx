@@ -17,7 +17,7 @@ const services = [
   {
     emoji: "🐕",
     titre: "Promenade de chiens",
-    prixPrincipal: "depuis 8€",
+    prixPrincipal: "Depuis 8€",
     description: "Nous promenons votre chien en toute sécurité dans les environs de Fontenay-le-Comte. Disponible en 30 min, 45 min ou 1 heure. Depuis 8€.",
     details: ["30min 8€", "45min 10€", "1h 12€", "Photos sur WhatsApp"],
     image:
@@ -53,7 +53,7 @@ const services = [
   {
     emoji: "🧹",
     titre: "Ménage maison/bureau",
-    prixPrincipal: "depuis 22€",
+    prixPrincipal: "Depuis 22€",
     description: "Nettoyage complet de votre domicile ou bureau. Depuis 22€.",
     details: ["Maison", "Bureau", "Sur mesure"],
     image:
@@ -62,7 +62,7 @@ const services = [
   {
     emoji: "🇪🇸",
     titre: "Cours d'espagnol",
-    prixPrincipal: "depuis 15€/h",
+    prixPrincipal: "Depuis 15€/h",
     description: "Cours particuliers d'espagnol pour tous niveaux. Depuis 15€/heure.",
     details: ["Tous niveaux", "Enfants", "Adultes", "À domicile ou en ligne"],
     image:
