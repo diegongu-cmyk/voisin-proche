@@ -367,7 +367,7 @@ export default function AdminPage() {
 
       // Contar nuevos clientes de hoy
       const { data: todayNewClients, error: todayNewClientsError } = await supabase
-        .from('profiles')
+        .from('auth.users')
         .select('*')
         .gte('created_at', `${today}T00:00:00.000Z`)
         .lte('created_at', `${today}T23:59:59.999Z`);
