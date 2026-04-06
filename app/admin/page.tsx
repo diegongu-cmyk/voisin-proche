@@ -335,7 +335,10 @@ export default function AdminPage() {
 
   const loadAdminData = async () => {
     try {
-      const today = new Date().toISOString().split('T')[0];
+      const now = new Date(); 
+      const today = now.toISOString().split('T')[0]; 
+      console.log('TODAY DATE:', today);
+      console.log('TODAY RESERVATIONS:', todayCreatedReservations);
       const { data: reservations, error: reservationsError } = await supabase
         .from('reservations')
         .select('*')
