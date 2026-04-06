@@ -373,13 +373,26 @@ export default function AdminPage() {
       const todayNewClientsCount = newClientsData.count || 0;
 
       // Contar nuevos clientes que hicieron su primera reserva hoy
-      const { data: firstTimeClients, error: firstTimeError } = await supabase
+      // Obtener todos los user_id que tienen reservas hoy
+      const { data: todayReservations, error: todayReservationsError } = await supabase
         .from('reservations')
         .select('user_id, created_at')
         .gte('created_at', `${today}T00:00:00.000Z`)
         .lte('created_at', `${today}T23:59:59.999Z`);
 
-      const todayNewClientsWithFirstReservation = firstTimeClients?.length || 0;
+      // Obtener todos los user_id que tuvieron reservas anteriores a hoy
+      const { data: previousReservations, error: previousReservationsError } = await supabase
+        .from('reservations')
+        .select('user_id')
+        .lt('created_at', `${today}T00:00:00.000Z`);
+
+      // Filtrar solo los user_id que no tienen reservas anteriores
+      const previousUserIds = previousReservations?.map(r => r.user_id) || [];
+      const todayUserIds = todayReservations?.map(r => r.user_id) || [];
+      const newUserIds = todayUserIds.filter(userId => !previousUserIds.includes(userId));
+
+      // Obtener detalles de los nuevos clientes (opcional, para el conteo solo necesitamos el array)
+      const todayNewClientsWithFirstReservation = newUserIds.length || 0;
 
       setTodayStats({
         reservations: todayCreatedReservations?.length || 0,
