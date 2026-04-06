@@ -541,125 +541,27 @@ export default function AdminPage() {
                 Déconnexion
               </button>
             </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    {/* Stats Cards - Fila 1 */}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium text-gray-600">Réservations aujourd'hui</p>
+            <p className="text-2xl font-bold text-gray-900">{todayStats.reservations}</p>
+          </div>
+          <div className="bg-blue-100 rounded-full p-3">
+            <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
           </div>
         </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Réservations aujourd'hui</p>
-                <p className="text-2xl font-bold text-gray-900">{todayStats.reservations}</p>
-              </div>
-              <div className="bg-blue-100 rounded-full p-3">
-                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Revenus aujourd'hui</p>
-                <p className="text-2xl font-bold text-gray-900">{todayStats.revenue}€</p>
-              </div>
-              <div className="bg-green-100 rounded-full p-3">
-                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Paiements carte</p>
-                <p className="text-2xl font-bold text-gray-900">{stripeRevenue.carteRevenue}€</p>
-              </div>
-              <div className="bg-blue-100 rounded-full p-3">
-                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 13h18m-9-9v9m0-9h9v9m0-9h9m0-9h9m0-9h9m0-9h9m0-9h9m0-9h9" />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Paiements virement</p>
-                <p className="text-2xl font-bold text-gray-900">{stripeRevenue.virementRevenue}€</p>
-              </div>
-              <div className="bg-yellow-100 rounded-full p-3">
-                <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-8 4M9 9a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V9a2 2 0 012-2h3a2 2 0 012 2zm-2 4h16a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6a2 2 0 012-2h4z" />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Paiements espèces</p>
-                <p className="text-2xl font-bold text-gray-900">{stripeRevenue.especesRevenue}€</p>
-              </div>
-              <div className="bg-orange-100 rounded-full p-3">
-                <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9v3m0 0v3m0 0h3m-3 0h-3m2-2h3a2 2 0 012 2v3a2 2 0 01-2 2H6a2 2 0 01-2-2V9a2 2 0 012-2h3a2 2 0 012 2zm-2 4h16a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6a2 2 0 012-2h4z" />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Nouveaux clients</p>
-                <p className="text-2xl font-bold text-gray-900">{todayStats.newClients}</p>
-              </div>
-              <div className="bg-purple-100 rounded-full p-3">
-                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Nouveaux inscrits</p>
-                <p className="text-2xl font-bold text-gray-900">{todayStats.newSignups}</p>
-              </div>
-              <div className="bg-orange-100 rounded-full p-3">
-                <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0 0h3m-3 0h-3m2-2h3a2 2 0 012 2v3a2 2 0 01-2 2H6a2 2 0 01-2-2V9a2 2 0 012-2h3a2 2 0 012 2zm-2 4h16a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6a2 2 0 012-2h4z" />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Messages non lus</p>
-                <p className="text-2xl font-bold text-gray-900">{todayStats.unreadMessages}</p>
-              </div>
-              <div className="bg-yellow-100 rounded-full p-3">
-                <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
+      </div>
 
         {/* Section 1 - Réservations du jour */}
         <section className="mb-8">
