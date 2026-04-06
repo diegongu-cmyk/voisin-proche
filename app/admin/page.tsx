@@ -366,21 +366,15 @@ export default function AdminPage() {
       console.log('PRIX VALUES:', todayCreatedReservations?.map((r: any) => r.prix));
 
       // Contar nuevos clientes de hoy
-      const { data: todayNewClients, error: todayNewClientsError } = await fetch('/api/new-clients')
+      const newClientsData = await fetch('/api/new-clients')
         .then(r => r.json())
-        .then(data => {
-          console.log('NEW CLIENTS FROM API:', data);
-          return data;
-        })
-        .catch(error => {
-          console.error('Error fetching new clients:', error);
-          return { count: 0, clients: [] };
-        });
+        .catch(() => ({ count: 0 }));
+      const todayNewClientsCount = newClientsData.count || 0;
 
       setTodayStats({
         reservations: todayCreatedReservations?.length || 0,
         revenue: todayRevenue,
-        newClients: todayNewClients?.length || 0,
+        newClients: todayNewClientsCount,
         unreadMessages: 0
       });
 
