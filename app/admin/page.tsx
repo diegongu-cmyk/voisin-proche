@@ -338,7 +338,6 @@ export default function AdminPage() {
       const now = new Date(); 
       const today = now.toISOString().split('T')[0]; 
       console.log('TODAY DATE:', today);
-      console.log('TODAY RESERVATIONS:', todayCreatedReservations);
       const { data: reservations, error: reservationsError } = await supabase
         .from('reservations')
         .select('*')
