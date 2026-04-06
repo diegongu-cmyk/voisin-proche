@@ -49,7 +49,10 @@ export default function AdminPage() {
   });
   const [stripeRevenue, setStripeRevenue] = useState({ 
     todayRevenue: 0, 
-    monthRevenue: 0 
+    monthRevenue: 0,
+    carteRevenue: 0,
+    virementRevenue: 0,
+    especesRevenue: 0
   });
 
   const [todayBookings, setTodayBookings] = useState<Reservation[]>([]);
@@ -363,6 +366,31 @@ export default function AdminPage() {
         return sum + (parseFloat(r.prix) || getServicePrice(r.service));
       }, 0) || 0;
 
+      // Separar ingresos por método de pago
+      const carteRevenue = todayCreatedReservations?.reduce((sum: number, r: any) => {
+        const details = typeof r.details === 'string' ? JSON.parse(r.details) : r.details;
+        return details?.metodoPago === 'carte' ? sum + (parseFloat(r.prix) || getServicePrice(r.service)) : sum;
+      }, 0) || 0;
+
+      const virementRevenue = todayCreatedReservations?.reduce((sum: number, r: any) => {
+        const details = typeof r.details === 'string' ? JSON.parse(r.details) : r.details;
+        return details?.metodoPago === 'virement' ? sum + (parseFloat(r.prix) || getServicePrice(r.service)) : sum;
+      }, 0) || 0;
+
+      const especesRevenue = todayCreatedReservations?.reduce((sum: number, r: any) => {
+        const details = typeof r.details === 'string' ? JSON.parse(r.details) : r.details;
+        return details?.metodoPago === 'especes' ? sum + (parseFloat(r.prix) || getServicePrice(r.service)) : sum;
+      }, 0) || 0;
+
+      // Actualizar stripeRevenue con todos los métodos
+      setStripeRevenue({
+        todayRevenue: todayRevenue,
+        monthRevenue: 0,
+        carteRevenue: carteRevenue,
+        virementRevenue: virementRevenue,
+        especesRevenue: especesRevenue
+      });
+
       console.log('TODAY REVENUE:', todayRevenue);
       console.log('PRIX VALUES:', todayCreatedReservations?.map((r: any) => r.prix));
 
@@ -543,6 +571,48 @@ export default function AdminPage() {
               <div className="bg-green-100 rounded-full p-3">
                 <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Paiements carte</p>
+                <p className="text-2xl font-bold text-gray-900">{stripeRevenue.carteRevenue}€</p>
+              </div>
+              <div className="bg-blue-100 rounded-full p-3">
+                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 13h18m-9-9v9m0-9h9v9m0-9h9m0-9h9m0-9h9m0-9h9m0-9h9m0-9h9" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Paiements virement</p>
+                <p className="text-2xl font-bold text-gray-900">{stripeRevenue.virementRevenue}€</p>
+              </div>
+              <div className="bg-yellow-100 rounded-full p-3">
+                <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-8 4M9 9a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V9a2 2 0 012-2h3a2 2 0 012 2zm-2 4h16a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6a2 2 0 012-2h4z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Paiements espèces</p>
+                <p className="text-2xl font-bold text-gray-900">{stripeRevenue.especesRevenue}€</p>
+              </div>
+              <div className="bg-orange-100 rounded-full p-3">
+                <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9v3m0 0v3m0 0h3m-3 0h-3m2-2h3a2 2 0 012 2v3a2 2 0 01-2 2H6a2 2 0 01-2-2V9a2 2 0 012-2h3a2 2 0 012 2zm-2 4h16a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6a2 2 0 012-2h4z" />
                 </svg>
               </div>
             </div>
