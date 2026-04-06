@@ -44,7 +44,7 @@ const services = [
   {
     emoji: "🛒",
     titre: "Courses et commissions",
-    prixPrincipal: "8€",
+    prixPrincipal: "depuis 8€",
     description: "Nous effectuons vos courses et commissions à votre place. Rapide et fiable. 8€.",
     details: ["Supermarché", "Pharmacie", "La Poste", "Articles à charge du client"],
     image:
