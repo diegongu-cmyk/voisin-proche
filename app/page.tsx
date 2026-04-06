@@ -354,7 +354,7 @@ export default function HomePage() {
             { icon: "🫶", title: "Confiance et proximité", text: "Une relation humaine et locale." },
             { icon: "💶", title: "Prix accessibles", text: "Des tarifs transparents et justes." },
             { icon: "📅", title: "Disponible 7j/7", text: "Une présence régulière toute la semaine." },
-            { icon: "🇪🇸", title: "Espagnol natif", text: "Communication fluide en espagnol." },
+            { icon: "🇪🇸", title: "Natifs latino-américains", text: "Cours d'espagnol dispensés par des natifs latino-américains. Une immersion authentique dans la langue et la culture." },
           ].map((point) => (
             <div
               key={point.title}
