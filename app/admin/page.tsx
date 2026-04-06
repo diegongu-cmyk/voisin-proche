@@ -355,6 +355,8 @@ export default function AdminPage() {
         .select('*')
         .gte('created_at', `${today}T00:00:00.000Z`)
         .lte('created_at', `${today}T23:59:59.999Z`);
+      
+      console.log('TODAY RESERVATIONS DATA:', todayCreatedReservations, todayCreatedError);
 
       const todayRevenue = todayCreatedReservations?.reduce((sum: number, r: any) => {
         return sum + (parseFloat(r.prix) || getServicePrice(r.service));
