@@ -7,8 +7,8 @@ const serviceMapping: Record<string, string> = {
   "Promenade de chiens": "promenade",
   "Garde d'animaux": "garde",
   "Accompagnement": "accompagnement",
-  "Courses": "courses",
-  "Ménage": "menage",
+  "Courses et commissions": "courses",
+  "Ménage maison/bureau": "menage",
   "Cours d'espagnol": "espagnol",
   "Autres services": "autres",
 };
