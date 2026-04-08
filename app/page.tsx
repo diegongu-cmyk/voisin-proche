@@ -150,7 +150,7 @@ export default function HomePage() {
               </div>
               <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:gap-4">
                 <Link
-                  href="/services"
+                  href={`/services/${serviceMapping[sliderServices[currentSlide].titre] || "autre"}`}
                   className="inline-flex items-center justify-center rounded-xl border border-white px-5 py-3 text-sm font-bold text-white transition hover:bg-white hover:text-[#1D9E75]"
                 >
                   Découvrir nos services
