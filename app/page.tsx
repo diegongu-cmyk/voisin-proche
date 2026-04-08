@@ -10,6 +10,7 @@ const serviceMapping: Record<string, string> = {
   "Courses": "courses",
   "Ménage": "menage",
   "Cours d'espagnol": "espagnol",
+  "Autres services": "autres",
 };
 
 const services = [
@@ -111,6 +112,15 @@ const sliderServices = [
     image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600",
     heroTitle: "Cours d'espagnol",
     heroText: "Cours authentiques dispensés par un natif espagnol. Tous niveaux, enfants et adultes, à domicile ou en ligne. Depuis 15€/h.",
+  },
+  {
+    emoji: "?!",
+    titre: "Autres services",
+    prix: "Sur mesure",
+    description: "Vous avez un besoin particulier ?\nParlez-nous en ! Nous sommes à votre écoute.",
+    image: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=600",
+    heroTitle: "Autres services",
+    heroText: "Vous avez un besoin particulier ? Parlez-nous en ! Nous sommes à votre écoute et ferons de notre mieux pour trouver une solution adaptée à votre situation.",
   },
 ];
 
