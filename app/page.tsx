@@ -218,9 +218,10 @@ export default function HomePage() {
         </div>
 
         <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
-          <article className="rounded-2xl border-[0.5px] border-slate-200 bg-white p-6 text-center shadow-sm">
+          <article className="group relative rounded-2xl border-[0.5px] border-slate-200 bg-white p-6 text-center shadow-sm transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105 hover:border-[#1D9E75] hover:cursor-pointer">
+            <div className="absolute bottom-0 left-0 h-1 w-full scale-x-0 bg-gradient-to-r from-[#1D9E75] to-[#085041] transition-transform duration-300 ease-in-out group-hover:scale-x-100"></div>
             <svg
-              className="mx-auto h-10 w-10 text-[#1D9E75]"
+              className="mx-auto h-10 w-10 text-[#1D9E75] transition-transform duration-300 ease-in-out group-hover:animate-bounce"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -229,15 +230,16 @@ export default function HomePage() {
               <path d="M12 3l7 3v6c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V6l7-3z" />
               <path d="M8.5 12.2l2.2 2.2 4.8-4.8" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            <h3 className="mt-4 text-lg font-semibold text-[#085041]">Confiance</h3>
+            <h3 className="mt-4 text-lg font-semibold text-[#085041] transition-colors duration-300 ease-in-out group-hover:text-[#085041]">Confiance</h3>
             <p className="mt-2 text-sm text-slate-500">
               Votre voisin de confiance, recommandé par vos voisins
             </p>
           </article>
 
-          <article className="rounded-2xl border-[0.5px] border-slate-200 bg-white p-6 text-center shadow-sm">
+          <article className="group relative rounded-2xl border-[0.5px] border-slate-200 bg-white p-6 text-center shadow-sm transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105 hover:border-[#1D9E75] hover:cursor-pointer">
+            <div className="absolute bottom-0 left-0 h-1 w-full scale-x-0 bg-gradient-to-r from-[#1D9E75] to-[#085041] transition-transform duration-300 ease-in-out group-hover:scale-x-100"></div>
             <svg
-              className="mx-auto h-10 w-10 text-[#1D9E75]"
+              className="mx-auto h-10 w-10 text-[#1D9E75] transition-transform duration-300 ease-in-out group-hover:animate-bounce"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -246,29 +248,31 @@ export default function HomePage() {
               <path d="M12 22s7-6.2 7-12a7 7 0 10-14 0c0 5.8 7 12 7 12z" />
               <circle cx="12" cy="10" r="2.5" />
             </svg>
-            <h3 className="mt-4 text-lg font-semibold text-[#085041]">Proximité</h3>
+            <h3 className="mt-4 text-lg font-semibold text-[#085041] transition-colors duration-300 ease-in-out group-hover:text-[#085041]">Proximité</h3>
             <p className="mt-2 text-sm text-slate-500">
               Toujours près de vous, où que vous soyez en Fontenay Le Compte.
             </p>
           </article>
 
-          <article className="rounded-2xl border-[0.5px] border-slate-200 bg-white p-6 text-center shadow-sm">
+          <article className="group relative rounded-2xl border-[0.5px] border-slate-200 bg-white p-6 text-center shadow-sm transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105 hover:border-[#1D9E75] hover:cursor-pointer">
+            <div className="absolute bottom-0 left-0 h-1 w-full scale-x-0 bg-gradient-to-r from-[#1D9E75] to-[#085041] transition-transform duration-300 ease-in-out group-hover:scale-x-100"></div>
             <svg
-              className="mx-auto h-10 w-10 text-[#F59E0B]"
+              className="mx-auto h-10 w-10 text-[#F59E0B] transition-transform duration-300 ease-in-out group-hover:animate-bounce"
               viewBox="0 0 24 24"
               fill="currentColor"
             >
               <path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3.1-5.8 3.1 1.1-6.5L2.6 9.3l6.5-.9L12 2.5z" />
             </svg>
-            <h3 className="mt-4 text-lg font-semibold text-[#085041]">Qualité</h3>
+            <h3 className="mt-4 text-lg font-semibold text-[#085041] transition-colors duration-300 ease-in-out group-hover:text-[#085041]">Qualité</h3>
             <p className="mt-2 text-sm text-slate-500">
               Des services soignés, avec attention et professionnalisme
             </p>
           </article>
 
-          <article className="rounded-2xl border-[0.5px] border-slate-200 bg-white p-6 text-center shadow-sm">
+          <article className="group relative rounded-2xl border-[0.5px] border-slate-200 bg-white p-6 text-center shadow-sm transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105 hover:border-[#1D9E75] hover:cursor-pointer">
+            <div className="absolute bottom-0 left-0 h-1 w-full scale-x-0 bg-gradient-to-r from-[#1D9E75] to-[#085041] transition-transform duration-300 ease-in-out group-hover:scale-x-100"></div>
             <svg
-              className="mx-auto h-10 w-10 text-[#1D9E75]"
+              className="mx-auto h-10 w-10 text-[#1D9E75] transition-transform duration-300 ease-in-out group-hover:animate-bounce"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -277,7 +281,7 @@ export default function HomePage() {
               <circle cx="12" cy="12" r="8" />
               <path d="M12 7v5l3 2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            <h3 className="mt-4 text-lg font-semibold text-[#085041]">Disponibilité</h3>
+            <h3 className="mt-4 text-lg font-semibold text-[#085041] transition-colors duration-300 ease-in-out group-hover:text-[#085041]">Disponibilité</h3>
             <p className="mt-2 text-sm text-slate-500">
               7 jours sur 7, matin et soir, selon vos besoins
             </p>
