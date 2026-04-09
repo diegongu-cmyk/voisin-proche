@@ -176,3 +176,16 @@ function ReservationConfirmeeContent() {
     </div>
   );
 }
+
+export default function ReservationConfirmeePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-4">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 border-t-transparent"></div>
+        <p className="mt-4 text-green-600">Chargement...</p>
+      </div>
+    </div>}>
+      <ReservationConfirmeeContent />
+    </Suspense>
+  );
+}
