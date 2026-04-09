@@ -58,6 +58,15 @@ function BookingPageContent() {
 
   const [formErrors, setFormErrors] = useState<string[]>([]);
 
+  const serviceNameMap: Record<string, string> = {
+    "promenade": "Promenade de chiens",
+    "garde": "Garde d'animaux",
+    "accompagnement": "Accompagnement de personnes",
+    "courses": "Courses et commissions",
+    "menage": "Ménage maison/bureau",
+    "espagnol": "Cours d'espagnol"
+  };
+
   useEffect(() => {
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -66,7 +75,7 @@ function BookingPageContent() {
           .from('fidelite')
           .select('*')
           .eq('user_id', session.user.id)
-          .eq('service', service || '');
+          .eq('service', serviceNameMap[service || '']);
         if (fideliteData && fideliteData.length > 0) {
           const userCount = fideliteData[0].count;
           setHasDiscount(userCount > 0 && userCount % 7 === 0);
