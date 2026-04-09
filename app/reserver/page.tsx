@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
@@ -85,6 +85,7 @@ function BookingPageContent() {
           setHasDiscount(userCount > 0 && userCount % 7 === 0);
         }
       }
+      setIsAuthLoading(false);
     };
     checkSession();
   }, [service]);
