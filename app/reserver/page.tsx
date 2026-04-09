@@ -28,6 +28,8 @@ function BookingPageContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [showBankModal, setShowBankModal] = useState(false);
+  const [currentReservationId, setCurrentReservationId] = useState("");
   const [user, setUser] = useState<any>(null);
 
   // Promenade states
@@ -287,6 +289,7 @@ function BookingPageContent() {
       }
 
       const reservationId = insertedData?.id || '';
+      setCurrentReservationId(reservationId);
 
       // Send admin notification email
       await fetch('/api/send-email', {
@@ -343,8 +346,14 @@ function BookingPageContent() {
         }
       }
 
-      // Show modal only for non-card payments
-      if (paymentMethod !== "carte") {
+      // Show bank modal for virement
+      if (paymentMethod === "virement") {
+        setShowBankModal(true);
+        return;
+      }
+
+      // Show modal only for non-card payments (except virement)
+      if (paymentMethod !== "carte" && paymentMethod !== "virement") {
         setShowModal(true);
       }
 
@@ -882,6 +891,87 @@ function BookingPageContent() {
                 >
                   📱 Nous contacter maintenant sur WhatsApp
                 </a>
+                <a
+                  href="/mon-compte"
+                  className="rounded-xl border border-gray-300 bg-white px-6 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  Voir mes réservations
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de virement bancaire */}
+      {showBankModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm"></div>
+          <div className="relative z-50 mx-4 max-w-lg w-full rounded-2xl bg-white p-8 shadow-2xl">
+            <div className="text-center">
+              <div className="mb-6 text-6xl">🏦</div>
+              <h3 className="mb-4 text-2xl font-bold text-gray-900">Virement Bancaire</h3>
+              <p className="mb-6 text-gray-600">
+                Pour finaliser votre réservation, veuillez effectuer un virement 
+                vers le compte ci-dessous. Votre réservation sera confirmée 
+                dès réception du paiement.
+              </p>
+              
+              <div className="mb-6 rounded-xl bg-green-50 border-2 border-green-200 p-6">
+                <h4 className="mb-4 text-lg font-semibold text-green-800">Coordonnées bancaires</h4>
+                <div className="space-y-3 text-left">
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium text-gray-700">IBAN:</span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-sm bg-white px-3 py-1 rounded border border-green-300">
+                        FR76 1470 6001 4174 0175 5308 241
+                      </span>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText('FR76 1470 6001 4174 0175 5308 241');
+                          alert('IBAN copié dans le presse-papiers !');
+                        }}
+                        className="text-green-600 hover:text-green-700 transition-colors"
+                        title="Copier l'IBAN"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8v8z" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="font-medium text-gray-700">BIC:</span>
+                    <span className="font-mono text-sm">AGRIFRPP847</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="font-medium text-gray-700">Titulaire:</span>
+                    <span className="text-sm">Diego Leonardo Gutierrez Suarez</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium text-gray-700">Référence:</span>
+                    <span className="font-mono text-sm bg-yellow-100 px-3 py-1 rounded border border-yellow-300">
+                      Réservation #{currentReservationId || 'En attente'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <p className="text-sm text-blue-800">
+                  <strong>Important:</strong> La réservation sera confirmée 
+                  automatiquement dès que nous recevrons votre virement. 
+                  Le délai de traitement est généralement de 1-2 jours ouvrés.
+                </p>
+              </div>
+              
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={() => setShowBankModal(false)}
+                  className="rounded-xl bg-[#1D9E75] px-6 py-3 font-semibold text-white hover:bg-[#1a8a63] transition-colors"
+                >
+                  J'ai compris
+                </button>
                 <a
                   href="/mon-compte"
                   className="rounded-xl border border-gray-300 bg-white px-6 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
