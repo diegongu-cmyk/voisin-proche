@@ -1,17 +1,17 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
 const services = [
-  { id: "promenade", icon: "ðŸ•", name: "Promenade de chiens", price: "depuis 8â‚¬", description: "Nous promenons votre chien en toute sÃ©curitÃ© dans les environs de Fontenay-le-Comte. Chaque promenade est accompagnÃ©e de jeux, caresses et un peu d'exercice pour le bonheur de votre compagnon. Des photos seront envoyÃ©es sur votre WhatsApp pendant la promenade. Disponible en 30 min, 45 min ou 1 heure. Depuis 8â‚¬." },
-  { id: "garde", icon: "ðŸ¾", name: "Garde d'animaux", price: "depuis 12â‚¬/jour", description: "Nous gardons votre animal Ã  votre domicile pendant votre absence. Votre compagnon ne remarquera mÃªme pas votre absence ! Nous aimons les animaux et savons Ã  quel point ils sont importants dans nos familles. Le service comprend des visites rÃ©guliÃ¨res Ã  votre domicile et l'envoi de photos quotidiennes sur votre WhatsApp pour vous rassurer. Depuis 12â‚¬/jour." },
-  { id: "accompagnement", icon: "ðŸ¤", name: "Accompagnement de personnes", price: "depuis 12â‚¬/h", description: "Nous accompagnons vos proches pour leurs rendez-vous mÃ©dicaux, courses ou sorties. Nous pouvons Ã©galement Ãªtre simplement une prÃ©sence chaleureuse et bienveillante, en conversant sur des sujets agrÃ©ables, des cultures diffÃ©rentes et la vie en gÃ©nÃ©ral. Notre langue natale est l'espagnol, ce qui enrichit nos Ã©changes, et si nÃ©cessaire nous utilisons des traducteurs en ligne pour faciliter la communication. Si la personne ne connaÃ®t pas ce type de technologies, nous serons ravis de lui apprendre Ã  les utiliser. Disponible 7j/7. Depuis 12â‚¬/heure." },
-  { id: "courses", icon: "ðŸ›’", name: "Courses et commissions", price: "8â‚¬", description: "Nous effectuons vos courses et commissions dans le lieu de votre choix, de la maniÃ¨re la plus rapide possible. Le tarif de 8â‚¬ est valable pour une seule enseigne ou magasin. Si vous souhaitez des courses dans plusieurs magasins, le tarif sera ajustÃ© en consÃ©quence. Le montant des articles Ã  acheter reste Ã  la charge du client. Rapide, fiable et sans complications." },
-  { id: "menage", icon: "ðŸ§¹", name: "MÃ©nage maison/bureau", price: "depuis 22â‚¬", description: "Nous effectuons un nettoyage dÃ©taillÃ© et professionnel de votre domicile ou bureau. Nous respectons et prÃ©servons la vie privÃ©e de nos clients Ã  tout moment. Depuis 22â‚¬." },
-  { id: "espagnol", icon: "ðŸ‡ªðŸ‡¸", name: "Cours d'espagnol", price: "depuis 15â‚¬/h", description: "Nous proposons des cours particuliers d'espagnol pour tous les niveaux, des dÃ©butants aux avancÃ©s, aussi bien pour les enfants que pour les adultes. Notre langue natale est l'espagnol, ce qui garantit un enseignement authentique, naturel et chaleureux. Les cours s'adaptent entiÃ¨rement au rythme et aux besoins de chaque Ã©lÃ¨ve. Disponibles Ã  domicile ou en ligne selon votre prÃ©fÃ©rence. Vous apprendrez non seulement la langue mais aussi la culture, les expressions du quotidien et la richesse du monde hispanophone. Depuis 15â‚¬/heure." },
-  { id: "autre", icon: "âœ¨", name: "Autres services", price: "nous contacter", description: "Vous avez un besoin spÃ©cifique ? Contactez-nous et nous ferons notre possible pour vous aider." },
+  { id: "promenade", icon: "🐕", name: "Promenade de chiens", price: "depuis 8€", description: "Nous promenons votre chien en toute sécurité dans les environs de Fontenay-le-Comte. Chaque promenade est accompagnée de jeux, caresses et un peu d'exercice pour le bonheur de votre compagnon. Des photos seront envoyées sur votre WhatsApp pendant la promenade. Disponible en 30 min, 45 min ou 1 heure. Depuis 8€." },
+  { id: "garde", icon: "🐾", name: "Garde d'animaux", price: "depuis 12€/jour", description: "Nous gardons votre animal à votre domicile pendant votre absence. Votre compagnon ne remarquera même pas votre absence ! Nous aimons les animaux et savons à quel point ils sont importants dans nos familles. Le service comprend des visites régulières à votre domicile et l'envoi de photos quotidiennes sur votre WhatsApp pour vous rassurer. Depuis 12€/jour." },
+  { id: "accompagnement", icon: "🤝", name: "Accompagnement de personnes", price: "depuis 12€/h", description: "Nous accompagnons vos proches pour leurs rendez-vous médicaux, courses ou sorties. Nous pouvons également être simplement une présence chaleureuse et bienveillante, en conversant sur des sujets agréables, des cultures différentes et la vie en général. Notre langue natale est l'espagnol, ce qui enrichit nos échanges, et si nécessaire nous utilisons des traducteurs en ligne pour faciliter la communication. Si la personne ne connaît pas ce type de technologies, nous serons ravis de lui apprendre à les utiliser. Disponible 7j/7. Depuis 12€/heure." },
+  { id: "courses", icon: "🛒", name: "Courses et commissions", price: "8€", description: "Nous effectuons vos courses et commissions dans le lieu de votre choix, de la manière la plus rapide possible. Le tarif de 8€ est valable pour une seule enseigne ou magasin. Si vous souhaitez des courses dans plusieurs magasins, le tarif sera ajusté en conséquence. Le montant des articles à acheter reste à la charge du client. Rapide, fiable et sans complications." },
+  { id: "menage", icon: "🧹", name: "Ménage maison/bureau", price: "depuis 22€", description: "Nous effectuons un nettoyage détaillé et professionnel de votre domicile ou bureau. Nous respectons et préservons la vie privée de nos clients à tout moment. Depuis 22€." },
+  { id: "espagnol", icon: "🇪🇸", name: "Cours d'espagnol", price: "depuis 15€/h", description: "Nous proposons des cours particuliers d'espagnol pour tous les niveaux, des débutants aux avancés, aussi bien pour les enfants que pour les adultes. Notre langue natale est l'espagnol, ce qui garantit un enseignement authentique, naturel et chaleureux. Les cours s'adaptent entièrement au rythme et aux besoins de chaque élève. Disponibles à domicile ou en ligne selon votre préférence. Vous apprendrez non seulement la langue mais aussi la culture, les expressions du quotidien et la richesse du monde hispanophone. Depuis 15€/heure." },
+  { id: "autre", icon: "✨", name: "Autres services", price: "nous contacter", description: "Vous avez un besoin spécifique ? Contactez-nous et nous ferons notre possible pour vous aider." },
 ];
 
 function BookingPageContent() {
@@ -65,7 +65,7 @@ function BookingPageContent() {
     "garde": "Garde d'animaux",
     "accompagnement": "Accompagnement de personnes",
     "courses": "Courses et commissions",
-    "menage": "MÃ©nage maison/bureau",
+    "menage": "Ménage maison/bureau",
     "espagnol": "Cours d'espagnol"
   };
 
@@ -135,9 +135,9 @@ function BookingPageContent() {
     if (!dogName.trim()) errors.push("Le nom du chien est obligatoire");
     if (!dogBreed.trim()) errors.push("La race du chien est obligatoire");
     if (!dogSize) errors.push("La taille du chien est obligatoire");
-    if (!dogTemperament) errors.push("Le tempÃ©rament du chien est obligatoire");
+    if (!dogTemperament) errors.push("Le tempérament du chien est obligatoire");
     if (!dogSocialization) errors.push("L'entente avec autres chiens est obligatoire");
-    if (!walkDuration) errors.push("La durÃ©e de la promenade est obligatoire");
+    if (!walkDuration) errors.push("La durée de la promenade est obligatoire");
     return errors;
   };
 
@@ -146,8 +146,8 @@ function BookingPageContent() {
     if (!animalName.trim()) errors.push("Le nom de l'animal est obligatoire");
     if (!animalType) errors.push("Le type d'animal est obligatoire");
     if (animalType === "Chien" && !animalBreed.trim()) errors.push("La race du chien est obligatoire");
-    if (!animalAge) errors.push("L'Ã¢ge de l'animal est obligatoire");
-    if (!animalTemperament) errors.push("Le tempÃ©rament est obligatoire");
+    if (!animalAge) errors.push("L'âge de l'animal est obligatoire");
+    if (!animalTemperament) errors.push("Le tempérament est obligatoire");
     if (!gardeNbJours) errors.push("Le nombre de jours est obligatoire");
     return errors;
   };
@@ -168,12 +168,12 @@ function BookingPageContent() {
 
   const validateCommonForm = () => {
     const errors: string[] = [];
-    if (!fullName.trim()) errors.push("Le prÃ©nom et nom sont obligatoires");
-    if (!phone.trim()) errors.push("Le tÃ©lÃ©phone est obligatoire");
+    if (!fullName.trim()) errors.push("Le prénom et nom sont obligatoires");
+    if (!phone.trim()) errors.push("Le téléphone est obligatoire");
     if (!date.trim()) errors.push("La date est obligatoire");
     if (!time.trim()) errors.push("L'heure est obligatoire");
     if (!fullAddress.trim()) errors.push("L'adresse est obligatoire");
-    if (service !== "espagnol" && !paymentMethod) errors.push("La mÃ©thode de paiement est obligatoire");
+    if (service !== "espagnol" && !paymentMethod) errors.push("La méthode de paiement est obligatoire");
     return errors;
   };
 
@@ -190,14 +190,14 @@ function BookingPageContent() {
       const commonErrors = validateCommonForm();
       if (commonErrors.length > 0) {
         setFormErrors(commonErrors);
-        alert("Veuillez complÃ©ter tous les champs obligatoires:\n" + commonErrors.join("\n"));
+        alert("Veuillez compléter tous les champs obligatoires:\n" + commonErrors.join("\n"));
         return;
       }
 
       if (service === "promenade") {
         const errors = validatePromenadeForm();
         if (errors.length > 0) {
-          alert("Veuillez complÃ©ter tous les champs obligatoires:\n" + errors.join("\n"));
+          alert("Veuillez compléter tous les champs obligatoires:\n" + errors.join("\n"));
           return;
         }
       }
@@ -205,7 +205,7 @@ function BookingPageContent() {
       if (service === "garde") {
         const errors = validateGardeForm();
         if (errors.length > 0) {
-          alert("Veuillez complÃ©ter tous les champs obligatoires:\n" + errors.join("\n"));
+          alert("Veuillez compléter tous les champs obligatoires:\n" + errors.join("\n"));
           return;
         }
       }
@@ -213,7 +213,7 @@ function BookingPageContent() {
       if (service === "menage") {
         const errors = validateMenageForm();
         if (errors.length > 0) {
-          alert("Veuillez complÃ©ter tous les champs obligatoires:\n" + errors.join("\n"));
+          alert("Veuillez compléter tous les champs obligatoires:\n" + errors.join("\n"));
           return;
         }
       }
@@ -223,7 +223,7 @@ function BookingPageContent() {
         if (espagnolLieu || espagnolNiveau) {
           const errors = validateEspagnolForm();
           if (errors.length > 0) {
-            alert("Veuillez complÃ©ter tous les champs obligatoires:\n" + errors.join("\n"));
+            alert("Veuillez compléter tous les champs obligatoires:\n" + errors.join("\n"));
             return;
           }
         }
@@ -234,7 +234,7 @@ function BookingPageContent() {
       const { data: { session: session2 } } = await supabase.auth.getSession();
       const user = session2?.user || session?.user;
       if (!user) {
-        alert("Veuillez vous connecter pour rÃ©server");
+        alert("Veuillez vous connecter pour réserver");
         return;
       }
 
@@ -284,7 +284,7 @@ function BookingPageContent() {
 
       if (error) {
         console.error('Reservation error:', error);
-        alert("Erreur lors de la rÃ©servation: " + error.message);
+        alert("Erreur lors de la réservation: " + error.message);
         return;
       }
 
@@ -297,25 +297,25 @@ function BookingPageContent() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           to: 'diegongu@gmail.com',
-          subject: `? Nouvelle rÃ©servation ? ${currentService?.name}`,
+          subject: `? Nouvelle réservation ? ${currentService?.name}`,
           html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 2px solid #1D9E75; border-radius: 12px;">
-              <h1 style="color: #1D9E75; text-align: center;">? Nouvelle RÃ©servation</h1>
+              <h1 style="color: #1D9E75; text-align: center;">? Nouvelle Réservation</h1>
               <h2 style="color: #085041;">${currentService?.icon} ${currentService?.name}</h2>
               <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; margin: 15px 0;">
-                <h3 style="color: #085041; margin-top: 0;">? DÃ©tails du service</h3>
+                <h3 style="color: #085041; margin-top: 0;">? Détails du service</h3>
                 <p><strong>Service:</strong> ${currentService?.name}</p>
-                <p><strong>Date souhaitÃ©e:</strong> ${date}</p>
-                <p><strong>Heure souhaitÃ©e:</strong> ${time}</p>
-                <p><strong>Prix estimÃ©:</strong> ${precioFinal}?</p>
-                <p><strong>MÃ©thode de paiement:</strong> ${paymentMethod}</p>
-                <p><strong>ID RÃ©servation:</strong> ${reservationId}</p>
+                <p><strong>Date souhaitée:</strong> ${date}</p>
+                <p><strong>Heure souhaitée:</strong> ${time}</p>
+                <p><strong>Prix estimé:</strong> ${precioFinal}?</p>
+                <p><strong>Méthode de paiement:</strong> ${paymentMethod}</p>
+                <p><strong>ID Réservation:</strong> ${reservationId}</p>
               </div>
               <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin: 15px 0;">
-                <h3 style="color: #085041; margin-top: 0;">? CoordonnÃ©es du client</h3>
+                <h3 style="color: #085041; margin-top: 0;">? Coordonnées du client</h3>
                 <p><strong>Nom:</strong> ${fullName}</p>
                 <p><strong>Email:</strong> ${user.email}</p>
-                <p><strong>TÃ©lÃ©phone / WhatsApp:</strong> ${phone}</p>
+                <p><strong>Téléphone / WhatsApp:</strong> ${phone}</p>
                 <p><strong>Adresse:</strong> ${fullAddress}</p>
               </div>
               <div style="text-align: center; margin-top: 20px;">
@@ -359,7 +359,7 @@ function BookingPageContent() {
 
     } catch (err) {
       console.error('Exception:', err);
-      alert("Une erreur est survenue lors de la rÃ©servation");
+      alert("Une erreur est survenue lors de la réservation");
     } finally {
       setIsLoading(false);
     }
@@ -368,40 +368,26 @@ function BookingPageContent() {
   const getDisplayPrice = () => {
     if (service === "promenade" && walkDuration) {
       const base = calculatePromenadePrice(walkDuration);
-      return hasDiscount ? `${Math.round(base * 0.8)}â‚¬` : `${base}â‚¬`;
+      return hasDiscount ? `${Math.round(base * 0.8)}€` : `${base}€`;
     }
     if (service === "garde" && gardeNbJours) {
       const base = 15 * (parseInt(gardeNbJours) || 1);
-      return hasDiscount ? `${Math.round(base * 0.8)}â‚¬` : `${base}â‚¬`;
+      return hasDiscount ? `${Math.round(base * 0.8)}€` : `${base}€`;
     }
     if (service === "menage" && menageSize) {
       const base = calculateMenagePrice(menageSize);
-      return hasDiscount ? `${Math.round(base * 0.8)}â‚¬` : `${base}â‚¬`;
+      return hasDiscount ? `${Math.round(base * 0.8)}€` : `${base}€`;
     }
     return currentService?.price || '';
   };
 
-  if (!user) {
-    return (
-      <section className="rounded-3xl bg-[#FFFBF5] px-4 py-20 md:px-8">
-        <div className="flex items-center justify-center">
-          <div className="max-w-md w-full mx-4 rounded-2xl bg-[#085041] p-8 shadow-2xl text-white text-center">
-            <h2 className="mb-4 text-2xl font-bold">Connectez-vous pour réserver</h2>
-            <p className="mb-8 opacity-90">Vous devez être connecté pour effectuer une réservation.</p>
-            <a href="/login" className="block w-full rounded-xl bg-white text-[#1D9E75] px-6 py-3 font-semibold mb-3">Se connecter</a>
-            <a href="/register" className="block w-full rounded-xl border-2 border-white text-white px-6 py-3 font-semibold">Créer un compte</a>
-          </div>
-        </div>
-      </section>
-    );
-  }
   return (
     <section className="rounded-3xl bg-[#FFFBF5] px-4 py-8 md:px-8">
-      <h1 className="text-3xl font-extrabold text-slate-900">RÃ©server un service</h1>
-      <p className="mt-2 text-slate-600">Choisissez votre service puis complÃ©tez les dÃ©tails en 3 Ã©tapes.</p>
+      <h1 className="text-3xl font-extrabold text-slate-900">Réserver un service</h1>
+      <p className="mt-2 text-slate-600">Choisissez votre service puis complétez les détails en 3 étapes.</p>
 
       <div className="mt-6 grid gap-2 rounded-2xl bg-white p-3 md:grid-cols-3">
-        {["1. Service", "2. DÃ©tails", "3. Confirmation"].map((label, idx) => {
+        {["1. Service", "2. Détails", "3. Confirmation"].map((label, idx) => {
           const current = idx + 1;
           const active = step >= current;
           return (
@@ -455,7 +441,7 @@ function BookingPageContent() {
 
           {service === "promenade" && (
             <div className="mb-6 rounded-xl bg-green-50 border border-green-200 p-4">
-              <h3 className="text-lg font-bold text-green-800 mb-4">ðŸ• Informations sur votre chien</h3>
+              <h3 className="text-lg font-bold text-green-800 mb-4">🐕 Informations sur votre chien</h3>
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
                   <label className="mb-1 block text-sm font-medium text-slate-700">Nom du chien *</label>
@@ -468,16 +454,16 @@ function BookingPageContent() {
                 <div>
                   <label className="mb-1 block text-sm font-medium text-slate-700">Taille *</label>
                   <select required value={dogSize} onChange={(e) => setDogSize(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
-                    <option value="">SÃ©lectionner</option>
+                    <option value="">Sélectionner</option>
                     <option>Petit - moins de 10kg</option>
-                    <option>Moyen - 10 Ã  25kg</option>
+                    <option>Moyen - 10 à 25kg</option>
                     <option>Grand - plus de 25kg</option>
                   </select>
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-slate-700">TempÃ©rament *</label>
+                  <label className="mb-1 block text-sm font-medium text-slate-700">Tempérament *</label>
                   <select required value={dogTemperament} onChange={(e) => setDogTemperament(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
-                    <option value="">SÃ©lectionner</option>
+                    <option value="">Sélectionner</option>
                     <option>Calme</option>
                     <option>Joueur</option>
                     <option>Nerveux</option>
@@ -487,19 +473,19 @@ function BookingPageContent() {
                 <div>
                   <label className="mb-1 block text-sm font-medium text-slate-700">Entente avec autres chiens *</label>
                   <select required value={dogSocialization} onChange={(e) => setDogSocialization(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
-                    <option value="">SÃ©lectionner</option>
-                    <option>Oui, trÃ¨s sociable</option>
-                    <option>Oui, mais supervisÃ©</option>
-                    <option>Non, prÃ©fÃ¨re Ãªtre seul</option>
+                    <option value="">Sélectionner</option>
+                    <option>Oui, très sociable</option>
+                    <option>Oui, mais supervisé</option>
+                    <option>Non, préfère être seul</option>
                   </select>
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-slate-700">DurÃ©e de la promenade *</label>
+                  <label className="mb-1 block text-sm font-medium text-slate-700">Durée de la promenade *</label>
                   <select required value={walkDuration} onChange={(e) => setWalkDuration(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
-                    <option value="">SÃ©lectionner</option>
-                    <option value="30 minutes">30 minutes - 8â‚¬</option>
-                    <option value="45 minutes">45 minutes - 10â‚¬</option>
-                    <option value="1 heure">1 heure - 12â‚¬</option>
+                    <option value="">Sélectionner</option>
+                    <option value="30 minutes">30 minutes - 8€</option>
+                    <option value="45 minutes">45 minutes - 10€</option>
+                    <option value="1 heure">1 heure - 12€</option>
                   </select>
                 </div>
               </div>
@@ -508,7 +494,7 @@ function BookingPageContent() {
 
           {service === "garde" && (
             <div className="mb-6 rounded-xl bg-green-50 border border-green-200 p-4">
-              <h3 className="text-lg font-bold text-green-800 mb-4">ðŸ¾ Informations sur votre animal</h3>
+              <h3 className="text-lg font-bold text-green-800 mb-4">🐾 Informations sur votre animal</h3>
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
                   <label className="mb-1 block text-sm font-medium text-slate-700">Nom de l'animal *</label>
@@ -517,7 +503,7 @@ function BookingPageContent() {
                 <div>
                   <label className="mb-1 block text-sm font-medium text-slate-700">Type d'animal *</label>
                   <select required value={animalType} onChange={(e) => setAnimalType(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
-                    <option value="">SÃ©lectionner</option>
+                    <option value="">Sélectionner</option>
                     <option>Chien</option>
                     <option>Chat</option>
                     <option>Oiseau</option>
@@ -532,19 +518,19 @@ function BookingPageContent() {
                   </div>
                 )}
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-slate-700">Ã‚ge de l'animal *</label>
+                  <label className="mb-1 block text-sm font-medium text-slate-700">Âge de l'animal *</label>
                   <select required value={animalAge} onChange={(e) => setAnimalAge(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
-                    <option value="">SÃ©lectionner</option>
+                    <option value="">Sélectionner</option>
                     <option>Moins de 1 an</option>
-                    <option>1 Ã  3 ans</option>
-                    <option>3 Ã  7 ans</option>
+                    <option>1 à 3 ans</option>
+                    <option>3 à 7 ans</option>
                     <option>Plus de 7 ans</option>
                   </select>
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-slate-700">TempÃ©rament *</label>
+                  <label className="mb-1 block text-sm font-medium text-slate-700">Tempérament *</label>
                   <select required value={animalTemperament} onChange={(e) => setAnimalTemperament(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
-                    <option value="">SÃ©lectionner</option>
+                    <option value="">Sélectionner</option>
                     <option>Calme</option>
                     <option>Joueur</option>
                     <option>Nerveux</option>
@@ -558,7 +544,7 @@ function BookingPageContent() {
               </div>
               {gardeNbJours && (
                 <p className="mt-3 text-sm font-semibold text-green-700">
-                  Prix estimÃ©: {hasDiscount ? Math.round(15 * (parseInt(gardeNbJours) || 1) * 0.8) : 15 * (parseInt(gardeNbJours) || 1)}â‚¬ ({gardeNbJours} jour(s) Ã  12â‚¬/jour{hasDiscount ? " avec -20% fidÃ©litÃ©" : ""})
+                  Prix estimé: {hasDiscount ? Math.round(15 * (parseInt(gardeNbJours) || 1) * 0.8) : 15 * (parseInt(gardeNbJours) || 1)}€ ({gardeNbJours} jour(s) à 12€/jour{hasDiscount ? " avec -20% fidélité" : ""})
                 </p>
               )}
             </div>
@@ -566,24 +552,24 @@ function BookingPageContent() {
 
           {service === "menage" && (
             <div className="mb-6 rounded-xl bg-green-50 border border-green-200 p-4">
-              <h3 className="text-lg font-bold text-green-800 mb-4">ðŸ§¹ Informations sur le mÃ©nage</h3>
+              <h3 className="text-lg font-bold text-green-800 mb-4">🧹 Informations sur le ménage</h3>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="md:col-span-2">
                   <label className="mb-1 block text-sm font-medium text-slate-700">Type d'espace *</label>
                   <select required value={menageType} onChange={(e) => {
                     setMenageType(e.target.value);
-                    if (["Studio / Appartement 1 piÃ¨ce", "Bureau petit"].includes(e.target.value)) {
+                    if (["Studio / Appartement 1 pièce", "Bureau petit"].includes(e.target.value)) {
                       setMenageSize("Petit");
-                    } else if (["Appartement 2 piÃ¨ces", "Appartement 3 piÃ¨ces ou plus", "Maison petite (1-2 chambres)", "Bureau moyen"].includes(e.target.value)) {
+                    } else if (["Appartement 2 pièces", "Appartement 3 pièces ou plus", "Maison petite (1-2 chambres)", "Bureau moyen"].includes(e.target.value)) {
                       setMenageSize("Moyen");
                     } else if (["Maison moyenne (3 chambres)", "Maison grande (4 chambres ou plus)", "Bureau grand"].includes(e.target.value)) {
                       setMenageSize("Grand");
                     }
                   }} className="w-full rounded-lg border border-slate-300 px-3 py-2">
-                    <option value="">SÃ©lectionner</option>
-                    <option>Studio / Appartement 1 piÃ¨ce</option>
-                    <option>Appartement 2 piÃ¨ces</option>
-                    <option>Appartement 3 piÃ¨ces ou plus</option>
+                    <option value="">Sélectionner</option>
+                    <option>Studio / Appartement 1 pièce</option>
+                    <option>Appartement 2 pièces</option>
+                    <option>Appartement 3 pièces ou plus</option>
                     <option>Maison petite (1-2 chambres)</option>
                     <option>Maison moyenne (3 chambres)</option>
                     <option>Maison grande (4 chambres ou plus)</option>
@@ -595,9 +581,9 @@ function BookingPageContent() {
               </div>
               {menageSize && (
                 <p className="mt-3 text-sm font-semibold text-green-700">
-                  {menageSize === "Petit" && `Prix estimÃ©: ${hasDiscount ? Math.round(22 * 0.8) : 22}â‚¬ (2h minimum Ã  11â‚¬/h)`}
-                  {menageSize === "Moyen" && `Prix estimÃ©: ${hasDiscount ? Math.round(33 * 0.8) : 33}â‚¬ (3h minimum Ã  11â‚¬/h)`}
-                  {menageSize === "Grand" && `Prix estimÃ©: ${hasDiscount ? Math.round(55 * 0.8) : 55}â‚¬ (5h minimum Ã  11â‚¬/h)`}
+                  {menageSize === "Petit" && `Prix estimé: ${hasDiscount ? Math.round(22 * 0.8) : 22}€ (2h minimum à 11€/h)`}
+                  {menageSize === "Moyen" && `Prix estimé: ${hasDiscount ? Math.round(33 * 0.8) : 33}€ (3h minimum à 11€/h)`}
+                  {menageSize === "Grand" && `Prix estimé: ${hasDiscount ? Math.round(55 * 0.8) : 55}€ (5h minimum à 11€/h)`}
                 </p>
               )}
             </div>
@@ -605,27 +591,27 @@ function BookingPageContent() {
 
           {service === "espagnol" && (
             <div className="mb-6 rounded-xl bg-green-50 border border-green-200 p-4">
-              <h3 className="text-lg font-bold text-green-800 mb-4">ðŸ‡ªðŸ‡¸ Informations sur le cours</h3>
+              <h3 className="text-lg font-bold text-green-800 mb-4">🇪🇸 Informations sur le cours</h3>
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
                   <label className="mb-1 block text-sm font-medium text-slate-700">Lieu du cours *</label>
                   <select required value={espagnolLieu} onChange={(e) => setEspagnolLieu(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
-                    <option value="">SÃ©lectionner</option>
-                    <option>Ã€ domicile (chez vous)</option>
-                    <option>En extÃ©rieur â€” Parc</option>
-                    <option>En extÃ©rieur â€” Promenade / Marche</option>
-                    <option>En ligne (visioconfÃ©rence)</option>
-                    <option>Ã€ dÃ©finir ensemble</option>
+                    <option value="">Sélectionner</option>
+                    <option>À domicile (chez vous)</option>
+                    <option>En extérieur — Parc</option>
+                    <option>En extérieur — Promenade / Marche</option>
+                    <option>En ligne (visioconférence)</option>
+                    <option>À définir ensemble</option>
                   </select>
                 </div>
                 <div>
                   <label className="mb-1 block text-sm font-medium text-slate-700">Niveau d'espagnol *</label>
                   <select required value={espagnolNiveau} onChange={(e) => setEspagnolNiveau(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
-                    <option value="">SÃ©lectionner</option>
-                    <option>DÃ©butant (aucune connaissance)</option>
-                    <option>Ã‰lÃ©mentaire (quelques bases)</option>
-                    <option>IntermÃ©diaire (conversations simples)</option>
-                    <option>AvancÃ© (bonne maÃ®trise)</option>
+                    <option value="">Sélectionner</option>
+                    <option>Débutant (aucune connaissance)</option>
+                    <option>Élémentaire (quelques bases)</option>
+                    <option>Intermédiaire (conversations simples)</option>
+                    <option>Avancé (bonne maîtrise)</option>
                   </select>
                 </div>
               </div>
@@ -633,18 +619,18 @@ function BookingPageContent() {
           )}
 
           <div className="rounded-xl bg-slate-50 border border-slate-200 p-4">
-            <h3 className="text-lg font-bold text-slate-800 mb-4">ðŸ‘¤ Vos coordonnÃ©es</h3>
+            <h3 className="text-lg font-bold text-slate-800 mb-4">👤 Vos coordonnées</h3>
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">PrÃ©nom et Nom *</label>
+                <label className="mb-1 block text-sm font-medium text-slate-700">Prénom et Nom *</label>
                 <input type="text" required value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
               </div>
               <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">TÃ©lÃ©phone WhatsApp *</label>
+                <label className="mb-1 block text-sm font-medium text-slate-700">Téléphone WhatsApp *</label>
                 <input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
               </div>
               <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">Date souhaitÃ©e *</label>
+                <label className="mb-1 block text-sm font-medium text-slate-700">Date souhaitée *</label>
                 <div className="relative">
                   <input 
                     type="date" 
@@ -663,7 +649,7 @@ function BookingPageContent() {
                 </div>
               </div>
               <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">Heure souhaitÃ©e *</label>
+                <label className="mb-1 block text-sm font-medium text-slate-700">Heure souhaitée *</label>
                 <select required value={time} onChange={(e) => setTime(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
                   <option value="">Choisir une heure</option>
                   <option>8h00</option><option>8h30</option><option>9h00</option>
@@ -677,7 +663,7 @@ function BookingPageContent() {
                 </select>
               </div>
               <div className="md:col-span-2">
-                <label className="mb-1 block text-sm font-medium text-slate-700">Adresse Ã  Fontenay-le-Comte *</label>
+                <label className="mb-1 block text-sm font-medium text-slate-700">Adresse à Fontenay-le-Comte *</label>
                 <input type="text" required value={fullAddress} onChange={(e) => setFullAddress(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
               </div>
               <div className="md:col-span-2">
@@ -689,10 +675,10 @@ function BookingPageContent() {
                 <div className="md:col-span-2">
                   <div className="mt-4 rounded-xl border border-yellow-200 bg-yellow-50 p-4">
                     <p className="text-sm text-yellow-800">
-                      ï¿½ <strong>Information tarif:</strong> Le tarif minimum 
-                      est de 12â‚¬/jour. Le prix final sera Ã©tabli selon la durÃ©e, 
-                      le type d'animal et vos besoins spÃ©cifiques. Nous vous 
-                      contacterons via WhatsApp aprÃ¨s rÃ©ception de votre demande.
+                      � <strong>Information tarif:</strong> Le tarif minimum 
+                      est de 12€/jour. Le prix final sera établi selon la durée, 
+                      le type d'animal et vos besoins spécifiques. Nous vous 
+                      contacterons via WhatsApp après réception de votre demande.
                     </p>
                   </div>
                 </div>
@@ -700,12 +686,12 @@ function BookingPageContent() {
               
               {service !== "garde" && (
                 <div className="md:col-span-2">
-                  <label className="mb-1 block text-sm font-medium text-slate-700">ðŸ’³ MÃ©thode de paiement prÃ©fÃ©rÃ©e *</label>
+                  <label className="mb-1 block text-sm font-medium text-slate-700">💳 Méthode de paiement préférée *</label>
                   <select required value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
-                    <option value="">SÃ©lectionner</option>
-                    <option value="carte">ðŸ’³ Paiement en ligne (Stripe)</option>
-                    <option value="especes">ðŸ’µ EspÃ¨ces (cash)</option>
-                    <option value="virement">ðŸ¦ Virement bancaire</option>
+                    <option value="">Sélectionner</option>
+                    <option value="carte">💳 Paiement en ligne (Stripe)</option>
+                    <option value="especes">💵 Espèces (cash)</option>
+                    <option value="virement">🏦 Virement bancaire</option>
                   </select>
                 </div>
               )}
@@ -722,18 +708,18 @@ function BookingPageContent() {
       {step === 3 && service && (
         <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
           <h2 className="text-xl font-bold text-slate-900">Confirmation</h2>
-          <p className="mt-1 text-sm text-slate-600">VÃ©rifiez les informations avant validation.</p>
+          <p className="mt-1 text-sm text-slate-600">Vérifiez les informations avant validation.</p>
 
           <div className="mt-5 space-y-5 text-sm text-slate-700">
             <div className="rounded-xl border border-slate-200 bg-[#1D9E75]/10 p-4">
               <h3 className="text-base font-extrabold text-slate-900">
-                {service === "garde" ? "ðŸ’› Tarif" : "Prix estimÃ©"}
+                {service === "garde" ? "💛 Tarif" : "Prix estimé"}
               </h3>
               {service === "garde" ? (
                 <div className="rounded-xl border border-yellow-200 bg-yellow-50 p-4">
                   <p className="text-sm text-yellow-800">
-                    ðŸ’› <strong>Tarif:</strong> Ã€ partir de 12â‚¬/jour â€” 
-                    Prix final confirmÃ© par WhatsApp
+                    💛 <strong>Tarif:</strong> À partir de 12€/jour — 
+                    Prix final confirmé par WhatsApp
                   </p>
                 </div>
               ) : (
@@ -742,8 +728,8 @@ function BookingPageContent() {
                     {hasDiscount ? (
                       <>
                         <span className="line-through text-gray-400 text-lg">{
-                          service === "promenade" && walkDuration ? `${calculatePromenadePrice(walkDuration)}â‚¬` :
-                          service === "menage" && menageSize ? `${calculateMenagePrice(menageSize)}â‚¬` :
+                          service === "promenade" && walkDuration ? `${calculatePromenadePrice(walkDuration)}€` :
+                          service === "menage" && menageSize ? `${calculateMenagePrice(menageSize)}€` :
                           currentService?.price
                         }</span>
                         <span className="ml-2 text-xl font-bold text-[#F59E0B]">{getDisplayPrice()}</span>
@@ -754,27 +740,27 @@ function BookingPageContent() {
                   </p>
                   {hasDiscount && (
                     <span className="inline-flex animate-pulse rounded-full bg-[#F59E0B] px-3 py-1 text-sm font-bold text-white">
-                      ðŸŽ -20% fidÃ©litÃ© appliquÃ© !
+                      🎁 -20% fidélité appliqué !
                     </span>
                   )}
                 </div>
               )}
-              <p className="mt-1 text-sm text-slate-700">Le prix final sera confirmÃ© lors de notre prise de contact</p>
+              <p className="mt-1 text-sm text-slate-700">Le prix final sera confirmé lors de notre prise de contact</p>
             </div>
 
             <div className="border-b border-slate-200 pb-4">
-              <h3 className="text-base font-extrabold text-slate-900">Vos coordonnÃ©es</h3>
+              <h3 className="text-base font-extrabold text-slate-900">Vos coordonnées</h3>
               <div className="mt-2 space-y-1">
-                <p><span className="font-semibold">PrÃ©nom et Nom:</span> {fullName || "Non renseignÃ©"}</p>
-                <p><span className="font-semibold">Email:</span> {user?.email || "Non renseignÃ©"}</p>
-                <p><span className="font-semibold">TÃ©lÃ©phone:</span> {phone || "Non renseignÃ©"}</p>
-                <p><span className="font-semibold">Adresse:</span> {fullAddress || "Non renseignÃ©e"}</p>
-                <p><span className="font-semibold">Date et heure:</span> {date || "Non renseignÃ©e"} Ã  {time}</p>
-                <p><span className="font-semibold">MÃ©thode de paiement:</span> {
-                  service === "garde" ? "?? Prix Ã  confirmer par WhatsApp" :
+                <p><span className="font-semibold">Prénom et Nom:</span> {fullName || "Non renseigné"}</p>
+                <p><span className="font-semibold">Email:</span> {user?.email || "Non renseigné"}</p>
+                <p><span className="font-semibold">Téléphone:</span> {phone || "Non renseigné"}</p>
+                <p><span className="font-semibold">Adresse:</span> {fullAddress || "Non renseignée"}</p>
+                <p><span className="font-semibold">Date et heure:</span> {date || "Non renseignée"} à {time}</p>
+                <p><span className="font-semibold">Méthode de paiement:</span> {
+                  service === "garde" ? "?? Prix à confirmer par WhatsApp" :
                   paymentMethod === "carte" ? "?? Paiement en ligne (Stripe)" :
-                  paymentMethod === "especes" ? "?? EspÃ¨ces (cash)" :
-                  paymentMethod === "virement" ? "?? Virement bancaire" : "Non renseignÃ©e"
+                  paymentMethod === "especes" ? "?? Espèces (cash)" :
+                  paymentMethod === "virement" ? "?? Virement bancaire" : "Non renseignée"
                 }</p>
                 {notes && <p><span className="font-semibold">Notes:</span> {notes}</p>}
               </div>
@@ -784,12 +770,12 @@ function BookingPageContent() {
               <div className="border-b border-slate-200 pb-4">
                 <h3 className="text-base font-extrabold text-slate-900">Informations du chien</h3>
                 <div className="mt-2 space-y-1">
-                  <p><span className="font-semibold">Nom du chien:</span> {dogName || "Non renseignÃ©"}</p>
-                  <p><span className="font-semibold">Race:</span> {dogBreed || "Non renseignÃ©e"}</p>
-                  <p><span className="font-semibold">Taille:</span> {dogSize || "Non renseignÃ©e"}</p>
-                  <p><span className="font-semibold">TempÃ©rament:</span> {dogTemperament || "Non renseignÃ©"}</p>
-                  <p><span className="font-semibold">Entente avec autres chiens:</span> {dogSocialization || "Non renseignÃ©"}</p>
-                  <p><span className="font-semibold">DurÃ©e de la promenade:</span> {walkDuration || "Non renseignÃ©e"}</p>
+                  <p><span className="font-semibold">Nom du chien:</span> {dogName || "Non renseigné"}</p>
+                  <p><span className="font-semibold">Race:</span> {dogBreed || "Non renseignée"}</p>
+                  <p><span className="font-semibold">Taille:</span> {dogSize || "Non renseignée"}</p>
+                  <p><span className="font-semibold">Tempérament:</span> {dogTemperament || "Non renseigné"}</p>
+                  <p><span className="font-semibold">Entente avec autres chiens:</span> {dogSocialization || "Non renseigné"}</p>
+                  <p><span className="font-semibold">Durée de la promenade:</span> {walkDuration || "Non renseignée"}</p>
                 </div>
               </div>
             )}
@@ -798,12 +784,12 @@ function BookingPageContent() {
               <div className="border-b border-slate-200 pb-4">
                 <h3 className="text-base font-extrabold text-slate-900">Informations de l'animal</h3>
                 <div className="mt-2 space-y-1">
-                  <p><span className="font-semibold">Nom:</span> {animalName || "Non renseignÃ©"}</p>
-                  <p><span className="font-semibold">Type:</span> {animalType || "Non renseignÃ©"}</p>
-                  {animalType === "Chien" && <p><span className="font-semibold">Race:</span> {animalBreed || "Non renseignÃ©e"}</p>}
-                  <p><span className="font-semibold">Ã‚ge:</span> {animalAge || "Non renseignÃ©"}</p>
-                  <p><span className="font-semibold">TempÃ©rament:</span> {animalTemperament || "Non renseignÃ©"}</p>
-                  <p><span className="font-semibold">Nombre de jours:</span> {gardeNbJours || "Non renseignÃ©"}</p>
+                  <p><span className="font-semibold">Nom:</span> {animalName || "Non renseigné"}</p>
+                  <p><span className="font-semibold">Type:</span> {animalType || "Non renseigné"}</p>
+                  {animalType === "Chien" && <p><span className="font-semibold">Race:</span> {animalBreed || "Non renseignée"}</p>}
+                  <p><span className="font-semibold">Âge:</span> {animalAge || "Non renseigné"}</p>
+                  <p><span className="font-semibold">Tempérament:</span> {animalTemperament || "Non renseigné"}</p>
+                  <p><span className="font-semibold">Nombre de jours:</span> {gardeNbJours || "Non renseigné"}</p>
                 </div>
               </div>
             )}
@@ -812,24 +798,24 @@ function BookingPageContent() {
               <div className="border-b border-slate-200 pb-4">
                 <h3 className="text-base font-extrabold text-slate-900">Informations sur le cours</h3>
                 <div className="mt-2 space-y-1">
-                  <p><span className="font-semibold">Lieu du cours:</span> {espagnolLieu || "Non renseignÃ©"}</p>
-                  <p><span className="font-semibold">Niveau d'espagnol:</span> {espagnolNiveau || "Non renseignÃ©"}</p>
+                  <p><span className="font-semibold">Lieu du cours:</span> {espagnolLieu || "Non renseigné"}</p>
+                  <p><span className="font-semibold">Niveau d'espagnol:</span> {espagnolNiveau || "Non renseigné"}</p>
                 </div>
               </div>
             )}
 
             {service === "menage" && (
               <div className="border-b border-slate-200 pb-4">
-                <h3 className="text-base font-extrabold text-slate-900">Informations du mÃ©nage</h3>
+                <h3 className="text-base font-extrabold text-slate-900">Informations du ménage</h3>
                 <div className="mt-2 space-y-1">
-                  <p><span className="font-semibold">Type d'espace:</span> {menageType || "Non renseignÃ©"}</p>
-                  <p><span className="font-semibold">Taille:</span> {menageSize || "Non renseignÃ©e"}</p>
+                  <p><span className="font-semibold">Type d'espace:</span> {menageType || "Non renseigné"}</p>
+                  <p><span className="font-semibold">Taille:</span> {menageSize || "Non renseignée"}</p>
                 </div>
               </div>
             )}
 
             <div className="border-b border-slate-200 pb-4">
-              <h3 className="text-base font-extrabold text-slate-900">Votre rÃ©servation</h3>
+              <h3 className="text-base font-extrabold text-slate-900">Votre réservation</h3>
               <div className="mt-2">
                 <p className="flex items-center gap-2">
                   <span className="font-semibold">Service choisi:</span>
@@ -843,24 +829,24 @@ function BookingPageContent() {
 
           <div className="mt-5 rounded-xl border border-[#1D9E75] bg-[#E1F5EE] p-4 text-[#085041]">
             <h3 className="text-base font-extrabold">
-              {service === "garde" ? "ðŸ’› Confirmation de rÃ©servation" : 
-               paymentMethod === "carte" ? "ðŸ’³ Paiement sÃ©curisÃ©" : "âœ… Confirmation de rÃ©servation"}
+              {service === "garde" ? "💛 Confirmation de réservation" : 
+               paymentMethod === "carte" ? "💳 Paiement sécurisé" : "✅ Confirmation de réservation"}
             </h3>
             <p className="mt-2 text-sm">
               {service === "garde"
-                ? "Votre rÃ©servation sera confirmÃ©e dans les 15 prochaines minutes via WhatsApp."
+                ? "Votre réservation sera confirmée dans les 15 prochaines minutes via WhatsApp."
                 : paymentMethod === "carte"
-                ? "AprÃ¨s confirmation, vous serez redirigÃ© vers notre page de paiement sÃ©curisÃ© Stripe."
-                : "Votre rÃ©servation sera confirmÃ©e dans les 15 prochaines minutes."}
+                ? "Après confirmation, vous serez redirigé vers notre page de paiement sécurisé Stripe."
+                : "Votre réservation sera confirmée dans les 15 prochaines minutes."}
             </p>
           </div>
 
           <div className="mt-5 rounded-xl border border-blue-200 bg-blue-50 p-4">
             <p className="text-sm text-blue-800">
-              âš ï¸ <strong>Important:</strong> Votre rÃ©servation est soumise 
-              Ã  confirmation de notre part. AprÃ¨s envoi de votre demande, 
-              nous vous contacterons via WhatsApp dans les plus brefs dÃ©lais 
-              pour finaliser les dÃ©tails et confirmer le service.
+              ⚠️ <strong>Important:</strong> Votre réservation est soumise 
+              à confirmation de notre part. Après envoi de votre demande, 
+              nous vous contacterons via WhatsApp dans les plus brefs délais 
+              pour finaliser les détails et confirmer le service.
             </p>
           </div>
 
@@ -874,7 +860,7 @@ function BookingPageContent() {
               disabled={isLoading}
               className="rounded-lg bg-[#1D9E75] px-5 py-2 font-semibold text-white hover:bg-[#1a8a63] transition-colors disabled:opacity-50"
             >
-              {isLoading ? "Confirmation en cours..." : paymentMethod === "carte" ? "Confirmer et payer" : "Confirmer la rÃ©servation"}
+              {isLoading ? "Confirmation en cours..." : paymentMethod === "carte" ? "Confirmer et payer" : "Confirmer la réservation"}
             </button>
           </div>
         </div>
@@ -886,14 +872,14 @@ function BookingPageContent() {
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm"></div>
           <div className="relative z-50 mx-4 max-w-md rounded-2xl bg-white p-6 shadow-2xl">
             <div className="text-center">
-              <div className="mb-4 text-6xl">âœ…</div>
-              <h3 className="mb-2 text-2xl font-bold text-gray-900">Demande reÃ§ue !</h3>
+              <div className="mb-4 text-6xl">✅</div>
+              <h3 className="mb-2 text-2xl font-bold text-gray-900">Demande reçue !</h3>
               <p className="mb-6 text-gray-600">
-                Votre demande de rÃ©servation a bien Ã©tÃ© reÃ§ue. 
+                Votre demande de réservation a bien été reçue. 
                 Nous vous contacterons via WhatsApp dans les prochaines 
-                minutes pour finaliser les dÃ©tails et Ã©tablir le prix dÃ©finitif.
+                minutes pour finaliser les détails et établir le prix définitif.
                 
-                Merci de votre confiance ! ðŸ™
+                Merci de votre confiance ! 🙏
               </p>
               
               <div className="flex flex-col gap-3">
@@ -903,13 +889,13 @@ function BookingPageContent() {
                   rel="noopener noreferrer"
                   className="rounded-xl bg-green-600 px-6 py-3 font-semibold text-white hover:bg-green-700 transition-colors"
                 >
-                  ðŸ“± Nous contacter maintenant sur WhatsApp
+                  📱 Nous contacter maintenant sur WhatsApp
                 </a>
                 <a
                   href="/mon-compte"
                   className="rounded-xl border border-gray-300 bg-white px-6 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
                 >
-                  Voir mes rÃ©servations
+                  Voir mes réservations
                 </a>
               </div>
             </div>
@@ -923,15 +909,15 @@ function BookingPageContent() {
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm"></div>
           <div className="relative z-50 mx-4 max-w-lg w-full rounded-2xl bg-white p-8 shadow-2xl">
             <div className="text-center">
-              <div className="mb-6 text-6xl">ðŸ¦</div>
+              <div className="mb-6 text-6xl">🏦</div>
               <h3 className="mb-4 text-2xl font-bold text-gray-900">Virement Bancaire</h3>
               <p className="mb-6 text-gray-600">
                 Veuillez effectuer un virement vers le compte ci-dessous 
-                en indiquant bien la rÃ©fÃ©rence dans le motif.
+                en indiquant bien la référence dans le motif.
               </p>
               
               <div className="mb-6 rounded-xl bg-green-50 border-2 border-green-200 p-6">
-                <h4 className="mb-4 text-lg font-semibold text-green-800">CoordonnÃ©es bancaires</h4>
+                <h4 className="mb-4 text-lg font-semibold text-green-800">Coordonnées bancaires</h4>
                 <div className="space-y-3 text-left">
                   <div className="flex justify-between items-center">
                     <span className="font-medium text-gray-700">IBAN:</span>
@@ -942,7 +928,7 @@ function BookingPageContent() {
                       <button
                         onClick={() => {
                           navigator.clipboard.writeText('FR76 1470 6001 4174 0175 5308 241');
-                          alert('IBAN copiÃ© dans le presse-papiers !');
+                          alert('IBAN copié dans le presse-papiers !');
                         }}
                         className="text-green-600 hover:text-green-700 transition-colors"
                         title="Copier l'IBAN"
@@ -962,7 +948,7 @@ function BookingPageContent() {
                     <span className="text-sm">Diego Leonardo Gutierrez Suarez</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="font-medium text-gray-700">RÃ©fÃ©rence:</span>
+                    <span className="font-medium text-gray-700">Référence:</span>
                     <span className="font-mono text-sm bg-yellow-100 px-3 py-1 rounded border border-yellow-300">
                       VP-{currentReservationId ? currentReservationId.substring(0, 8) : 'En attente'}
                     </span>
@@ -972,7 +958,7 @@ function BookingPageContent() {
               
               <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
                 <p className="text-sm text-blue-800">
-                  <strong>Important:</strong> Une fois votre virement effectuÃ©, nous confirmerons votre rÃ©servation dans les plus brefs dÃ©lais. Merci de bien indiquer la rÃ©fÃ©rence ci-dessus dans le motif du virement.
+                  <strong>Important:</strong> Une fois votre virement effectué, nous confirmerons votre réservation dans les plus brefs délais. Merci de bien indiquer la référence ci-dessus dans le motif du virement.
                 </p>
               </div>
               
@@ -987,7 +973,7 @@ function BookingPageContent() {
                   href="/mon-compte"
                   className="rounded-xl border border-gray-300 bg-white px-6 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
                 >
-                  Voir mes rÃ©servations
+                  Voir mes réservations
                 </a>
               </div>
             </div>
