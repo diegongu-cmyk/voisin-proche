@@ -1,10 +1,13 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function ReservationConfirmeePage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const [paymentIntentId, setPaymentIntentId] = useState<string>("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Add entrance animations
@@ -13,6 +16,19 @@ export default function ReservationConfirmeePage() {
     }, 100);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    // Capture payment_intent_id from URL if payment was completed
+    const sessionId = searchParams.get('session_id');
+    const reservationId = searchParams.get('reservation_id');
+    
+    if (sessionId) {
+      // In a real implementation, you would fetch the session from Stripe
+      // to get the payment_intent_id. For now, we'll use the session_id as a placeholder
+      setPaymentIntentId(sessionId);
+    }
+    setLoading(false);
+  }, [searchParams]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-4">
@@ -83,6 +99,25 @@ export default function ReservationConfirmeePage() {
               votre service dans les 15 prochaines minutes.
             </p>
           </div>
+
+          {/* Payment Confirmation Code */}
+          {paymentIntentId && (
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-6 mb-8">
+              <div className="text-center">
+                <h3 className="text-lg font-bold text-blue-800 mb-3">
+                  Code de confirmation de paiement
+                </h3>
+                <div className="bg-white rounded-lg border-2 border-blue-300 px-4 py-3 inline-block">
+                  <p className="text-xl font-mono font-bold text-blue-900">
+                    PI-{paymentIntentId}
+                  </p>
+                </div>
+                <p className="text-sm text-blue-700 mt-3">
+                  Veuillez conserver ce code pour vos archives
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* WhatsApp Section */}
           <div className="bg-green-50 rounded-2xl p-6 mb-8">
