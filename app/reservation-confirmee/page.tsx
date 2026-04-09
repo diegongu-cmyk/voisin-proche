@@ -8,6 +8,7 @@ function ReservationConfirmeeContent() {
   const searchParams = useSearchParams();
   const [paymentIntentId, setPaymentIntentId] = useState<string>("");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     // Add entrance animations
@@ -18,17 +19,78 @@ function ReservationConfirmeeContent() {
   }, []);
 
   useEffect(() => {
-    // Capture payment_intent_id from URL if payment was completed
-    const sessionId = searchParams.get('session_id');
-    const reservationId = searchParams.get('reservation_id');
-    
-    if (sessionId) {
-      // In a real implementation, you would fetch the session from Stripe
-      // to get the payment_intent_id. For now, we'll use the session_id as a placeholder
-      setPaymentIntentId(sessionId);
-    }
-    setLoading(false);
+    const fetchPaymentIntent = async () => {
+      try {
+        const sessionId = searchParams.get('session_id');
+        const reservationId = searchParams.get('reservation_id');
+        
+        if (sessionId) {
+          // Fetch payment_intent_id from Stripe API
+          const response = await fetch(`/api/get-payment-intent?session_id=${sessionId}`);
+          const data = await response.json();
+          
+          if (data.payment_intent) {
+            setPaymentIntentId(data.payment_intent);
+            
+            // Save payment_intent_id to Supabase if we have reservation_id
+            if (reservationId) {
+              await updateReservationWithPaymentIntent(reservationId, data.payment_intent);
+            }
+          } else {
+            setError("Impossible de récupérer les informations de paiement");
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching payment intent:', err);
+        setError("Erreur lors de la récupération des informations de paiement");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPaymentIntent();
   }, [searchParams]);
+
+  const updateReservationWithPaymentIntent = async (reservationId: string, paymentIntentId: string) => {
+    try {
+      const { createClient } = require('@supabase/supabase-js');
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      );
+
+      // First, get the current details
+      const { data: reservation } = await supabase
+        .from('reservations')
+        .select('details')
+        .eq('id', reservationId)
+        .single();
+
+      if (reservation) {
+        // Parse existing details and add payment_intent_id
+        const details = typeof reservation.details === 'string' 
+          ? JSON.parse(reservation.details) 
+          : reservation.details;
+        
+        details.paymentIntentId = paymentIntentId;
+
+        // Update the reservation with the payment_intent_id
+        const { error } = await supabase
+          .from('reservations')
+          .update({ 
+            details: JSON.stringify(details),
+            statut: 'confirme' // Auto-confirm paid reservations
+          })
+          .eq('id', reservationId);
+
+        if (error) {
+          console.error('Error updating reservation:', error);
+        }
+      }
+    } catch (err) {
+      console.error('Error updating reservation:', err);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-4">
@@ -101,19 +163,33 @@ function ReservationConfirmeeContent() {
           </div>
 
           {/* Payment Confirmation Code */}
-          {paymentIntentId && (
+          {!loading && paymentIntentId && (
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-6 mb-8">
               <div className="text-center">
                 <h3 className="text-lg font-bold text-blue-800 mb-3">
-                  Code de confirmation de paiement
+                  Code de paiement
                 </h3>
                 <div className="bg-white rounded-lg border-2 border-blue-300 px-4 py-3 inline-block">
                   <p className="text-xl font-mono font-bold text-blue-900">
-                    PI-{paymentIntentId}
+                    {paymentIntentId}
                   </p>
                 </div>
                 <p className="text-sm text-blue-700 mt-3">
                   Veuillez conserver ce code pour vos archives
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Error State */}
+          {!loading && error && (
+            <div className="bg-gradient-to-r from-red-50 to-orange-50 border-2 border-red-200 rounded-2xl p-6 mb-8">
+              <div className="text-center">
+                <h3 className="text-lg font-bold text-red-800 mb-3">
+                  Erreur de paiement
+                </h3>
+                <p className="text-sm text-red-700">
+                  {error}
                 </p>
               </div>
             </div>
