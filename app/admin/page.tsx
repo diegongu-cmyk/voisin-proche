@@ -1209,6 +1209,12 @@ export default function AdminPage() {
                               </span>
                             </div>
                           )}
+                          {details?.paymentIntentId && (
+                            <div className="flex justify-between mt-2">
+                              <span className="text-sm text-gray-600">Code de paiement:</span>
+                              <span className="text-xs font-mono font-medium text-blue-700 bg-blue-50 px-2 py-1 rounded">{details.paymentIntentId}</span>
+                            </div>
+                          )}
                         </div>
                       </div>
 
