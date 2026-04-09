@@ -65,7 +65,8 @@ function BookingPageContent() {
         const { data: fideliteData } = await supabase
           .from('fidelite')
           .select('*')
-          .eq('user_id', session.user.id);
+          .eq('user_id', session.user.id)
+          .eq('service', service || '');
         if (fideliteData && fideliteData.length > 0) {
           const userCount = fideliteData[0].count;
           setHasDiscount(userCount > 0 && userCount % 7 === 0);
@@ -73,7 +74,7 @@ function BookingPageContent() {
       }
     };
     checkSession();
-  }, []);
+  }, [service]);
 
   const currentService = services.find((s) => s.id === service);
 
