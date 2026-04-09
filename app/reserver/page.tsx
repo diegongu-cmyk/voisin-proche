@@ -181,7 +181,6 @@ function BookingPageContent() {
     try {
       setIsLoading(true);
 
-      // Debug logs
       console.log("Service:", service);
       console.log("PaymentMethod:", paymentMethod);
       console.log("EspagnolLieu:", espagnolLieu);
@@ -219,7 +218,6 @@ function BookingPageContent() {
       }
 
       if (service === "espagnol") {
-        // Solo validar si los campos existen
         if (espagnolLieu || espagnolNiveau) {
           const errors = validateEspagnolForm();
           if (errors.length > 0) {
@@ -291,28 +289,27 @@ function BookingPageContent() {
       const reservationId = insertedData?.id || '';
       setCurrentReservationId(reservationId);
 
-      // Send admin notification email
       await fetch('/api/send-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           to: 'diegongu@gmail.com',
-          subject: `? Nouvelle réservation ? ${currentService?.name}`,
+          subject: `Nouvelle réservation - ${currentService?.name}`,
           html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 2px solid #1D9E75; border-radius: 12px;">
-              <h1 style="color: #1D9E75; text-align: center;">? Nouvelle Réservation</h1>
-              <h2 style="color: #085041;">${currentService?.icon} ${currentService?.name}</h2>
+              <h1 style="color: #1D9E75; text-align: center;">Nouvelle Réservation</h1>
+              <h2 style="color: #085041;">${currentService?.name}</h2>
               <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; margin: 15px 0;">
-                <h3 style="color: #085041; margin-top: 0;">? Détails du service</h3>
+                <h3 style="color: #085041; margin-top: 0;">Détails du service</h3>
                 <p><strong>Service:</strong> ${currentService?.name}</p>
                 <p><strong>Date souhaitée:</strong> ${date}</p>
                 <p><strong>Heure souhaitée:</strong> ${time}</p>
-                <p><strong>Prix estimé:</strong> ${precioFinal}?</p>
+                <p><strong>Prix estimé:</strong> ${precioFinal}€</p>
                 <p><strong>Méthode de paiement:</strong> ${paymentMethod}</p>
                 <p><strong>ID Réservation:</strong> ${reservationId}</p>
               </div>
               <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin: 15px 0;">
-                <h3 style="color: #085041; margin-top: 0;">? Coordonnées du client</h3>
+                <h3 style="color: #085041; margin-top: 0;">Coordonnées du client</h3>
                 <p><strong>Nom:</strong> ${fullName}</p>
                 <p><strong>Email:</strong> ${user.email}</p>
                 <p><strong>Téléphone / WhatsApp:</strong> ${phone}</p>
@@ -328,7 +325,6 @@ function BookingPageContent() {
         })
       });
 
-      // Redirect based on payment method
       if (paymentMethod === "carte" && service !== "autre") {
         const stripeResponse = await fetch('/api/create-checkout-session', {
           method: 'POST',
@@ -346,13 +342,11 @@ function BookingPageContent() {
         }
       }
 
-      // Show bank modal for virement
       if (paymentMethod === "virement") {
         setShowBankModal(true);
         return;
       }
 
-      // Show modal only for non-card payments (except virement)
       if (paymentMethod !== "carte" && paymentMethod !== "virement") {
         setShowModal(true);
       }
@@ -380,6 +374,24 @@ function BookingPageContent() {
     }
     return currentService?.price || '';
   };
+
+  if (!user) {
+    return (
+      <section className="rounded-3xl bg-[#FFFBF5] px-4 py-20 md:px-8">
+        <div className="flex items-center justify-center">
+          <div className="max-w-md w-full mx-4 rounded-2xl bg-[#085041] p-8 shadow-2xl text-white text-center">
+            <div className="mb-6 text-6xl">🔐</div>
+            <h2 className="mb-4 text-2xl font-bold">Connectez-vous pour réserver</h2>
+            <p className="mb-8 opacity-90">Pour effectuer une réservation, vous devez être connecté à votre compte. C'est rapide et gratuit !</p>
+            <div className="space-y-3">
+              <a href="/login" className="block w-full rounded-xl bg-white text-[#1D9E75] px-6 py-3 font-semibold hover:bg-gray-50 transition-colors">Se connecter</a>
+              <a href="/register" className="block w-full rounded-xl border-2 border-white text-white px-6 py-3 font-semibold hover:bg-white/10 transition-colors">Créer un compte</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="rounded-3xl bg-[#FFFBF5] px-4 py-8 md:px-8">
@@ -632,14 +644,14 @@ function BookingPageContent() {
               <div>
                 <label className="mb-1 block text-sm font-medium text-slate-700">Date souhaitée *</label>
                 <div className="relative">
-                  <input 
-                    type="date" 
-                    required 
-                    value={date} 
-                    onChange={(e) => setDate(e.target.value)} 
+                  <input
+                    type="date"
+                    required
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
                     min={new Date().toISOString().split('T')[0]}
                     max={new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
-                    className="w-full rounded-lg border-2 border-slate-300 px-4 py-3 pr-12 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200 hover:border-slate-400" 
+                    className="w-full rounded-lg border-2 border-slate-300 px-4 py-3 pr-12 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200 hover:border-slate-400"
                   />
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
                     <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -670,28 +682,28 @@ function BookingPageContent() {
                 <label className="mb-1 block text-sm font-medium text-slate-700">Notes libres</label>
                 <textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
               </div>
-              
+
               {service === "garde" && (
                 <div className="md:col-span-2">
                   <div className="mt-4 rounded-xl border border-yellow-200 bg-yellow-50 p-4">
                     <p className="text-sm text-yellow-800">
-                      � <strong>Information tarif:</strong> Le tarif minimum 
-                      est de 12€/jour. Le prix final sera établi selon la durée, 
-                      le type d'animal et vos besoins spécifiques. Nous vous 
+                      <strong>Information tarif:</strong> Le tarif minimum
+                      est de 12€/jour. Le prix final sera établi selon la durée,
+                      le type d'animal et vos besoins spécifiques. Nous vous
                       contacterons via WhatsApp après réception de votre demande.
                     </p>
                   </div>
                 </div>
               )}
-              
+
               {service !== "garde" && (
                 <div className="md:col-span-2">
-                  <label className="mb-1 block text-sm font-medium text-slate-700">💳 Méthode de paiement préférée *</label>
+                  <label className="mb-1 block text-sm font-medium text-slate-700">Méthode de paiement préférée *</label>
                   <select required value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2">
                     <option value="">Sélectionner</option>
-                    <option value="carte">💳 Paiement en ligne (Stripe)</option>
-                    <option value="especes">💵 Espèces (cash)</option>
-                    <option value="virement">🏦 Virement bancaire</option>
+                    <option value="carte">Paiement en ligne (Stripe)</option>
+                    <option value="especes">Espèces (cash)</option>
+                    <option value="virement">Virement bancaire</option>
                   </select>
                 </div>
               )}
@@ -713,12 +725,12 @@ function BookingPageContent() {
           <div className="mt-5 space-y-5 text-sm text-slate-700">
             <div className="rounded-xl border border-slate-200 bg-[#1D9E75]/10 p-4">
               <h3 className="text-base font-extrabold text-slate-900">
-                {service === "garde" ? "💛 Tarif" : "Prix estimé"}
+                {service === "garde" ? "Tarif" : "Prix estimé"}
               </h3>
               {service === "garde" ? (
                 <div className="rounded-xl border border-yellow-200 bg-yellow-50 p-4">
                   <p className="text-sm text-yellow-800">
-                    💛 <strong>Tarif:</strong> À partir de 12€/jour — 
+                    <strong>Tarif:</strong> À partir de 12€/jour —
                     Prix final confirmé par WhatsApp
                   </p>
                 </div>
@@ -740,7 +752,7 @@ function BookingPageContent() {
                   </p>
                   {hasDiscount && (
                     <span className="inline-flex animate-pulse rounded-full bg-[#F59E0B] px-3 py-1 text-sm font-bold text-white">
-                      🎁 -20% fidélité appliqué !
+                      -20% fidélité appliqué !
                     </span>
                   )}
                 </div>
@@ -757,10 +769,10 @@ function BookingPageContent() {
                 <p><span className="font-semibold">Adresse:</span> {fullAddress || "Non renseignée"}</p>
                 <p><span className="font-semibold">Date et heure:</span> {date || "Non renseignée"} à {time}</p>
                 <p><span className="font-semibold">Méthode de paiement:</span> {
-                  service === "garde" ? "?? Prix à confirmer par WhatsApp" :
-                  paymentMethod === "carte" ? "?? Paiement en ligne (Stripe)" :
-                  paymentMethod === "especes" ? "?? Espèces (cash)" :
-                  paymentMethod === "virement" ? "?? Virement bancaire" : "Non renseignée"
+                  service === "garde" ? "Prix à confirmer par WhatsApp" :
+                  paymentMethod === "carte" ? "Paiement en ligne (Stripe)" :
+                  paymentMethod === "especes" ? "Espèces (cash)" :
+                  paymentMethod === "virement" ? "Virement bancaire" : "Non renseignée"
                 }</p>
                 {notes && <p><span className="font-semibold">Notes:</span> {notes}</p>}
               </div>
@@ -829,8 +841,8 @@ function BookingPageContent() {
 
           <div className="mt-5 rounded-xl border border-[#1D9E75] bg-[#E1F5EE] p-4 text-[#085041]">
             <h3 className="text-base font-extrabold">
-              {service === "garde" ? "💛 Confirmation de réservation" : 
-               paymentMethod === "carte" ? "💳 Paiement sécurisé" : "✅ Confirmation de réservation"}
+              {service === "garde" ? "Confirmation de réservation" :
+               paymentMethod === "carte" ? "Paiement sécurisé" : "Confirmation de réservation"}
             </h3>
             <p className="mt-2 text-sm">
               {service === "garde"
@@ -843,9 +855,9 @@ function BookingPageContent() {
 
           <div className="mt-5 rounded-xl border border-blue-200 bg-blue-50 p-4">
             <p className="text-sm text-blue-800">
-              ⚠️ <strong>Important:</strong> Votre réservation est soumise 
-              à confirmation de notre part. Après envoi de votre demande, 
-              nous vous contacterons via WhatsApp dans les plus brefs délais 
+              <strong>Important:</strong> Votre réservation est soumise
+              à confirmation de notre part. Après envoi de votre demande,
+              nous vous contacterons via WhatsApp dans les plus brefs délais
               pour finaliser les détails et confirmer le service.
             </p>
           </div>
@@ -866,7 +878,6 @@ function BookingPageContent() {
         </div>
       )}
 
-      {/* Modal de confirmation */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm"></div>
@@ -875,13 +886,11 @@ function BookingPageContent() {
               <div className="mb-4 text-6xl">✅</div>
               <h3 className="mb-2 text-2xl font-bold text-gray-900">Demande reçue !</h3>
               <p className="mb-6 text-gray-600">
-                Votre demande de réservation a bien été reçue. 
-                Nous vous contacterons via WhatsApp dans les prochaines 
+                Votre demande de réservation a bien été reçue.
+                Nous vous contacterons via WhatsApp dans les prochaines
                 minutes pour finaliser les détails et établir le prix définitif.
-                
-                Merci de votre confiance ! 🙏
+                Merci de votre confiance !
               </p>
-              
               <div className="flex flex-col gap-3">
                 <a
                   href="https://wa.me/33602353569"
@@ -889,7 +898,7 @@ function BookingPageContent() {
                   rel="noopener noreferrer"
                   className="rounded-xl bg-green-600 px-6 py-3 font-semibold text-white hover:bg-green-700 transition-colors"
                 >
-                  📱 Nous contacter maintenant sur WhatsApp
+                  Nous contacter maintenant sur WhatsApp
                 </a>
                 <a
                   href="/mon-compte"
@@ -903,7 +912,6 @@ function BookingPageContent() {
         </div>
       )}
 
-      {/* Modal de virement bancaire */}
       {showBankModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm"></div>
@@ -912,10 +920,9 @@ function BookingPageContent() {
               <div className="mb-6 text-6xl">🏦</div>
               <h3 className="mb-4 text-2xl font-bold text-gray-900">Virement Bancaire</h3>
               <p className="mb-6 text-gray-600">
-                Veuillez effectuer un virement vers le compte ci-dessous 
+                Veuillez effectuer un virement vers le compte ci-dessous
                 en indiquant bien la référence dans le motif.
               </p>
-              
               <div className="mb-6 rounded-xl bg-green-50 border-2 border-green-200 p-6">
                 <h4 className="mb-4 text-lg font-semibold text-green-800">Coordonnées bancaires</h4>
                 <div className="space-y-3 text-left">
@@ -955,13 +962,11 @@ function BookingPageContent() {
                   </div>
                 </div>
               </div>
-              
               <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
                 <p className="text-sm text-blue-800">
                   <strong>Important:</strong> Une fois votre virement effectué, nous confirmerons votre réservation dans les plus brefs délais. Merci de bien indiquer la référence ci-dessus dans le motif du virement.
                 </p>
               </div>
-              
               <div className="flex flex-col gap-3">
                 <button
                   onClick={() => setShowBankModal(false)}
