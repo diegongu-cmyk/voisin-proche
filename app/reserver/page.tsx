@@ -951,7 +951,7 @@ function BookingPageContent() {
                   <div className="flex justify-between items-center">
                     <span className="font-medium text-gray-700">Référence:</span>
                     <span className="font-mono text-sm bg-yellow-100 px-3 py-1 rounded border border-yellow-300">
-                      Réservation #{currentReservationId || 'En attente'}
+                      VP-{currentReservationId ? currentReservationId.substring(0, 8) : 'En attente'}
                     </span>
                   </div>
                 </div>
@@ -959,9 +959,7 @@ function BookingPageContent() {
               
               <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
                 <p className="text-sm text-blue-800">
-                  <strong>Important:</strong> La réservation sera confirmée 
-                  automatiquement dès que nous recevrons votre virement. 
-                  Le délai de traitement est généralement de 1-2 jours ouvrés.
+                  <strong>Important:</strong> Une fois votre virement effectué, nous confirmerons votre réservation dans les plus brefs délais. Merci de bien indiquer la référence ci-dessus dans le motif du virement.
                 </p>
               </div>
               
