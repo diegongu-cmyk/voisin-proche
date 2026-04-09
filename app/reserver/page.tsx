@@ -382,7 +382,21 @@ function BookingPageContent() {
   };
 
   if (!user) {
+    if (!user) {
     return (
+      <section className='rounded-3xl bg-[#FFFBF5] px-4 py-20 md:px-8'>
+        <div className='flex items-center justify-center'>
+          <div className='max-w-md w-full mx-4 rounded-2xl p-8 shadow-2xl text-white text-center' style={{background:'#085041'}}>
+            <h2 className='mb-4 text-2xl font-bold'>Connectez-vous pour reserver</h2>
+            <p className='mb-8 opacity-90'>Vous devez etre connecte pour reserver.</p>
+            <a href='/login' className='block w-full rounded-xl bg-white px-6 py-3 font-semibold mb-3' style={{color:'#1D9E75'}}>Se connecter</a>
+            <a href='/register' className='block w-full rounded-xl border-2 border-white text-white px-6 py-3 font-semibold'>Creer un compte</a>
+          </div>
+        </div>
+      </section>
+    );
+  }
+  return (
       <section className="rounded-3xl bg-[#FFFBF5] px-4 py-20 md:px-8">
         <div className="flex items-center justify-center">
           <div className="max-w-md w-full mx-4 rounded-2xl bg-gradient-to-br from-[#1D9E75] to-[#085041] p-8 shadow-2xl text-white text-center">
