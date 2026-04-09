@@ -228,7 +228,8 @@ function BookingPageContent() {
         }
       }
 
-      if (!user) {
+      if (isAuthLoading) { return <section className="rounded-3xl bg-[#FFFBF5] px-4 py-20 md:px-8"><div className="flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1D9E75]"></div></div></section>; }
+  if (!user) {
         alert("Veuillez vous connecter pour réserver");
         return;
       }
