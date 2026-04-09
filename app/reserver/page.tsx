@@ -31,6 +31,7 @@ function BookingPageContent() {
   const [showBankModal, setShowBankModal] = useState(false);
   const [currentReservationId, setCurrentReservationId] = useState("");
   const [user, setUser] = useState<any>(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   // Promenade states
   const [dogName, setDogName] = useState("");
@@ -231,7 +232,8 @@ function BookingPageContent() {
       await new Promise(resolve => setTimeout(resolve, 500));
       const { data: { session: session2 } } = await supabase.auth.getSession();
       const user = session2?.user || session?.user;
-      if (!user) {
+      if (isAuthLoading) { return <section className="rounded-3xl bg-[#FFFBF5] px-4 py-20 md:px-8"><div className="flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1D9E75]"></div></div></section>; }
+  if (!user) {
         alert("Veuillez vous connecter pour réserver");
         return;
       }
