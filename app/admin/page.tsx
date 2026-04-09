@@ -1183,25 +1183,25 @@ export default function AdminPage() {
                             <span className="text-sm text-gray-600">Prix estimé:</span>
                             <span className="text-sm font-semibold text-gray-900">{selectedReservation.prix}€</span>
                           </div>
-                          {details?.metodoPago && (
+                          {details?.paymentMethod && (
                             <div className="flex justify-between mt-3">
                               <span className="text-sm text-gray-600">Méthode de paiement:</span>
                               <span className="text-sm font-medium text-gray-900 flex items-center">
-                                {details.metodoPago === 'carte' && (
+                                {details.paymentMethod === 'carte' && (
                                   <>
-                                    <span className="mr-1">💳</span>
+                                    <span className="mr-1">??</span>
                                     <span>Carte bancaire</span>
                                   </>
                                 )}
-                                {details.metodoPago === 'virement' && (
+                                {details.paymentMethod === 'virement' && (
                                   <>
-                                    <span className="mr-1">🏦</span>
+                                    <span className="mr-1">??</span>
                                     <span>Virement bancaire</span>
                                   </>
                                 )}
-                                {details.metodoPago === 'especes' && (
+                                {details.paymentMethod === 'especes' && (
                                   <>
-                                    <span className="mr-1">💶</span>
+                                    <span className="mr-1">??</span>
                                     <span>Espèces</span>
                                   </>
                                 )}
