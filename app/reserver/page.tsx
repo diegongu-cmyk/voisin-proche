@@ -274,7 +274,11 @@ function BookingPageContent() {
         statut: "en_attente"
       };
 
-      const { error } = await supabase.from('reservations').insert([reservationData]);
+      const { data: insertedData, error } = await supabase
+        .from('reservations')
+        .insert([reservationData])
+        .select('id')
+        .single();
 
       if (error) {
         console.error('Reservation error:', error);
@@ -282,19 +286,7 @@ function BookingPageContent() {
         return;
       }
 
-      // Get the inserted reservation ID
-      const { data: insertedReservation } = await supabase
-        .from('reservations')
-        .select('id')
-        .eq('user_id', user.id)
-        .eq('service', currentService?.name || "")
-        .eq('date', date || "")
-        .eq('heure', time || "")
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
-
-      const reservationId = insertedReservation?.id || '';
+      const reservationId = insertedData?.id || '';
 
       // Send admin notification email
       await fetch('/api/send-email', {
