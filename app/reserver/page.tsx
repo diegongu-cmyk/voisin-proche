@@ -622,7 +622,22 @@ function BookingPageContent() {
               </div>
               <div>
                 <label className="mb-1 block text-sm font-medium text-slate-700">Date souhaitée *</label>
-                <input type="date" required value={date} onChange={(e) => setDate(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+                <div className="relative">
+                  <input 
+                    type="date" 
+                    required 
+                    value={date} 
+                    onChange={(e) => setDate(e.target.value)} 
+                    min={new Date().toISOString().split('T')[0]}
+                    max={new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
+                    className="w-full rounded-lg border-2 border-slate-300 px-4 py-3 pr-12 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200 hover:border-slate-400" 
+                  />
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                    <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                </div>
               </div>
               <div>
                 <label className="mb-1 block text-sm font-medium text-slate-700">Heure souhaitée *</label>
