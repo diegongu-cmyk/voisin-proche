@@ -1188,22 +1188,23 @@ export default function AdminPage() {
                               <span className="text-sm text-gray-600">Méthode de paiement:</span>
                               <span className="text-sm font-medium text-gray-900 flex items-center">
                                 {details.paymentMethod === 'carte' && (
-                                  <>
-                                    <span className="mr-1">??</span>
-                                    <span>Carte bancaire</span>
-                                  </>
+                                  <span className="inline-flex items-center justify-center w-5 h-5 bg-blue-100 text-blue-600 text-xs font-bold rounded mr-2">CB</span>
                                 )}
                                 {details.paymentMethod === 'virement' && (
-                                  <>
-                                    <span className="mr-1">??</span>
-                                    <span>Virement bancaire</span>
-                                  </>
+                                  <span className="inline-flex items-center justify-center w-5 h-5 bg-green-100 text-green-600 text-xs font-bold rounded mr-2">VR</span>
                                 )}
                                 {details.paymentMethod === 'especes' && (
-                                  <>
-                                    <span className="mr-1">??</span>
-                                    <span>Espèces</span>
-                                  </>
+                                  <span className="inline-flex items-center justify-center w-5 h-5 bg-orange-100 text-orange-600 text-xs font-bold rounded mr-2">ES</span>
+                                )}
+                                {details.paymentMethod && (
+                                  <span>
+                                    {details.paymentMethod === 'carte' && 'Carte bancaire'}
+                                    {details.paymentMethod === 'virement' && 'Virement bancaire'}
+                                    {details.paymentMethod === 'especes' && 'Espèces'}
+                                  </span>
+                                )}
+                                {!details.paymentMethod && (
+                                  <span className="text-gray-400">Non spécifié</span>
                                 )}
                               </span>
                             </div>
