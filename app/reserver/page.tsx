@@ -912,9 +912,8 @@ function BookingPageContent() {
               <div className="mb-6 text-6xl">🏦</div>
               <h3 className="mb-4 text-2xl font-bold text-gray-900">Virement Bancaire</h3>
               <p className="mb-6 text-gray-600">
-                Pour finaliser votre réservation, veuillez effectuer un virement 
-                vers le compte ci-dessous. Votre réservation sera confirmée 
-                dès réception du paiement.
+                Veuillez effectuer un virement vers le compte ci-dessous 
+                en indiquant bien la référence dans le motif.
               </p>
               
               <div className="mb-6 rounded-xl bg-green-50 border-2 border-green-200 p-6">
