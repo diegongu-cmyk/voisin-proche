@@ -1183,6 +1183,31 @@ export default function AdminPage() {
                             <span className="text-sm text-gray-600">Prix estimé:</span>
                             <span className="text-sm font-semibold text-gray-900">{selectedReservation.prix}€</span>
                           </div>
+                          {details?.metodoPago && (
+                            <div className="flex justify-between mt-3">
+                              <span className="text-sm text-gray-600">Méthode de paiement:</span>
+                              <span className="text-sm font-medium text-gray-900 flex items-center">
+                                {details.metodoPago === 'carte' && (
+                                  <>
+                                    <span className="mr-1">💳</span>
+                                    <span>Carte bancaire</span>
+                                  </>
+                                )}
+                                {details.metodoPago === 'virement' && (
+                                  <>
+                                    <span className="mr-1">🏦</span>
+                                    <span>Virement bancaire</span>
+                                  </>
+                                )}
+                                {details.metodoPago === 'especes' && (
+                                  <>
+                                    <span className="mr-1">💶</span>
+                                    <span>Espèces</span>
+                                  </>
+                                )}
+                              </span>
+                            </div>
+                          )}
                         </div>
                       </div>
 
