@@ -23,12 +23,12 @@ function BookingPageContent() {
   const [notes, setNotes] = useState("");
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
   const [fullAddress, setFullAddress] = useState("");
   const [hasDiscount, setHasDiscount] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [user, setUser] = useState<any>(null);
 
   // Promenade states
   const [dogName, setDogName] = useState("");
@@ -71,6 +71,7 @@ function BookingPageContent() {
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
+        setUser(session.user);
         const { data: fideliteData } = await supabase
           .from('fidelite')
           .select('*')
@@ -167,7 +168,6 @@ function BookingPageContent() {
     const errors: string[] = [];
     if (!fullName.trim()) errors.push("Le prénom et nom sont obligatoires");
     if (!phone.trim()) errors.push("Le téléphone est obligatoire");
-    if (!email.trim()) errors.push("L'email est obligatoire");
     if (!date.trim()) errors.push("La date est obligatoire");
     if (!time.trim()) errors.push("L'heure est obligatoire");
     if (!fullAddress.trim()) errors.push("L'adresse est obligatoire");
@@ -248,7 +248,7 @@ function BookingPageContent() {
       }
       const precioFinal = hasDiscount ? Math.round(precioNumerico * 0.8) : precioNumerico;
 
-      let detailsObject: any = { fullName, phone, email, fullAddress, notes, paymentMethod };
+      let detailsObject: any = { fullName, phone, email: user.email, fullAddress, notes, paymentMethod };
 
       if (service === "promenade") {
         detailsObject = { ...detailsObject, dogName, dogBreed, dogSize, dogTemperament, dogSocialization, walkDuration };
@@ -311,7 +311,7 @@ function BookingPageContent() {
               <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin: 15px 0;">
                 <h3 style="color: #085041; margin-top: 0;">? Coordonnées du client</h3>
                 <p><strong>Nom:</strong> ${fullName}</p>
-                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Email:</strong> ${user.email}</p>
                 <p><strong>Téléphone / WhatsApp:</strong> ${phone}</p>
                 <p><strong>Adresse:</strong> ${fullAddress}</p>
               </div>
@@ -621,10 +621,6 @@ function BookingPageContent() {
                 <input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
               </div>
               <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">Email *</label>
-                <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
-              </div>
-              <div>
                 <label className="mb-1 block text-sm font-medium text-slate-700">Date souhaitée *</label>
                 <input type="date" required value={date} onChange={(e) => setDate(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
               </div>
@@ -732,15 +728,15 @@ function BookingPageContent() {
               <h3 className="text-base font-extrabold text-slate-900">Vos coordonnées</h3>
               <div className="mt-2 space-y-1">
                 <p><span className="font-semibold">Prénom et Nom:</span> {fullName || "Non renseigné"}</p>
-                <p><span className="font-semibold">Email:</span> {email || "Non renseigné"}</p>
+                <p><span className="font-semibold">Email:</span> {user?.email || "Non renseigné"}</p>
                 <p><span className="font-semibold">Téléphone:</span> {phone || "Non renseigné"}</p>
                 <p><span className="font-semibold">Adresse:</span> {fullAddress || "Non renseignée"}</p>
                 <p><span className="font-semibold">Date et heure:</span> {date || "Non renseignée"} à {time}</p>
                 <p><span className="font-semibold">Méthode de paiement:</span> {
-                  service === "garde" ? "💛 Prix à confirmer par WhatsApp" :
-                  paymentMethod === "carte" ? "💳 Paiement en ligne (Stripe)" :
-                  paymentMethod === "especes" ? "💵 Espèces (cash)" :
-                  paymentMethod === "virement" ? "🏦 Virement bancaire" : "Non renseignée"
+                  service === "garde" ? "?? Prix à confirmer par WhatsApp" :
+                  paymentMethod === "carte" ? "?? Paiement en ligne (Stripe)" :
+                  paymentMethod === "especes" ? "?? Espèces (cash)" :
+                  paymentMethod === "virement" ? "?? Virement bancaire" : "Non renseignée"
                 }</p>
                 {notes && <p><span className="font-semibold">Notes:</span> {notes}</p>}
               </div>
