@@ -4,6 +4,8 @@ export async function POST(request: NextRequest) {
   try {
     const { amount, serviceName, reservationId } = await request.json();
 
+    console.log('CREATE CHECKOUT - reservationId:', reservationId, 'amount:', amount);
+
     const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
     const session = await stripe.checkout.sessions.create({
@@ -21,7 +23,7 @@ export async function POST(request: NextRequest) {
         },
       ],
       mode: 'payment',
-      success_url: 'https://voisin-proche.vercel.app/reservation-confirmee',
+      success_url: `https://voisin-proche.vercel.app/reservation-confirmee?session_id={CHECKOUT_SESSION_ID}&reservation_id=${reservationId}`,
       cancel_url: 'https://voisin-proche.vercel.app/reserver',
     });
 
