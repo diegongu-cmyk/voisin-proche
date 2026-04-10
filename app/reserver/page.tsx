@@ -71,6 +71,11 @@ function BookingPageContent() {
   };
 
   useEffect(() => {
+    // Check localStorage first for faster authentication
+    if (typeof window !== 'undefined' && localStorage.getItem('sb-bcfxjnqtxakdcsnqhbis-auth-token')) {
+      setIsAuthLoading(false);
+    }
+    
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
@@ -229,8 +234,10 @@ function BookingPageContent() {
         }
       }
 
-      if (isAuthLoading) { return <section className="rounded-3xl bg-[#FFFBF5] px-4 py-20 md:px-8"><div className="flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1D9E75]"></div></div></section>; }
-  if (!user) {
+      const { data: { session } } = await supabase.auth.getSession();
+      const { data: { session: session2 } } = await supabase.auth.getSession();
+      const user = session2?.user || session?.user;
+      if (!user) {
         alert("Veuillez vous connecter pour réserver");
         return;
       }
@@ -373,6 +380,16 @@ function BookingPageContent() {
     }
     return currentService?.price || '';
   };
+
+  if (isAuthLoading) {
+    return (
+      <section className="rounded-3xl bg-[#FFFBF5] px-4 py-20 md:px-8">
+        <div className="flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1D9E75]"></div>
+        </div>
+      </section>
+    );
+  }
 
   if (!user) {
     return (
