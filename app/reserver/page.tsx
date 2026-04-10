@@ -72,7 +72,14 @@ function BookingPageContent() {
 
   useEffect(() => {
     // Check localStorage first for faster authentication
-    if (typeof window !== 'undefined' && localStorage.getItem('sb-bcfxjnqtxakdcsnqhbis-auth-token')) {
+    const savedToken = localStorage.getItem('sb-bcfxjnqtxakdcsnqhbis-auth-token');
+    if (typeof window !== 'undefined' && savedToken) {
+      try {
+        const parsed = JSON.parse(savedToken);
+        if (parsed?.user) {
+          setUser(parsed.user);
+        }
+      } catch(e) {}
       setIsAuthLoading(false);
     }
     
