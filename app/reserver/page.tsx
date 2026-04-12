@@ -187,7 +187,7 @@ function BookingPageContent() {
     if (!date.trim()) errors.push("La date est obligatoire");
     if (!time.trim()) errors.push("L'heure est obligatoire");
     if (!fullAddress.trim()) errors.push("L'adresse est obligatoire");
-    if (service !== "espagnol" && !paymentMethod) errors.push("La méthode de paiement est obligatoire");
+    if (service !== "espagnol" && service !== "garde" && !paymentMethod) errors.push("La méthode de paiement est obligatoire");
     return errors;
   };
 
