@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase";
 
 const services = [
   { id: "promenade", icon: "🐕", name: "Promenade de chiens", price: "depuis 8€", description: "Nous promenons votre chien en toute sécurité dans les environs de Fontenay-le-Comte. Chaque promenade est accompagnée de jeux, caresses et un peu d'exercice pour le bonheur de votre compagnon. Des photos seront envoyées sur votre WhatsApp pendant la promenade. Disponible en 30 min, 45 min ou 1 heure. Depuis 8€." },
-  { id: "garde", icon: "🐾", name: "Garde d'animaux", price: "depuis 12€/jour", description: "Nous gardons votre animal à votre domicile pendant votre absence. Votre compagnon ne remarquera même pas votre absence ! Nous aimons les animaux et savons à quel point ils sont importants dans nos familles. Le service comprend des visites régulières à votre domicile et l'envoi de photos quotidiennes sur votre WhatsApp pour vous rassurer. Depuis 12€/jour." },
+  { id: "garde", icon: "🐾", name: "Garde d'animaux", price: "dès 15€/jour", description: "Nous gardons votre animal à votre domicile pendant votre absence. Votre compagnon ne remarquera même pas votre absence ! Nous aimons les animaux et savons à quel point ils sont importants dans nos familles. Le service comprend des visites régulières à votre domicile et l'envoi de photos quotidiennes sur votre WhatsApp pour vous rassurer. Dès 15€/jour." },
   { id: "accompagnement", icon: "🤝", name: "Accompagnement de personnes", price: "depuis 12€/h", description: "Nous accompagnons vos proches pour leurs rendez-vous médicaux, courses ou sorties. Nous pouvons également être simplement une présence chaleureuse et bienveillante, en conversant sur des sujets agréables, des cultures différentes et la vie en général. Notre langue natale est l'espagnol, ce qui enrichit nos échanges, et si nécessaire nous utilisons des traducteurs en ligne pour faciliter la communication. Si la personne ne connaît pas ce type de technologies, nous serons ravis de lui apprendre à les utiliser. Disponible 7j/7. Depuis 12€/heure." },
   { id: "courses", icon: "🛒", name: "Courses et commissions", price: "8€", description: "Nous effectuons vos courses et commissions dans le lieu de votre choix, de la manière la plus rapide possible. Le tarif de 8€ est valable pour une seule enseigne ou magasin. Si vous souhaitez des courses dans plusieurs magasins, le tarif sera ajusté en conséquence. Le montant des articles à acheter reste à la charge du client. Rapide, fiable et sans complications." },
   { id: "menage", icon: "🧹", name: "Ménage maison/bureau", price: "depuis 22€", description: "Nous effectuons un nettoyage détaillé et professionnel de votre domicile ou bureau. Nous respectons et préservons la vie privée de nos clients à tout moment. Depuis 22€." },
@@ -579,7 +579,7 @@ function BookingPageContent() {
               </div>
               {gardeNbJours && (
                 <p className="mt-3 text-sm font-semibold text-green-700">
-                  Prix estimé: {hasDiscount ? Math.round(15 * (parseInt(gardeNbJours) || 1) * 0.8) : 15 * (parseInt(gardeNbJours) || 1)}€ ({gardeNbJours} jour(s) à 12€/jour{hasDiscount ? " avec -20% fidélité" : ""})
+                  Prix estimé: {hasDiscount ? Math.round(15 * (parseInt(gardeNbJours) || 1) * 0.8) : 15 * (parseInt(gardeNbJours) || 1)}€ ({gardeNbJours} jour(s) à 15€/jour{hasDiscount ? " avec -20% fidélité" : ""})
                 </p>
               )}
             </div>
