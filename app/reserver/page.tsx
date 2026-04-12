@@ -711,7 +711,7 @@ function BookingPageContent() {
                   <div className="mt-4 rounded-xl border border-yellow-200 bg-yellow-50 p-4">
                     <p className="text-sm text-yellow-800">
                       <strong>Information tarif:</strong> Le tarif minimum
-                      est de 12€/jour. Le prix final sera établi selon la durée,
+                      est de 15€/jour. Le prix final sera établi selon la durée,
                       le type d'animal et vos besoins spécifiques. Nous vous
                       contacterons via WhatsApp après réception de votre demande.
                     </p>
@@ -753,7 +753,7 @@ function BookingPageContent() {
               {service === "garde" ? (
                 <div className="rounded-xl border border-yellow-200 bg-yellow-50 p-4">
                   <p className="text-sm text-yellow-800">
-                    <strong>Tarif:</strong> À partir de 12€/jour —
+                    <strong>Tarif:</strong> Dès 15€/jour —
                     Prix final confirmé par WhatsApp
                   </p>
                 </div>
