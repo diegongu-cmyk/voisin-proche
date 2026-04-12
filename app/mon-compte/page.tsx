@@ -221,6 +221,17 @@ export default function MonCompte() {
                       </div>
                     </div>
 
+                    {details.paymentIntentId && (
+                      <div className="mt-2 px-2 py-1.5 bg-slate-50 rounded-lg border border-slate-200">
+                        <p className="text-xs text-slate-500">
+                          🔐 Confirmation de paiement:
+                        </p>
+                        <p className="text-xs font-mono text-slate-700 break-all">
+                          {details.paymentIntentId}
+                        </p>
+                      </div>
+                    )}
+
                     {/* DETALLES ADICIONALES */}
                     {(details.walkDuration || details.gardeNbJours || details.menageType) && (
                       <div className="mt-2 text-xs text-slate-500">
@@ -304,6 +315,17 @@ export default function MonCompte() {
                       </div>
                     </div>
 
+                    {details.paymentIntentId && (
+                      <div className="mt-2 px-2 py-1.5 bg-slate-50 rounded-lg border border-slate-200">
+                        <p className="text-xs text-slate-500">
+                          🔐 Confirmation de paiement:
+                        </p>
+                        <p className="text-xs font-mono text-slate-700 break-all">
+                          {details.paymentIntentId}
+                        </p>
+                      </div>
+                    )}
+
                     {/* DETALLES ADICIONALES */}
                     {(details.walkDuration || details.gardeNbJours || details.menageType) && (
                       <div className="mt-2 text-xs text-slate-500">
@@ -386,6 +408,17 @@ export default function MonCompte() {
                         <p className="font-bold text-green-600">{r.prix}€</p>
                       </div>
                     </div>
+
+                    {details.paymentIntentId && (
+                      <div className="mt-2 px-2 py-1.5 bg-slate-50 rounded-lg border border-slate-200">
+                        <p className="text-xs text-slate-500">
+                          🔐 Confirmation de paiement:
+                        </p>
+                        <p className="text-xs font-mono text-slate-700 break-all">
+                          {details.paymentIntentId}
+                        </p>
+                      </div>
+                    )}
 
                     {/* DETALLES ADICIONALES */}
                     {(details.walkDuration || details.gardeNbJours || details.menageType) && (
