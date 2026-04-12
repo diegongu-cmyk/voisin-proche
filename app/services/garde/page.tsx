@@ -21,7 +21,7 @@ export default function GardeService() {
               Garde d'Animaux
             </h1>
             <div className="inline-flex rounded-full bg-green-500 px-6 py-3 text-lg font-bold text-white">
-              Depuis 15€/jour
+              Dès 15€/jour
             </div>
           </div>
         </div>
@@ -33,13 +33,10 @@ export default function GardeService() {
           <div>
             <h2 className="mb-4 text-3xl font-bold text-gray-900">Description du service</h2>
             <p className="text-lg leading-relaxed text-gray-600">
-              Votre animal gardé à domicile avec tout l'amour qu'il mérite. Je propose un service de garde personnalisé 
-              où votre compagnon reste dans son environnement familier, ce qui réduit le stress et l'anxiété liés au déplacement.
-            </p>
-            <p className="mt-4 text-lg leading-relaxed text-gray-600">
-              Pendant votre absence, je m'occupe de votre animal comme s'il était le mien : alimentation selon ses habitudes, 
-              jeux, promenades (pour chiens), câlins et surtout beaucoup d'attention. Je vous envoie quotidiennement 
-              des photos et des vidéos pour que vous puissiez suivre le bien-être de votre compagnon à distance.
+              Dès 15€/jour. Le tarif comprend une visite quotidienne à votre animal, avec 
+              promenade si nécessaire et nettoyage de son espace. Le prix final peut varier 
+              selon les besoins spécifiques de votre animal et sera confirmé par WhatsApp 
+              ou par email après votre demande de réservation.
             </p>
           </div>
 
@@ -114,8 +111,8 @@ export default function GardeService() {
           <div className="grid gap-6 md:grid-cols-2">
             <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
               <h3 className="mb-2 text-xl font-bold text-gray-900">Par jour</h3>
-              <p className="mb-4 text-3xl font-bold text-green-600">15€/jour</p>
-              <p className="text-gray-600">Garde avec visites régulières</p>
+              <p className="mb-4 text-3xl font-bold text-green-600">Dès 15€/jour</p>
+              <p className="text-gray-600">Garde avec 1 visite par jour</p>
               <ul className="mt-4 space-y-2 text-sm text-gray-600">
                 <li>• Visites régulières à domicile</li>
                 <li>• Photos quotidiennes sur WhatsApp</li>

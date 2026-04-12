@@ -26,9 +26,9 @@ const services = [
   {
     emoji: "🐾",
     titre: "Garde d'animaux",
-    prixPrincipal: "12€/jour",
-    description: "Nous gardons votre animal chez vous pendant votre absence. Prix minimum — détails confirmés par WhatsApp.",
-    details: ["12€/jour", "Photos quotidiennes", "7j/7"],
+    prixPrincipal: "Dès 15€/jour",
+    description: "Dès 15€/jour — tarif final confirmé selon vos besoins.",
+    details: ["Dès 15€/jour", "Photos quotidiennes", "7j/7"],
     image:
       "https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?w=600",
   },

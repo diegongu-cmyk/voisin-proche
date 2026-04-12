@@ -24,7 +24,7 @@ const services = [
   {
     emoji: "🐾",
     titre: "Garde d'animaux",
-    prix: "Depuis 12€/jour",
+    prix: "Dès 15€/jour",
     description: "Visites à domicile tous les jours.\nSoin attentif et nouvelles régulières.",
     image: "https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?w=400",
   },
@@ -71,11 +71,11 @@ const sliderServices = [
   {
     emoji: "🐾",
     titre: "Garde d'animaux",
-    prix: "Depuis 12€/jour",
-    description: "Votre animal gardé à domicile avec amour.\nPhotos quotidiennes sur WhatsApp. Depuis 12€/jour.",
+    prix: "Dès 15€/jour",
+    description: "Votre animal gardé à domicile avec amour.\nPhotos quotidiennes sur WhatsApp. Dès 15€/jour.",
     image: "https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?w=600",
     heroTitle: "Garde d'animaux à domicile",
-    heroText: "Votre animal gardé chez vous avec tout l'amour qu'il mérite. Visites régulières et photos quotidiennes sur WhatsApp. Depuis 12€/jour.",
+    heroText: "Votre animal gardé chez vous avec tout l'amour qu'il mérite. Visites régulières et photos quotidiennes sur WhatsApp. Dès 15€/jour.",
   },
   {
     emoji: "🤝",
