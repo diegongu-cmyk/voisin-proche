@@ -39,6 +39,11 @@ export default function AdminPage() {
   const [error, setError] = useState("");
   const [selectedReservation, setSelectedReservation] = useState<Reservation | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [editPrixGarde, setEditPrixGarde] = useState<string>('');
+  const [generatingLink, setGeneratingLink] = useState<boolean>(false);
+  const [generatedLink, setGeneratedLink] = useState<string>('');
+  const [linkError, setLinkError] = useState<string>('');
+  const [linkCopied, setLinkCopied] = useState<boolean>(false);
 
   const [todayStats, setTodayStats] = useState({
     reservations: 0,
@@ -311,6 +316,51 @@ export default function AdminPage() {
     }
   };
 
+  const handleGeneratePaymentLink = async () => {
+    setLinkError('');
+    setGeneratedLink('');
+    
+    if (!selectedReservation) return;
+    
+    const amount = parseFloat(editPrixGarde);
+    if (!amount || amount <= 0) {
+      setLinkError('Veuillez saisir un prix valide');
+      return;
+    }
+    
+    setGeneratingLink(true);
+    try {
+      const response = await fetch('/api/create-payment-link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          reservationId: selectedReservation.id,
+          amount: amount,
+          serviceName: selectedReservation.service,
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        setLinkError(data.error || 'Erreur lors de la génération du lien');
+        return;
+      }
+      
+      setGeneratedLink(data.paymentLink);
+    } catch (err: any) {
+      setLinkError(err.message || 'Erreur réseau');
+    } finally {
+      setGeneratingLink(false);
+    }
+  };
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(generatedLink);
+    setLinkCopied(true);
+    setTimeout(() => setLinkCopied(false), 2000);
+  };
+  
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Confirme":
@@ -1213,6 +1263,72 @@ export default function AdminPage() {
                             <div className="flex justify-between mt-2">
                               <span className="text-sm text-gray-600">Code de paiement:</span>
                               <span className="text-xs font-mono font-medium text-blue-700 bg-blue-50 px-2 py-1 rounded">{details.paymentIntentId}</span>
+                            </div>
+                          )}
+                          {selectedReservation.service === "Garde d'animaux" && (
+                            <div className="mt-4 pt-4 border-t border-blue-200">
+                              <h5 className="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
+                                <span>🐾</span>
+                                Gestion du paiement Garde
+                              </h5>
+                              <div className="space-y-3">
+                                <div>
+                                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                                    Prix final accordé avec le client (€)
+                                  </label>
+                                  <input
+                                    type="number"
+                                    min="0"
+                                    step="0.01"
+                                    value={editPrixGarde}
+                                    onChange={(e) => setEditPrixGarde(e.target.value)}
+                                    placeholder={selectedReservation.prix ? String(selectedReservation.prix) : "Ex: 30"}
+                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                  />
+                                  {editPrixGarde && parseFloat(editPrixGarde) > 0 && parseFloat(editPrixGarde) < 15 && (
+                                    <p className="mt-1 text-xs text-orange-600">
+                                      ⚠️ Inférieur au tarif minimum recommandé (15€/jour)
+                                    </p>
+                                  )}
+                                </div>
+                                <button
+                                  onClick={handleGeneratePaymentLink}
+                                  disabled={generatingLink || !editPrixGarde}
+                                  className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                                >
+                                  {generatingLink ? 'Génération en cours...' : '💳 Générer lien de paiement'}
+                                </button>
+                                {linkError && (
+                                  <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                                    <p className="text-xs text-red-700">{linkError}</p>
+                                  </div>
+                                )}
+                                {generatedLink && (
+                                  <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                                    <p className="text-xs font-semibold text-green-800 mb-2">
+                                      ✅ Lien de paiement généré
+                                    </p>
+                                    <div className="flex items-center gap-2">
+                                      <input
+                                        type="text"
+                                        readOnly
+                                        value={generatedLink}
+                                        className="flex-1 px-2 py-1 text-xs bg-white border border-green-300 rounded font-mono"
+                                        onClick={(e) => (e.target as HTMLInputElement).select()}
+                                      />
+                                      <button
+                                        onClick={handleCopyLink}
+                                        className="px-3 py-1 text-xs font-medium text-white bg-green-600 rounded hover:bg-green-700"
+                                      >
+                                        {linkCopied ? '✓ Copié' : 'Copier'}
+                                      </button>
+                                    </div>
+                                    <p className="mt-2 text-xs text-green-700">
+                                      Envoyez ce lien au client par WhatsApp pour qu'il puisse payer.
+                                    </p>
+                                  </div>
+                                )}
+                              </div>
                             </div>
                           )}
                         </div>
