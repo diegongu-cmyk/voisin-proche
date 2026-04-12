@@ -250,7 +250,7 @@ export default function HomePage() {
             </svg>
             <h3 className="mt-4 text-lg font-semibold text-[#085041] transition-colors duration-300 ease-in-out group-hover:text-[#085041]">Proximité</h3>
             <p className="mt-2 text-sm text-slate-500">
-              Toujours près de vous, où que vous soyez en Fontenay Le Compte.
+              Toujours près de vous, où que vous soyez en Fontenay-le-Comte.
             </p>
           </article>
 
