@@ -33,7 +33,7 @@ export default function EspagnolService() {
           <div>
             <h2 className="mb-4 text-3xl font-bold text-gray-900">Description du service</h2>
             <p className="text-lg leading-relaxed text-gray-600">
-              Cours authentiques dispensés par un natif espagnol. Je propose des cours d'espagnol 
+              Cours authentiques dispensés par un natif hispanophone. Je propose des cours d'espagnol 
               personnalisés pour tous niveaux, que vous soyez débutant ou avancé. Mon approche pédagogique 
               combine l'apprentissage structuré avec des conversations naturelles pour vous permettre 
               de progresser rapidement tout en découvrant la richesse de la culture hispanique.
@@ -106,7 +106,7 @@ export default function EspagnolService() {
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-blue-600">ℹ️</span>
-                  <span>Cours individuels ou petits groupes</span>
+                  <span>Cours individuels personnalisés</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-blue-600">ℹ️</span>
@@ -118,7 +118,7 @@ export default function EspagnolService() {
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-blue-600">ℹ️</span>
-                  <span>Accent natif espagnol (castillan)</span>
+                  <span>Accent natif latino-américain</span>
                 </li>
               </ul>
             </div>
@@ -130,7 +130,7 @@ export default function EspagnolService() {
       <section className="bg-gray-50 py-16">
         <div className="mx-auto max-w-4xl px-4">
           <h2 className="mb-8 text-center text-3xl font-bold text-gray-900">Tarifs</h2>
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 max-w-3xl mx-auto">
             <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
               <h3 className="mb-2 text-xl font-bold text-gray-900">Cours individuel</h3>
               <p className="mb-4 text-3xl font-bold text-green-600">15€</p>
@@ -154,17 +154,6 @@ export default function EspagnolService() {
                 <li>• Tarif avantageux: 13€/h</li>
                 <li>• Planning personnalisé</li>
                 <li>• Support pédagogique inclus</li>
-              </ul>
-            </div>
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-              <h3 className="mb-2 text-xl font-bold text-gray-900">Groupe (2-3 pers)</h3>
-              <p className="mb-4 text-3xl font-bold text-green-600">10€</p>
-              <p className="text-gray-600">Par personne et par heure</p>
-              <ul className="mt-4 space-y-2 text-sm text-gray-600">
-                <li>• Cours en petit groupe</li>
-                <li>• Tarif réduit par personne</li>
-                <li>• Interactions enrichissantes</li>
-                <li>• Ambiance conviviale</li>
               </ul>
             </div>
           </div>
