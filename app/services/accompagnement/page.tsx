@@ -34,13 +34,13 @@ export default function AccompagnementService() {
             <h2 className="mb-4 text-3xl font-bold text-gray-900">Description du service</h2>
             <p className="text-lg leading-relaxed text-gray-600">
               Une présence chaleureuse et bienveillante pour vos rendez-vous ou simplement pour échanger. 
-              Je propose un service d'accompagnement personnalisé adapté à vos besoins, que ce soit pour des 
+              Nous proposons un service d'accompagnement personnalisé adapté à vos besoins, que ce soit pour des 
               rendez-vous médicaux, courses administratives, ou simplement pour rompre la solitude.
             </p>
             <p className="mt-4 text-lg leading-relaxed text-gray-600">
-              Mon rôle est d'être à vos côtés avec patience et écoute, en respectant votre rythme et vos préférences. 
-              Je peux vous aider dans vos déplacements, vous assister dans vos démarches, ou simplement partager 
-              un moment de convivialité. Disponible 7 jours sur 7, je m'adapte à votre emploi du temps pour vous 
+              Notre rôle est d'être à vos côtés avec patience et écoute, en respectant votre rythme et vos préférences. 
+              Nous pouvons vous aider dans vos déplacements, vous assister dans vos démarches, ou simplement partager 
+              un moment de convivialité. Disponible 7 jours sur 7, nous nous adaptons à votre emploi du temps pour vous 
               apporter le soutien dont vous avez besoin.
             </p>
             <p className="mt-4 text-lg leading-relaxed text-gray-600">
