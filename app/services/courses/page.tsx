@@ -40,7 +40,7 @@ export default function CoursesService() {
             </p>
             <p className="mt-4 text-lg leading-relaxed text-gray-600">
               Vous ne payez que pour le service, les courses sont réglées directement par vous ou via une 
-              avance remboursée. Je respecte scrupuleusement votre liste de courses, vos préférences et votre 
+              avance remboursée. Nous respectons scrupuleusement votre liste de courses, vos préférences et votre 
               budget. Service disponible avec une grande flexibilité horaire pour s'adapter à vos besoins.
             </p>
           </div>
