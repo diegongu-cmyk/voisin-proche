@@ -33,13 +33,13 @@ export default function PromenadeService() {
           <div>
             <h2 className="mb-4 text-3xl font-bold text-gray-900">Description du service</h2>
             <p className="text-lg leading-relaxed text-gray-600">
-              Des promenades sécurisées et adaptées à votre compagnon. Je m'occupe de votre chien avec amour et professionnalisme, 
+              Des promenades sécurisées et adaptées à votre compagnon. Nous nous occupons de votre chien avec amour et professionnalisme, 
               en respectant ses besoins et son rythme. Chaque balade est une occasion pour lui de faire de l'exercice, 
               de socialiser et de s'amuser dans un environnement sécurisé.
             </p>
             <p className="mt-4 text-lg leading-relaxed text-gray-600">
               Les promenades incluent des jeux, des caresses, et bien sûr de l'exercice physique adapté à la race et à l'âge de votre animal. 
-              Je vous envoie régulièrement des photos pendant la balade pour que vous puissiez suivre les aventures de votre compagnon.
+              Nous vous envoyons régulièrement des photos pendant la balade pour que vous puissiez suivre les aventures de votre compagnon.
             </p>
           </div>
 
