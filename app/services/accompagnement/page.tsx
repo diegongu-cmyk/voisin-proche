@@ -44,10 +44,10 @@ export default function AccompagnementService() {
               apporter le soutien dont vous avez besoin.
             </p>
             <p className="mt-4 text-lg leading-relaxed text-gray-600">
-              Notre niveau de français est limité, mais cela ne constitue pas un obstacle à la qualité de notre service. 
-              Si nécessaire, nous utilisons des outils de traduction en ligne pour faciliter la communication. 
-              Cela devient même une opportunité d'immersion linguistique pour la personne accompagnée, permettant 
-              un partage enrichissant entre différentes cultures et une ouverture sur le monde hispanophone.
+              Notre langue maternelle est l'espagnol, ce qui apporte une dimension humaine et culturelle unique à chaque accompagnement.
+              Nous communiquons en français au quotidien, et pour les échanges plus complexes nous nous appuyons sur
+              des outils de traduction fiables afin de garantir une compréhension parfaite.
+              Cette particularité est souvent appréciée comme une occasion de découvrir une autre culture et d'égayer les conversations.
             </p>
           </div>
 
@@ -119,7 +119,7 @@ export default function AccompagnementService() {
       <section className="bg-gray-50 py-16">
         <div className="mx-auto max-w-4xl px-4">
           <h2 className="mb-8 text-center text-3xl font-bold text-gray-900">Tarifs</h2>
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="mx-auto max-w-md">
             <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
               <h3 className="mb-2 text-xl font-bold text-gray-900">Horaire</h3>
               <p className="mb-4 text-3xl font-bold text-green-600">12€</p>
@@ -131,32 +131,7 @@ export default function AccompagnementService() {
                 <li>• Ajustable selon besoins</li>
               </ul>
             </div>
-            <div className="rounded-2xl border border-green-400 bg-green-50 p-6 shadow-md">
-              <div className="mb-2">
-                <span className="rounded-full bg-green-500 px-3 py-1 text-xs font-bold text-white">POPULAIRE</span>
-              </div>
-              <h3 className="mb-2 text-xl font-bold text-gray-900">Demi-journée</h3>
-              <p className="mb-4 text-3xl font-bold text-green-600">50€</p>
-              <p className="text-gray-600">4 heures d'accompagnement</p>
-              <ul className="mt-4 space-y-2 text-sm text-gray-600">
-                <li>• 4 heures continues</li>
-                <li>• Tarif dégressif: 12,50€/h</li>
-                <li>• Idéal pour rendez-vous multiples</li>
-                <li>• Pause incluse si nécessaire</li>
-              </ul>
-            </div>
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-              <h3 className="mb-2 text-xl font-bold text-gray-900">Forfait journée</h3>
-              <p className="mb-4 text-3xl font-bold text-green-600">90€</p>
-              <p className="text-gray-600">8 heures d'accompagnement</p>
-              <ul className="mt-4 space-y-2 text-sm text-gray-600">
-                <li>• Journée complète</li>
-                <li>• Tarif avantageux: 11,25€/h</li>
-                <li>• Plusieurs missions possibles</li>
-                <li>• Déjeuner non inclus</li>
-              </ul>
-            </div>
-          </div>
+                                  </div>
         </div>
       </section>
 
