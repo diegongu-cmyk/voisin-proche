@@ -33,16 +33,16 @@ export default function EspagnolService() {
           <div>
             <h2 className="mb-4 text-3xl font-bold text-gray-900">Description du service</h2>
             <p className="text-lg leading-relaxed text-gray-600">
-              Cours authentiques dispensés par un natif hispanophone. Je propose des cours d'espagnol 
-              personnalisés pour tous niveaux, que vous soyez débutant ou avancé. Mon approche pédagogique 
+              Cours authentiques dispensés par un natif hispanophone. Nous proposons des cours d'espagnol 
+              personnalisés pour tous niveaux, que vous soyez débutant ou avancé. Notre approche pédagogique 
               combine l'apprentissage structuré avec des conversations naturelles pour vous permettre 
               de progresser rapidement tout en découvrant la richesse de la culture hispanique.
             </p>
             <p className="mt-4 text-lg leading-relaxed text-gray-600">
               Les cours s'adaptent à vos objectifs spécifiques : préparation aux voyages, perfectionnement 
-              professionnel, soutien scolaire, ou simplement par passion pour la langue. J'offre une 
+              professionnel, soutien scolaire, ou simplement par passion pour la langue. Nous offrons une 
               flexibilité totale avec des cours à domicile, en ligne, ou dans des lieux neutres. 
-              Mon accent natif et ma connaissance approfondie de la culture espagnole garantissent 
+              Notre accent natif et notre connaissance approfondie de la culture latino-américaine garantissent 
               un apprentissage authentique et immersif.
             </p>
           </div>
