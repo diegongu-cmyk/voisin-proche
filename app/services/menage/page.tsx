@@ -112,9 +112,9 @@ export default function MenageService() {
           <h2 className="mb-8 text-center text-3xl font-bold text-gray-900">Tarifs</h2>
           <div className="grid gap-6 md:grid-cols-3">
             <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-              <h3 className="mb-2 text-xl font-bold text-gray-900">Studio/Appartement</h3>
+              <h3 className="mb-2 text-xl font-bold text-gray-900">Petit ménage</h3>
               <p className="mb-4 text-3xl font-bold text-green-600">22€</p>
-              <p className="text-gray-600">Jusqu'à 35m²</p>
+              <p className="text-gray-600">2 heures de service</p>
               <ul className="mt-4 space-y-2 text-sm text-gray-600">
                 <li>• 2 heures de service</li>
                 <li>• Pièces principales</li>
@@ -126,9 +126,9 @@ export default function MenageService() {
               <div className="mb-2">
                 <span className="rounded-full bg-green-500 px-3 py-1 text-xs font-bold text-white">POPULAIRE</span>
               </div>
-              <h3 className="mb-2 text-xl font-bold text-gray-900">Appartement/Maison</h3>
-              <p className="mb-4 text-3xl font-bold text-green-600">35€</p>
-              <p className="text-gray-600">35m² à 80m²</p>
+              <h3 className="mb-2 text-xl font-bold text-gray-900">Ménage moyen</h3>
+              <p className="mb-4 text-3xl font-bold text-green-600">33€</p>
+              <p className="text-gray-600">3 heures de service</p>
               <ul className="mt-4 space-y-2 text-sm text-gray-600">
                 <li>• 3 heures de service</li>
                 <li>• Toutes les pièces</li>
@@ -137,11 +137,11 @@ export default function MenageService() {
               </ul>
             </div>
             <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-              <h3 className="mb-2 text-xl font-bold text-gray-900">Grande maison/Bureau</h3>
-              <p className="mb-4 text-3xl font-bold text-green-600">50€</p>
-              <p className="text-gray-600">Plus de 80m²</p>
+              <h3 className="mb-2 text-xl font-bold text-gray-900">Grand ménage</h3>
+              <p className="mb-4 text-3xl font-bold text-green-600">55€</p>
+              <p className="text-gray-600">5 heures de service</p>
               <ul className="mt-4 space-y-2 text-sm text-gray-600">
-                <li>• 4 heures minimum</li>
+                <li>• 5 heures de service</li>
                 <li>• Sur devis personnalisé</li>
                 <li>• Service complet</li>
                 <li>• Options spécifiques</li>
