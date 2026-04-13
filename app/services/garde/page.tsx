@@ -33,10 +33,10 @@ export default function GardeService() {
           <div>
             <h2 className="mb-4 text-3xl font-bold text-gray-900">Description du service</h2>
             <p className="text-lg leading-relaxed text-gray-600">
-              Dès 15€/jour. Le tarif comprend une visite quotidienne à votre animal, avec 
-              promenade si nécessaire et nettoyage de son espace. Le prix final peut varier 
-              selon les besoins spécifiques de votre animal et sera confirmé par WhatsApp 
-              ou par email après votre demande de réservation.
+              Dès 15€/jour. Le tarif de base comprend une visite quotidienne d'une heure minimum à votre animal, 
+              à l'horaire de votre choix. La visite inclut nourriture, propreté, jeux et promenade si nécessaire. 
+              Visites supplémentaires possibles avec supplément (idéal pour chiens nécessitant plusieurs sorties par jour 
+              ou animaux avec besoins spécifiques). Le prix final sera confirmé par WhatsApp ou par email après votre demande de réservation.
             </p>
           </div>
 
@@ -46,7 +46,7 @@ export default function GardeService() {
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start gap-3">
                   <span className="text-green-600">✓</span>
-                  <span>Garde à domicile 24h/24</span>
+                  <span>1 visite quotidienne d'1 heure minimum</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-green-600">✓</span>
@@ -58,7 +58,7 @@ export default function GardeService() {
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-green-600">✓</span>
-                  <span>Promenades (2-3 par jour pour chiens)</span>
+                  <span>Promenade pendant la visite (chiens)</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-green-600">✓</span>
@@ -66,11 +66,19 @@ export default function GardeService() {
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-green-600">✓</span>
-                  <span>Administration de médicaments si nécessaire</span>
+                  <span>Administration de médicaments (supplément)</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-green-600">✓</span>
                   <span>Entretien de l'espace de vie</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600">✓</span>
+                  <span>Visites supplémentaires possibles (supplément)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600">✓</span>
+                  <span>Horaire de visite au choix du client</span>
                 </li>
               </ul>
             </div>
@@ -108,36 +116,21 @@ export default function GardeService() {
       <section className="bg-gray-50 py-16">
         <div className="mx-auto max-w-4xl px-4">
           <h2 className="mb-8 text-center text-3xl font-bold text-gray-900">Tarifs</h2>
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="mx-auto max-w-md">
             <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
               <h3 className="mb-2 text-xl font-bold text-gray-900">Par jour</h3>
               <p className="mb-4 text-3xl font-bold text-green-600">Dès 15€/jour</p>
-              <p className="text-gray-600">Garde avec 1 visite par jour</p>
+              <p className="text-gray-600">1 visite d'1h/jour à l'horaire de votre choix</p>
               <ul className="mt-4 space-y-2 text-sm text-gray-600">
-                <li>• Visites régulières à domicile</li>
+                <li>• 1 visite d'1 heure minimum/jour</li>
                 <li>• Photos quotidiennes sur WhatsApp</li>
                 <li>• Alimentation selon vos instructions et dosages</li>
                 <li>• Jeux et attention personnalisée</li>
                 <li>• Promenades pour les chiens</li>
+                <li>• Visites supplémentaires sur demande (supplément)</li>
               </ul>
             </div>
-            <div className="rounded-2xl border border-green-400 bg-green-50 p-6 shadow-md">
-              <div className="mb-2">
-                <span className="rounded-full bg-green-500 px-3 py-1 text-xs font-bold text-white">POPULAIRE</span>
-              </div>
-              <h3 className="mb-2 text-xl font-bold text-gray-900">24h / Week-end</h3>
-              <p className="mb-4 text-3xl font-bold text-green-600">Sur devis</p>
-              <p className="text-gray-600">Garde prolongée jour et nuit</p>
-              <ul className="mt-4 space-y-2 text-sm text-gray-600">
-                <li>• Garde 24h ou week-end complet</li>
-                <li>• Service personnalisé</li>
-                <li>• Photos quotidiennes sur WhatsApp</li>
-                <li>• Alimentation selon vos instructions</li>
-                <li>• Tarif établi selon la durée et le type d'animal</li>
-                <li>• Contactez-nous pour un devis personnalisé</li>
-              </ul>
-            </div>
-          </div>
+                      </div>
         </div>
       </section>
 
