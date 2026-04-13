@@ -33,15 +33,15 @@ export default function MenageService() {
           <div>
             <h2 className="mb-4 text-3xl font-bold text-gray-900">Description du service</h2>
             <p className="text-lg leading-relaxed text-gray-600">
-              Nettoyage détaillé et professionnel pour votre maison ou votre bureau. Je propose un service 
+              Nettoyage détaillé et professionnel pour votre maison ou votre bureau. Nous proposons un service 
               de ménage complet et soigné, adapté à vos besoins spécifiques. Que ce soit pour un entretien 
-              régulier, un grand nettoyage de printemps, ou une préparation pour un événement, j'assure 
+              régulier, un grand nettoyage de printemps, ou une préparation pour un événement, nous assurons 
               un travail méticuleux avec des produits adaptés à vos besoins.
             </p>
             <p className="mt-4 text-lg leading-relaxed text-gray-600">
-              Je respecte votre intimité et votre espace personnel, avec une discrétion totale garantie. 
-              Mon approche professionnelle combine efficacité et attention aux détails pour vous offrir 
-              un environnement propre et accueillant. Flexible et fiable, je m'adapte à vos horaires 
+              Nous respectons votre intimité et votre espace personnel, avec une discrétion totale garantie. 
+              Notre approche professionnelle combine efficacité et attention aux détails pour vous offrir 
+              un environnement propre et accueillant. Flexible et fiable, nous nous adaptons à vos horaires 
               et à vos exigences pour un service sur mesure.
             </p>
           </div>
