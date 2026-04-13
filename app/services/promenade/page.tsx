@@ -49,7 +49,7 @@ export default function PromenadeService() {
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start gap-3">
                   <span className="text-green-600">✓</span>
-                  <span>Promenade de 45 minutes minimum</span>
+                  <span>Promenade de 30 minutes minimum</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-green-600">✓</span>
